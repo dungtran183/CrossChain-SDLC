@@ -128,7 +128,7 @@ export default function Cd1Page() {
       setProve(null);
       setVerify(null);
       setAttempts([]);
-      toast({ kind: "success", title: t("cd1.toast.setup"), body: `ThresholdVerifier @ ${short(r.verifier, 4)}` });
+      toast({ anchor: "cd1-stage", kind: "success", title: t("cd1.toast.setup"), body: `ThresholdVerifier @ ${short(r.verifier, 4)}` });
     });
 
   const doIssue = () =>
@@ -138,7 +138,7 @@ export default function Cd1Page() {
       setIssue(r);
       complete("cd1", "issue");
       setBeamIssue((x) => x + 1);
-      toast({ kind: "success", title: t("cd1.toast.issue"), body: `root ${short(r.root, 6)}` });
+      toast({ anchor: "cd1-stage", kind: "success", title: t("cd1.toast.issue"), body: `root ${short(r.root, 6)}` });
     });
 
   const doProve = (req = request()) =>
@@ -158,7 +158,7 @@ export default function Cd1Page() {
     setAttempts((xs) => [r, ...xs].slice(0, 8));
     setBeamAB((x) => x + 1);
     setFlash({ k: Date.now(), tone: r.accepted ? "success" : "danger" });
-    toast({ kind: r.accepted ? "success" : "error", title: r.accepted ? t("cd1.toast.accepted") : t("cd1.toast.rejected"), body: r.reason });
+    toast({ anchor: "cd1-stage", kind: r.accepted ? "success" : "error", title: r.accepted ? t("cd1.toast.accepted") : t("cd1.toast.rejected"), body: r.reason });
   };
 
   const doVerify = () =>
@@ -175,7 +175,7 @@ export default function Cd1Page() {
       complete("cd1", "revoke");
       absorb(r);
       setBeamIssue((x) => x + 1);
-      toast({ kind: "info", title: t("cd1.toast.revoked"), body: `${sid} · ${short(r.credential_hash, 6)}` });
+      toast({ anchor: "cd1-stage", kind: "info", title: t("cd1.toast.revoked"), body: `${sid} · ${short(r.credential_hash, 6)}` });
     });
 
   const doAbe = (attrs: Record<string, string>) =>
@@ -190,18 +190,18 @@ export default function Cd1Page() {
   ref.current = { doReset, doSetup, doIssue, doProve, doVerify, doTamper, doRevoke, doAbe, setPreset };
   const steps = useMemo<TourStep[]>(
     () => [
-      { caption: "cd1.tour.s0", run: () => ref.current.doReset(), hold: 2200 },
-      { caption: "cd1.tour.s1", run: () => ref.current.doSetup() },
-      { caption: "cd1.tour.s2", run: () => ref.current.doIssue(), hold: 3200 },
-      { caption: "cd1.tour.s3", run: () => (ref.current.setPreset("s3"), ref.current.doProve(PRESETS[0])), hold: 3600 },
-      { caption: "cd1.tour.s4", run: () => ref.current.doVerify(), hold: 3600 },
-      { caption: "cd1.tour.s5", run: () => ref.current.doAbe({ role: "HR", org: "ACME" }), hold: 2800 },
-      { caption: "cd1.tour.s6", run: () => ref.current.doTamper("below_threshold"), hold: 3200 },
-      { caption: "cd1.tour.s7", run: () => ref.current.doTamper("signature"), hold: 2800 },
-      { caption: "cd1.tour.s8", run: () => ref.current.doTamper("replay"), hold: 2800 },
-      { caption: "cd1.tour.s9", run: () => ref.current.doRevoke("S3"), hold: 2400 },
-      { caption: "cd1.tour.s10", run: async () => (await ref.current.doProve(PRESETS[0]), await ref.current.doVerify()), hold: 3800 },
-      { caption: "cd1.tour.s11", hold: 3000 },
+      { caption: "cd1.tour.s0", focus: "cd1-steps", run: () => ref.current.doReset(), hold: 2200 },
+      { caption: "cd1.tour.s1", focus: "cd1-stage", run: () => ref.current.doSetup() },
+      { caption: "cd1.tour.s2", focus: "cd1-stage", run: () => ref.current.doIssue(), hold: 3200 },
+      { caption: "cd1.tour.s3", focus: "cd1-sw", run: () => (ref.current.setPreset("s3"), ref.current.doProve(PRESETS[0])), hold: 3600 },
+      { caption: "cd1.tour.s4", focus: "cd1-stage", run: () => ref.current.doVerify(), hold: 3600 },
+      { caption: "cd1.tour.s5", focus: "cd1-stage", run: () => ref.current.doAbe({ role: "HR", org: "ACME" }), hold: 2800 },
+      { caption: "cd1.tour.s6", focus: "cd1-tamper", run: () => ref.current.doTamper("below_threshold"), hold: 3200 },
+      { caption: "cd1.tour.s7", focus: "cd1-tamper", run: () => ref.current.doTamper("signature"), hold: 2800 },
+      { caption: "cd1.tour.s8", focus: "cd1-tamper", run: () => ref.current.doTamper("replay"), hold: 2800 },
+      { caption: "cd1.tour.s9", focus: "cd1-stage", run: () => ref.current.doRevoke("S3"), hold: 2400 },
+      { caption: "cd1.tour.s10", focus: "cd1-stage", run: async () => (await ref.current.doProve(PRESETS[0]), await ref.current.doVerify()), hold: 3800 },
+      { caption: "cd1.tour.s11", focus: "cd1-steps", hold: 3000 },
     ],
     [],
   );
@@ -242,7 +242,7 @@ export default function Cd1Page() {
       />
       <ErrorBanner error={error} onClose={() => setError(null)} />
 
-      <GlassCard accent={A.grad}>
+      <GlassCard id="cd1-steps" accent={A.grad}>
         <Stepper steps={tl("cd1.steps")} states={stepStates} accent={A.grad} />
         <div className="mt-5 flex flex-wrap items-end gap-3 border-t border-white/5 pt-4">
           <Button accent={A.grad} icon={<Play className="h-4 w-4" />} onClick={doSetup} loading={busy === "setup"}>
@@ -302,7 +302,7 @@ export default function Cd1Page() {
       </GlassCard>
 
       {/* Sân khấu 3 cột: Issuer · Committee · Verifier */}
-      <div className="grid gap-4 xl:grid-cols-[1fr_auto_1fr_auto_1fr]">
+      <div id="cd1-stage" className="grid scroll-mt-24 gap-4 rounded-2xl xl:grid-cols-[1fr_auto_1fr_auto_1fr]">
         <GlassCard title={t("cd1.stage.issuer")} icon={<Building2 className="h-4 w-4" />} accent="from-cyan-400 to-sky-500">
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1.5">
@@ -413,13 +413,13 @@ export default function Cd1Page() {
       </div>
 
       {prove && (
-        <GlassCard title={t("cd1.sw.title")} icon={<FileKey2 className="h-4 w-4" />} accent={A.grad} actions={<span className="chip">sigma-protocol · Fiat–Shamir</span>}>
+        <GlassCard id="cd1-sw" title={t("cd1.sw.title")} icon={<FileKey2 className="h-4 w-4" />} accent={A.grad} actions={<span className="chip">sigma-protocol · Fiat–Shamir</span>}>
           <StatementWitness data={prove} />
         </GlassCard>
       )}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1.2fr]">
-        <GlassCard title={t("cd1.tamper.title")} icon={<Skull className="h-4 w-4" />} accent="from-rose-500 to-orange-500">
+        <GlassCard id="cd1-tamper" title={t("cd1.tamper.title")} icon={<Skull className="h-4 w-4" />} accent="from-rose-500 to-orange-500">
           <p className="mb-3 text-sm text-slate-400">{t("cd1.tamper.body")}</p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {TAMPERS.map((k) => (
@@ -449,7 +449,7 @@ export default function Cd1Page() {
           </div>
         </GlassCard>
 
-        <GlassCard title={t("cd1.chains")} icon={<Timer className="h-4 w-4" />} accent={A.grad}>
+        <GlassCard id="cd1-chains" title={t("cd1.chains")} icon={<Timer className="h-4 w-4" />} accent={A.grad}>
           <div className="space-y-3">
             <ChainPanel name={`chain-A · ${t("cd1.stage.issuerShort")}`} chainId={31337} txs={chainTx("chain-A")} color={A.hex} />
             <ChainPanel name={`chain-B · ${t("cd1.stage.verifierShort")}`} chainId={97} txs={chainTx("chain-B")} color="#2dd4bf" />
@@ -457,7 +457,7 @@ export default function Cd1Page() {
         </GlassCard>
       </div>
 
-      <GlassCard title={t("cd1.shamir.title")} icon={<KeyRound className="h-4 w-4" />} accent={A.grad} actions={<span className="chip">GF(65537)</span>}>
+      <GlassCard id="cd1-shamir" title={t("cd1.shamir.title")} icon={<KeyRound className="h-4 w-4" />} accent={A.grad} actions={<span className="chip">GF(65537)</span>}>
         <ShamirPanel api={api} />
       </GlassCard>
 

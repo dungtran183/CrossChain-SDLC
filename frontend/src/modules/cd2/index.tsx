@@ -8,6 +8,7 @@ import { useAction } from "../../lib/useAsync";
 import { useTour, type TourStep } from "../../lib/tour";
 import { ACCENTS } from "../../lib/theme";
 import { useT } from "../../i18n/useT";
+import { useToast } from "../../components/Toast";
 import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
 import GlassCard from "../../components/GlassCard";
@@ -29,6 +30,7 @@ type TabId = "m1" | "m2" | "m3" | "m4" | "ex";
 
 export default function Cd2Page() {
   const { t, lang } = useT();
+  const toast = useToast();
   const api = useMemo(() => createClient("cd2", "audit-flow"), []);
   const { busy, error, run, setError } = useAction();
   // Phân tích mẫu chạy độc lập với các hành động khác (khóa riêng).
@@ -90,6 +92,7 @@ export default function Cd2Page() {
     run(`ex-${target}`, async () => {
       const r = await api.post<ExploitRes>(`/api/cd2/exploit/run?target=${target}&sample=${sid}`);
       setEx(r);
+      toast({ anchor: "cd2-tabs", kind: r.exploited ? "error" : "success", title: r.exploited ? t("cd2.ex.exploited") : t("cd2.ex.blocked"), body: `${r.sample_id.slice(3)} · ${t(`cd2.ex.attack.${r.attack}`)}` });
       if (r.target === "vuln" && r.exploited) complete("cd2", "exploit");
       if (r.target === "safe" && !r.exploited) complete("cd2", "fixed");
       if (target === "safe") setM4(await api.post<M4Res>("/api/cd2/m4/report?k=5", { sample_id: sid, after_exploit: true }));
@@ -110,14 +113,14 @@ export default function Cd2Page() {
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
   const steps = useMemo<TourStep[]>(
     () => [
-      { caption: "cd2.tour.s0", run: () => (ref.current.setSel("Cd2VulnBridgeNoNonce"), ref.current.setTab("m1")), hold: 3200 },
-      { caption: "cd2.tour.s1", run: () => ref.current.setTab("m1"), hold: 3800 },
-      { caption: "cd2.tour.s2", run: async () => (ref.current.setTab("m2"), ref.current.setK(1), await wait(1800), ref.current.setK(5)), hold: 3800 },
-      { caption: "cd2.tour.s3", run: () => (ref.current.setTab("m3"), ref.current.setEps(1), ref.current.setAlpha(1), ref.current.runFl(1, 1)), hold: 5200 },
-      { caption: "cd2.tour.s4", run: () => ref.current.setTab("m4"), hold: 4200 },
-      { caption: "cd2.tour.s5", run: () => (ref.current.setTab("ex"), ref.current.runExploit("vuln", "Cd2VulnBridgeNoNonce")), hold: 5200 },
-      { caption: "cd2.tour.s6", run: () => ref.current.runExploit("safe", "Cd2VulnBridgeNoNonce"), hold: 5200 },
-      { caption: "cd2.tour.s7", run: () => ref.current.setTab("m4"), hold: 3600 },
+      { caption: "cd2.tour.s0", focus: "cd2-code", run: () => (ref.current.setSel("Cd2VulnBridgeNoNonce"), ref.current.setTab("m1")), hold: 3200 },
+      { caption: "cd2.tour.s1", focus: "cd2-tabs", run: () => ref.current.setTab("m1"), hold: 3800 },
+      { caption: "cd2.tour.s2", focus: "cd2-tabs", run: async () => (ref.current.setTab("m2"), ref.current.setK(1), await wait(1800), ref.current.setK(5)), hold: 3800 },
+      { caption: "cd2.tour.s3", focus: "cd2-tabs", run: () => (ref.current.setTab("m3"), ref.current.setEps(1), ref.current.setAlpha(1), ref.current.runFl(1, 1)), hold: 5200 },
+      { caption: "cd2.tour.s4", focus: "cd2-tabs", run: () => ref.current.setTab("m4"), hold: 4200 },
+      { caption: "cd2.tour.s5", focus: "cd2-tabs", run: () => (ref.current.setTab("ex"), ref.current.runExploit("vuln", "Cd2VulnBridgeNoNonce")), hold: 5200 },
+      { caption: "cd2.tour.s6", focus: "cd2-tabs", run: () => ref.current.runExploit("safe", "Cd2VulnBridgeNoNonce"), hold: 5200 },
+      { caption: "cd2.tour.s7", focus: "cd2-tabs", run: () => ref.current.setTab("m4"), hold: 3600 },
     ],
     [],
   );
@@ -178,6 +181,7 @@ export default function Cd2Page() {
         </GlassCard>
 
         <GlassCard
+          id="cd2-code"
           title={
             <span className="flex items-center gap-2">
               {detail?.title ?? "…"} <span className="font-mono text-xs text-slate-500">.sol</span>
@@ -197,7 +201,7 @@ export default function Cd2Page() {
         </GlassCard>
       </div>
 
-      <GlassCard accent={A.grad}>
+      <GlassCard id="cd2-tabs" accent={A.grad}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <Tabs tabs={tabs} value={tab} onChange={(v) => setTab(v as TabId)} accent={A.grad} />
           <div className="flex items-center gap-2 text-xs text-slate-400">

@@ -20,7 +20,7 @@ export default function ModuleHeader({ ns, accent, glyph, actions }: Props) {
           className="relative shrink-0"
         >
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${accent} opacity-60 blur-xl`} />
-          <div className={`relative grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br ${accent} text-2xl font-extrabold text-ink-950 shadow-lg`}>
+          <div className={`relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${accent} text-lg font-extrabold text-ink-950 shadow-lg`}>
             {glyph}
           </div>
         </motion.div>
@@ -28,13 +28,13 @@ export default function ModuleHeader({ ns, accent, glyph, actions }: Props) {
           <div className="flex flex-wrap items-center gap-2">
             <span className="chip">{t(`${ns}.sdlc`)}</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          <h1 className="text-lg font-bold leading-snug tracking-tight sm:text-xl">
             <span className={`mod-title bg-gradient-to-r ${accent} bg-clip-text text-transparent`} style={{ ["--hl" as string]: HL[ns] ?? "#ffc730" }}>
               {t(`${ns}.name`)}
             </span>{" "}
             <span className="font-medium text-slate-400">— {t(`${ns}.topic`)}</span>
           </h1>
-          <p className="max-w-4xl text-sm text-slate-300">{t(`${ns}.summary`)}</p>
+          <p className="max-w-4xl text-[13px] text-slate-300">{t(`${ns}.summary`)}</p>
         </div>
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

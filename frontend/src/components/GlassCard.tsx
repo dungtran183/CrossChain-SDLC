@@ -11,12 +11,14 @@ type Props = {
   bodyClassName?: string;
   children?: ReactNode;
   delay?: number;
+  id?: string;
 };
 
 /** Thẻ kính mờ có vệt sáng theo chuột, tiêu đề + vùng hành động. */
-export default function GlassCard({ title, icon, actions, accent, className = "", bodyClassName = "", children, delay = 0 }: Props) {
+export default function GlassCard({ title, icon, actions, accent, className = "", bodyClassName = "", children, delay = 0, id }: Props) {
   return (
     <motion.section
+      id={id}
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}

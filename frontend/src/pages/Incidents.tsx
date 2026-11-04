@@ -3,10 +3,12 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { ArrowRight, Flame, ShieldCheck } from "lucide-react";
+import { ArrowRight, Flame, PlayCircle, ShieldCheck, Swords } from "lucide-react";
 import { useT } from "../i18n/useT";
 import { MODULES } from "../modules/registry";
 import { CHART } from "../lib/theme";
+import { focusAnchor } from "../lib/activity";
+import IncidentPlayer from "./incidents/IncidentPlayer";
 
 type ModId = "cd1" | "cd2" | "cd3";
 const COLOR: Record<ModId, string> = { cd1: "#22d3ee", cd2: "#8b5cf6", cd3: "#f59e0b" };
@@ -27,6 +29,12 @@ const INCIDENTS: { id: string; name: string; date: string; loss: number; cat: st
 export default function Incidents() {
   const { t, lang } = useT();
   const [filter, setFilter] = useState<ModId | "all">("all");
+  const [pick, setPick] = useState("ronin");
+  const picked = INCIDENTS.find((x) => x.id === pick) ?? INCIDENTS[0];
+  const watch = (id: string) => {
+    setPick(id);
+    focusAnchor("inc-player");
+  };
   const list = useMemo(() => INCIDENTS.filter((x) => filter === "all" || x.by.includes(filter)), [filter]);
   const total = list.reduce((s, x) => s + x.loss, 0);
   const fmt = (m: number) => (lang === "vi" ? `≈ ${m.toLocaleString("vi-VN")} triệu USD` : `≈ $${m.toLocaleString("en-US")}M`);
@@ -37,9 +45,34 @@ export default function Incidents() {
         <span className="chip">
           <Flame className="h-3 w-3" /> {t("inc.badge")}
         </span>
-        <h1 className="text-3xl font-bold tracking-tight">{t("inc.title")}</h1>
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">{t("inc.title")}</h1>
         <p className="max-w-3xl text-slate-300">{t("inc.body")}</p>
       </header>
+
+      <section id="inc-player" className="glass space-y-4 p-4 sm:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Swords className="h-4 w-4 text-rose-300" />
+            <div className="font-display text-base font-bold">{t("inc.player.title")}</div>
+          </div>
+          <div className="flex flex-wrap gap-1.5" role="tablist" aria-label={t("inc.player.pick")}>
+            {[...INCIDENTS]
+              .sort((a, b) => b.loss - a.loss)
+              .map((x) => (
+                <button key={x.id} role="tab" aria-selected={x.id === pick} onClick={() => setPick(x.id)} className={`chip text-[11px] ${x.id === pick ? "!bg-rose-500 !text-white" : ""}`}>
+                  {x.name}
+                </button>
+              ))}
+          </div>
+        </div>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="text-lg font-bold">{picked.name}</span>
+          <span className="text-xs text-slate-400">{picked.date}</span>
+          <span className="rounded-md bg-rose-500/15 px-2 py-0.5 text-xs font-extrabold text-rose-200">{fmt(picked.loss)}</span>
+          <span className="chip text-[10px]">{t(`inc.cat.${picked.cat}`)}</span>
+        </div>
+        <IncidentPlayer key={picked.id} incident={picked} fmt={fmt} />
+      </section>
 
       <div className="grid gap-5 xl:grid-cols-[1.3fr_1fr]">
         <section className="glass p-5">
@@ -114,9 +147,14 @@ export default function Incidents() {
                 ))}
                 <span className="chip text-[10px]">{t(`inc.cat.${x.cat}`)}</span>
               </div>
-              <Link to={x.demo} className="flex items-center gap-1 text-xs text-slate-200 hover:text-white">
-                {t("inc.try")} <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              <div className="flex items-center gap-3">
+                <button onClick={() => watch(x.id)} className="flex items-center gap-1 text-xs font-semibold text-rose-300 hover:text-rose-200">
+                  <PlayCircle className="h-3.5 w-3.5" /> {t("inc.view")}
+                </button>
+                <Link to={x.demo} className="flex items-center gap-1 text-xs text-slate-200 hover:text-white">
+                  {t("inc.try")} <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
             </div>
           </motion.article>
         ))}

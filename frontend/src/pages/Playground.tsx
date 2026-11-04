@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Droplets, KeyRound, RefreshCw, Send, ShieldAlert, Sparkles, Wallet as WalletIcon } from "lucide-react";
 import { useT } from "../i18n/useT";
-import { createClient, MODE } from "../lib/api";
+import { createClient } from "../lib/api";
 import { short, type BlockInfo, type ChainInfo, type TxSummary } from "../lib/types";
 import { useAction } from "../lib/useAsync";
 import { ACCENTS } from "../lib/theme";
@@ -92,7 +92,7 @@ export default function Playground() {
     <div className="space-y-6">
       <header className="space-y-2">
         <span className="chip">{t("app.tools")}</span>
-        <h1 className="text-3xl font-bold tracking-tight">{t("pg.title")}</h1>
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">{t("pg.title")}</h1>
         <p className="max-w-3xl text-slate-300">{t("pg.body")}</p>
       </header>
       <ErrorBanner error={error} onClose={() => setError(null)} />
@@ -156,7 +156,6 @@ export default function Playground() {
                   </Button>
                 </div>
               ))}
-              {MODE === "replay" && <p className="text-[11px] text-sky-300/70">{t("pg.replayNote")}</p>}
             </div>
           </GlassCard>
         </Shake>

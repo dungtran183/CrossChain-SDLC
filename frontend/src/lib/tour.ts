@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { focusAnchor, logActivity } from "./activity";
 
 /** Một bước của chế độ Trình chiếu: phụ đề (key i18n) + hành động + thời gian dừng sau hành động. */
-export type TourStep = { caption: string; run?: () => Promise<unknown> | unknown; hold?: number };
+export type TourStep = { caption: string; run?: () => Promise<unknown> | unknown; hold?: number; focus?: string };
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -30,8 +31,12 @@ export function useTour(steps: TourStep[]) {
     for (let i = 0; i < steps.length; i++) {
       if (runId.current !== id) return;
       setIndex(i);
+      logActivity({ kind: "info", title: `▶ ${i + 1}/${steps.length}`, bodyKey: steps[i].caption, anchor: steps[i].focus });
       try {
+        // cuộn tới khu vực của bước trước khi chạy, để diễn biến luôn nằm trong tầm nhìn
+        if (steps[i].focus) focusAnchor(steps[i].focus);
         await steps[i].run?.();
+        if (steps[i].focus) setTimeout(() => focusAnchor(steps[i].focus), 350); // phần tử có thể vừa xuất hiện
       } catch {
         /* lỗi bước được component hiển thị; tour vẫn tiếp tục */
       }

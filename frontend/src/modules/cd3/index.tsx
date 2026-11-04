@@ -61,7 +61,7 @@ export default function Cd3Page() {
       if (MODE === "replay" && prev && s.tick < prev.tick) {
         // hết bản ghi → dừng thay vì quay về đầu
         setPlaying(false);
-        toast({ kind: "info", title: t("cd3.replayEnd") });
+        toast({ anchor: "cd3-control", kind: "info", title: t("cd3.replayEnd") });
         return false;
       }
       setSt(s);
@@ -103,7 +103,7 @@ export default function Cd3Page() {
       }
       absorb((await api.post<StepRes>(`/api/cd3/start?scenario=${sc}`)).state);
       if (sc !== "normal") complete("cd3", "attack");
-      toast({ kind: "info", title: `${t("cd3.scenario")}: ${t(`cd3.sc.${sc}`)}` });
+      toast({ anchor: "cd3-control", kind: "info", title: `${t("cd3.scenario")}: ${t(`cd3.sc.${sc}`)}` });
     });
 
   const reset = () =>
@@ -123,7 +123,7 @@ export default function Cd3Page() {
       if (ok && q) complete("cd3", q.level === "R5" ? "pause" : "approve");
       absorb(r.state);
       const tx = r.txs?.[0];
-      if (ok && tx) toast({ kind: tx.status === 1 ? "success" : "error", title: t("cd3.toast.executed"), body: `${tx.fn} · chain-B #${tx.block}` });
+      if (ok && tx) toast({ anchor: "cd3-control", kind: tx.status === 1 ? "success" : "error", title: t("cd3.toast.executed"), body: `${tx.fn} · chain-B #${tx.block}` });
     });
 
   const runTune = (ww = w) => run("tune", async () => (setTune(await api.post<TuneRes>("/api/cd3/tune", ww)), complete("cd3", "tune")));
@@ -152,14 +152,14 @@ export default function Cd3Page() {
   };
   const steps = useMemo<TourStep[]>(
     () => [
-      { caption: "cd3.tour.s0", run: async () => (MODE === "replay" ? ref.current.setFile("slow_burn") : await ref.current.reset(), ref.current.setTab("m1")), hold: 2500 },
-      { caption: "cd3.tour.s1", run: () => ticks(MODE === "replay" ? 10 : 8), hold: 1500 },
-      { caption: "cd3.tour.s2", run: async () => (await ref.current.startScenario("slow_burn"), ref.current.setTab("m2"), await ticks(2)), hold: 2500 },
-      { caption: "cd3.tour.s3", run: () => approvePending("R4", "V7"), hold: 3500 },
-      { caption: "cd3.tour.s4", run: async () => (ref.current.setTab("m1"), await ticks(3)), hold: 3000 },
-      { caption: "cd3.tour.s5", run: async () => (MODE === "replay" ? (ref.current.setFile("collusion"), await sleep(1500), await ticks(10, 350)) : await ref.current.startScenario("collusion"), ref.current.setTab("m3"), await ticks(2)), hold: 2000 },
-      { caption: "cd3.tour.s6", run: () => approvePending("R5"), hold: 3500 },
-      { caption: "cd3.tour.s7", run: async () => (ref.current.setTab("m3"), ref.current.setW({ w_d: 1, w_g: 0, w_c: 0.3 }), await ref.current.runTune({ w_d: 1, w_g: 0, w_c: 0.3 }), await sleep(2500), ref.current.setW({ w_d: 1, w_g: 1, w_c: 0.3 }), await ref.current.runTune({ w_d: 1, w_g: 1, w_c: 0.3 })), hold: 4000 },
+      { caption: "cd3.tour.s0", focus: "cd3-control", run: async () => (MODE === "replay" ? ref.current.setFile("slow_burn") : await ref.current.reset(), ref.current.setTab("m1")), hold: 2500 },
+      { caption: "cd3.tour.s1", focus: "cd3-control", run: () => ticks(MODE === "replay" ? 10 : 8), hold: 1500 },
+      { caption: "cd3.tour.s2", focus: "cd3-tabs", run: async () => (await ref.current.startScenario("slow_burn"), ref.current.setTab("m2"), await ticks(2)), hold: 2500 },
+      { caption: "cd3.tour.s3", focus: "cd3-tabs", run: () => approvePending("R4", "V7"), hold: 3500 },
+      { caption: "cd3.tour.s4", focus: "cd3-tabs", run: async () => (ref.current.setTab("m1"), await ticks(3)), hold: 3000 },
+      { caption: "cd3.tour.s5", focus: "cd3-control", run: async () => (MODE === "replay" ? (ref.current.setFile("collusion"), await sleep(1500), await ticks(10, 350)) : await ref.current.startScenario("collusion"), ref.current.setTab("m3"), await ticks(2)), hold: 2000 },
+      { caption: "cd3.tour.s6", focus: "cd3-tabs", run: () => approvePending("R5"), hold: 3500 },
+      { caption: "cd3.tour.s7", focus: "cd3-tabs", run: async () => (ref.current.setTab("m3"), ref.current.setW({ w_d: 1, w_g: 0, w_c: 0.3 }), await ref.current.runTune({ w_d: 1, w_g: 0, w_c: 0.3 }), await sleep(2500), ref.current.setW({ w_d: 1, w_g: 1, w_c: 0.3 }), await ref.current.runTune({ w_d: 1, w_g: 1, w_c: 0.3 })), hold: 4000 },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -194,7 +194,7 @@ export default function Cd3Page() {
       <ErrorBanner error={error} onClose={() => setError(null)} />
 
       {/* thanh điều khiển */}
-      <GlassCard accent={A.grad} bodyClassName="space-y-4">
+      <GlassCard id="cd3-control" accent={A.grad} bodyClassName="space-y-4">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="label mr-1">{t("cd3.scenario")}</span>
@@ -230,7 +230,6 @@ export default function Cd3Page() {
             ▸ {t(`cd3.scHint.${currentSc}`)}
           </motion.p>
         )}
-        {MODE === "replay" && <p className="text-[11px] text-sky-300/70">{t("cd3.replayNote")}</p>}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
           {[
             { k: "tick", v: <AnimatedNumber value={st?.tick ?? 0} />, c: "text-white" },
@@ -254,7 +253,7 @@ export default function Cd3Page() {
       </GlassCard>
 
       <Shake trigger={alarm || undefined} tone={alarm ? "danger" : null}>
-        <GlassCard accent={A.grad}>
+        <GlassCard id="cd3-tabs" accent={A.grad}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <Tabs
               tabs={[

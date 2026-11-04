@@ -429,9 +429,9 @@
   "common": {
     "thesisResults": "Thesis experimental results",
     "source": "Source",
-    "tourStart": "Presentation",
-    "tourStop": "Stop presentation",
-    "tourKeys": "Space: pause · →: next step · Esc: exit",
+    "tourStart": "Run attack scenario",
+    "tourStop": "Stop scenario",
+    "tourKeys": "Space: pause · →: next step · Esc: stop · each step scrolls to where it happens",
     "head": "head",
     "noTx": "No transactions yet",
     "empty": "No data yet",
@@ -678,7 +678,7 @@
     "nav": "Real incidents",
     "badge": "Lessons from the field",
     "title": "Notable cross-chain bridge incidents",
-    "body": "The largest bridge attacks of recent years, their root causes and which thesis study targets that exact weakness. Click \"Try in the demo\" to see the matching defence.",
+    "body": "The largest bridge attacks of recent years. Pick an incident to see, step by step, what the attacker did — and, side by side, what would happen if the bridge were equipped with the thesis tools.",
     "chart": "Estimated loss per incident",
     "all": "All",
     "total": "Total loss",
@@ -737,6 +737,161 @@
         "cause": "7 of 10 multisig keys were compromised and the vault was drained.",
         "defense": "CĐ1: threshold and key distribution; CĐ3: abnormal withdrawal monitoring with approved pause."
       }
+    },
+    "view": "Watch the attack",
+    "scene": {
+      "source": "Source chain",
+      "vault": "Vault",
+      "bridge": "Bridge contract",
+      "bug": "BAD INITIALIZATION",
+      "hijacked": "PRIVILEGE HIJACKED",
+      "accepted": "WRONGLY ACCEPTED",
+      "validators": "Validators",
+      "stolen": "compromised",
+      "dest": "Destination chain",
+      "unbacked": "Unbacked tokens",
+      "attacker": "Attacker"
+    },
+    "player": {
+      "title": "How the attack unfolds",
+      "pick": "Pick an incident",
+      "real": "What happened",
+      "with": "With the thesis tools",
+      "step": "Step",
+      "play": "Play",
+      "pause": "Pause",
+      "prev": "Previous step",
+      "next": "Next step",
+      "restart": "Replay",
+      "lost": "Loss",
+      "saved": "Kept safe",
+      "prevented": "This step cannot happen — the attack was stopped at step {n} and the assets are still safe in the vault."
+    },
+    "story": {
+      "ronin": {
+        "steps": [
+          "The attackers send a fake job offer with a malware-laden PDF to an engineer at the operator. From the infected machine they obtain 4 of the 9 validator keys — all 4 held by the same organization.",
+          "5 of 9 signatures are needed to withdraw. The 5th comes from a partner organization that had let the operator \"sign on its behalf\" months earlier and never revoked it.",
+          "With 5 signatures, the attackers craft two formally valid withdrawal orders for the bridge contract.",
+          "The contract sees enough signatures and releases 173,600 ETH and 25.5M USDC from the vault to the attackers.",
+          "No monitoring raises an alarm. The breach is discovered only 6 days later, when a user cannot withdraw 5,000 ETH."
+        ],
+        "late": "Discovered after 6 days",
+        "block": "CĐ1: every signature must be bound to an independent committee member; delegated \"sign on behalf\" rights and keys of the same entity are not double-counted. The 5th signature is rejected — 4/9 misses the threshold, so the withdrawal is never valid.",
+        "outcome": {
+          "real": "≈ $624M drained and detected 6 days late — the largest bridge hack on record.",
+          "with": "The attackers still get 4 keys but miss the threshold; no withdrawal is accepted. CĐ3 would also raise an alarm the moment the vault drains abnormally."
+        }
+      },
+      "wormhole": {
+        "steps": [
+          "On Solana, the bridge's signature check reads its result from a \"system account\" supplied by the caller without checking it is the real one. The attacker supplies a fake account pre-filled with \"signatures verified\".",
+          "The bridge trusts the fake account and accepts a mint message never signed by the 19 guardians.",
+          "120,000 wETH is minted on Solana — with no matching ETH locked on Ethereum.",
+          "The attacker bridges about 93,750 ETH back to Ethereum, draining the bridge's collateral vault."
+        ],
+        "block": "CĐ1: the destination contract recovers every signature itself (ecrecover) and counts t-of-n committee members, never trusting a \"verified\" flag passed in from outside. No real signatures → the message is rejected and nothing is minted.",
+        "outcome": {
+          "real": "≈ $326M; Solana tokens were unbacked until an investor replaced the 120,000 ETH.",
+          "with": "The forged message is rejected on arrival. CĐ2 would also flag the \"missing message verification\" bug before deployment."
+        }
+      },
+      "nomad": {
+        "steps": [
+          "A contract upgrade is initialized incorrectly: the value 0x00 is marked as a \"trusted Merkle root\". Since every unproven message has root 0x00 by default, every message now counts as valid.",
+          "The attacker writes a withdrawal message that was never sent from the source chain — the contract accepts it.",
+          "100 WBTC leaves the vault in the very first transaction.",
+          "The attack transaction is public: hundreds of addresses simply copy it, swap in their own recipient, and jointly empty the vault."
+        ],
+        "block": "CĐ2: before the upgrade ships, M4 checks the message-verification invariant — \"an unproven message is never processed\". A trusted 0x00 root violates it, so the upgrade is stopped at the audit gate.",
+        "outcome": {
+          "real": "≈ $190M drained by hundreds of addresses within hours — a \"crowd heist\".",
+          "with": "The faulty upgrade never reaches the chain; there is nothing to exploit or copy."
+        }
+      },
+      "poly": {
+        "steps": [
+          "The cross-chain manager lets a message call any function by name. The attacker searches for a function name whose 4-byte identifier collides with the \"change keeper\" function — the one that decides who may sign withdrawals.",
+          "The message executes: the manager (which holds top privileges) calls the change-keeper function on itself and replaces the keeper key with the attacker's.",
+          "Now the \"legitimate\" keeper, the attacker signs withdrawals and the bridge accepts them.",
+          "Assets on three chains (Ethereum, BSC, Polygon) are drained to the attacker."
+        ],
+        "block": "CĐ2: the access-control invariant INV-ACL requires the change-keeper function to be called only through multisig governance, never from the arbitrary message path. M1 flags \"arbitrary call into a privileged contract\" — the hole is fixed before deployment.",
+        "outcome": {
+          "real": "≈ $611M drained across three chains (most later returned by the attacker).",
+          "with": "The change-keeper message is rejected for lacking privilege; the keeper stays, and no forged withdrawal is valid."
+        }
+      },
+      "qubit": {
+        "steps": [
+          "The attacker calls the bridge's ETH deposit function without sending any coins. The ETH path uses an empty token address (0x0).",
+          "The \"transfer token\" call to the empty address does not fail — the contract believes it was paid and emits a successful deposit event.",
+          "The destination chain sees the deposit and mints qXETH for the attacker — completely unbacked.",
+          "The qXETH is posted as collateral to borrow and drain the protocol's real assets."
+        ],
+        "block": "CĐ2: M2 classifies the bug as \"bridge logic\" and M4 derives the supply invariant INV-SUPPLY: minted tokens never exceed assets actually locked. A zero deposit does not increase the balance, so nothing is credited.",
+        "outcome": {
+          "real": "≈ $80M borrowed out against collateral that did not exist.",
+          "with": "The empty deposit is not credited, no qXETH is minted — the protocol is unaffected."
+        }
+      },
+      "harmony": {
+        "steps": [
+          "The bridge uses a 2-of-5 multisig. The attackers obtain 2 keys — exactly the threshold.",
+          "With 2 signatures, they sign 11 transactions moving assets out of the bridge.",
+          "About $100M (ETH, USDC, WBTC…) is drained and quickly laundered through a mixer."
+        ],
+        "block": "CĐ1: the committee threshold follows a safe ratio (e.g. 4/5) over independent members. The attackers still obtain 2 keys, but 2/5 is below the threshold, so no transaction can be signed.",
+        "outcome": {
+          "real": "≈ $100M drained in 11 transactions.",
+          "with": "Two leaked keys are not enough; the vault stays intact and keys can be rotated. CĐ3 can also detect collusion if signers behave abnormally."
+        }
+      },
+      "bnb": {
+        "steps": [
+          "The attacker exploits a bug in the Merkle (IAVL tree) proof checker to build a fake proof for a packet that never existed.",
+          "The bridge contract checks the fake proof and deems it valid.",
+          "2 million new BNB are minted in two transactions — with no backing.",
+          "The attacker rushes over $100M to other chains before the network is halted."
+        ],
+        "block": "CĐ1: the Merkle proof is fully re-verified and bound to the leaf content (leaf binding) and the chain context against the anchored root. A fake proof does not match the commitment → no mint.",
+        "outcome": {
+          "real": "≈ $570M minted illegitimately; the whole network had to halt.",
+          "with": "The fake proof is rejected; no new tokens. CĐ3 would also catch a \"mint without matching lock\" if one slipped through."
+        }
+      },
+      "multichain": {
+        "steps": [
+          "All of the bridge's MPC key shares are controlled by a single person/infrastructure — \"distributed\" only on paper.",
+          "Once the key holder loses control, vault assets move out abnormally across several bridges at once.",
+          "The outflow is not stopped; the assets are unrecoverable and the project shuts down."
+        ],
+        "late": "Unrecoverable",
+        "block": "CĐ1: threshold key shares are assigned to independent members, each holding only one share. Compromising one party yields a single share — not enough to sign a transfer.",
+        "outcome": {
+          "real": "≈ $126M moved out; the project collapsed.",
+          "with": "Losing one party does not lose the bridge: below threshold, assets stay safe. CĐ3 would trigger R4/R5 on an abnormal outflow."
+        }
+      },
+      "orbit": {
+        "steps": [
+          "7 of the 10 multisig keys are compromised — exactly the 7/10 threshold.",
+          "The attackers sign withdrawals that are valid as far as signatures go.",
+          "The first withdrawal moves part of the USDT out of the vault.",
+          "The following withdrawals take the USDC, ETH, WBTC and DAI — about $81M in total."
+        ],
+        "block": "CĐ3: the first withdrawal is far outside the bridge's normal profile. Event detection + Dempster–Shafer fusion push the CRS risk score over the threshold → response R5 pauses the bridge (with approval) before the remaining withdrawals.",
+        "outcome": {
+          "real": "≈ $81M drained in a series of withdrawals.",
+          "with": "Only the first withdrawal gets through (≈ 15%); the bridge is paused and most assets are kept."
+        }
+      }
     }
+  },
+  "dock": {
+    "title": "Event log",
+    "empty": "No events yet — transaction results, approvals and scenario steps will appear here.",
+    "clear": "Clear log",
+    "top": "Back to top"
   }
 }

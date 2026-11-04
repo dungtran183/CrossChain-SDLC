@@ -27,7 +27,7 @@ export default function BigPicture() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="label">{t("big.label")}</div>
-          <h2 className="text-2xl font-bold">{t("big.title")}</h2>
+          <h2 className="text-lg font-bold sm:text-xl">{t("big.title")}</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           {MODULES.map((m) => (

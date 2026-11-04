@@ -99,9 +99,8 @@ export default function Home() {
               <span className="chip">
                 <ShieldCheck className="h-3 w-3" /> {t("home.badge")}
               </span>
-              <span className="chip">{MODE === "replay" ? t("app.replayMode") : t("app.liveMode")}</span>
             </div>
-            <h1 className="hero-title animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-3xl font-extrabold leading-tight tracking-tight text-transparent sm:text-4xl">
+            <h1 className="hero-title animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-2xl font-extrabold leading-tight tracking-tight text-transparent sm:text-3xl">
               {t("home.heroTitle")}
             </h1>
             <p className="mt-3 max-w-2xl text-base text-slate-300">{t("home.heroBody")}</p>

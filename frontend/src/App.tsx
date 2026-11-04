@@ -1,12 +1,13 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Flame, FlaskConical, GitBranch, House, Menu, Moon, Radio, Sun, X } from "lucide-react";
+import { Flame, FlaskConical, GitBranch, House, Menu, Moon, Sun, X } from "lucide-react";
 import { useT, type Lang } from "./i18n/useT";
 import { MODULES } from "./modules/registry";
 import { MODE, checkHealth } from "./lib/api";
 import Home from "./pages/Home";
 import ParticleField from "./components/fx/ParticleField";
+import ActivityDock, { ScrollProgress } from "./components/ActivityDock";
 import { Loading } from "./components/States";
 import { useToast } from "./components/Toast";
 import { onQuest } from "./lib/progress";
@@ -58,12 +59,7 @@ function ModeBadge() {
       clearInterval(id);
     };
   }, []);
-  if (MODE === "replay")
-    return (
-      <span className="chip border-sky-400/40 bg-sky-400/10 text-sky-200" title={t("app.replayHint")}>
-        <Radio className="h-3 w-3" /> {t("app.replayMode")}
-      </span>
-    );
+  if (MODE === "replay") return null;
   const color = ok === null ? "bg-slate-400" : ok ? "bg-emerald-400" : "bg-rose-400";
   return (
     <span className="chip" title={ok ? "" : t("common.backendHint")}>
@@ -143,6 +139,8 @@ export default function App() {
 
   return (
     <>
+      <ScrollProgress />
+      <ActivityDock />
       <ParticleField key={mode} className="fixed inset-0 -z-10 h-full w-full opacity-70" colors={mode === "light" ? PARTICLES_LIGHT : undefined} density={mode === "light" ? 0.6 : 1} />
       <div className="mx-auto flex min-h-screen max-w-[1680px] gap-6 px-3 py-4 sm:px-5 lg:py-6">
         <aside className="glass sticky top-6 hidden h-[calc(100vh-3rem)] w-64 shrink-0 flex-col p-4 lg:flex">

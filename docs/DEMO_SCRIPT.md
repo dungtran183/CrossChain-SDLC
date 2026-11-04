@@ -1,8 +1,10 @@
 # Kịch bản trình bày / Demo script
 
-> Mỗi trang module có nút **Trình chiếu / Presentation** chạy tự động đúng các bước dưới đây, kèm phụ đề song ngữ
-> (Space: tạm dừng · →: bước tiếp · Esc: thoát). Có thể bấm tay từng nút nếu muốn thuyết minh chậm hơn.
-> Each module page has a **Presentation** button that plays these steps automatically with bilingual captions.
+> Mỗi trang module có nút **Chạy kịch bản tấn công / Run attack scenario** chạy tự động đúng các bước dưới đây, kèm phụ đề song ngữ
+> (Space: tạm dừng · →: bước tiếp · Esc: thoát). Trang tự cuộn tới vùng đang diễn ra sự kiện; thông báo và kết quả
+> được lưu trong **Nhật ký sự kiện** (góc dưới phải) — bấm vào một mục để cuộn lại đúng chỗ.
+> Each module page has a **Run attack scenario** button that plays these steps automatically with bilingual captions;
+> the page follows the action and every result is kept in the floating **Event log**.
 
 **Chuẩn bị / Setup** — live (khuyến nghị): `bash scripts/dev.sh` → http://localhost:5173 · offline: link GitHub Pages (replay).
 Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
@@ -67,3 +69,11 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 | 8 | (Tùy chọn) **Oracle lệch giá** / **Rút cạn đột biến** / **Mất validator** | O1 báo giá lệch → trách nhiệm quy cho oracle, không cho validator; U3 chuyển khối lượng cực lớn — không luật nào bắt, chỉ kênh học thấy → R4; V1–V2 ngoại tuyến → trễ lan trên mọi relayer được nhận diện là sự cố hệ thống, không ai bị cô lập. | Oracle blamed, not validators; a rule-less flash drain caught by the learning channel; a systemic outage blames nobody. |
 
 *Replay (GitHub Pages)*: mỗi kịch bản là một bản ghi riêng (9 kịch bản), khởi động bằng lưu lượng bình thường rồi chuyển sang kịch bản.
+
+## Sự cố thực tế / Real-world incidents (≈ 2 phút)
+| # | Thao tác | Thuyết minh (VI) | Narration (EN) |
+|---|---|---|---|
+| 1 | Mở **Sự cố thực tế**, khung **Diễn biến tấn công** tự phát vụ **Ronin** | Hai cảnh chạy cùng nhịp: bên trái là điều đã xảy ra (4 khóa bị đánh cắp, chữ ký thứ 5 "ký hộ", kho bị rút 624 triệu USD, phát hiện sau 6 ngày); bên phải cùng cuộc tấn công nhưng cầu nối có CĐ1 — khiên chặn ở bước 2, kho giữ nguyên. | Same attack, two worlds: reality on the left, the CĐ1-equipped bridge on the right stops it at step 2. |
+| 2 | Chọn **Nomad** / **Poly Network** | Lỗi nằm trong mã: CĐ2 chặn ngay từ bước đầu tiên ở cổng kiểm toán (bất biến kiểm chứng thông điệp, bất biến phân quyền) — lỗ hổng không bao giờ lên chuỗi. | Code bugs: CĐ2 stops them at the audit gate before deployment. |
+| 3 | Chọn **Orbit Bridge** | Khóa đã bị chiếm đủ ngưỡng nên chữ ký "hợp lệ": CĐ3 để lệnh rút đầu tiên diễn ra, phát hiện bất thường và R5 tạm dừng cầu nối — chỉ mất ≈ 15%. | Valid signatures, abnormal flow: CĐ3 detects the first withdrawal and pauses the bridge. |
+| 4 | Bấm **Xem diễn biến** trên thẻ của bất kỳ sự cố nào | Trang cuộn về khung diễn biến; có thể dừng, lùi/tiến từng bước để thuyết minh. | Any card's "Watch the attack" jumps back to the player. |

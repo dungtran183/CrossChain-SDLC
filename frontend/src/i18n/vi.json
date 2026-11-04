@@ -429,9 +429,9 @@
   "common": {
     "thesisResults": "Kết quả thực nghiệm của luận án",
     "source": "Nguồn",
-    "tourStart": "Trình chiếu",
-    "tourStop": "Dừng trình chiếu",
-    "tourKeys": "Space: tạm dừng · →: bước tiếp · Esc: thoát",
+    "tourStart": "Chạy kịch bản tấn công",
+    "tourStop": "Dừng kịch bản",
+    "tourKeys": "Space: tạm dừng · →: bước tiếp · Esc: dừng · mỗi bước tự cuộn tới khu vực đang diễn ra",
     "head": "đỉnh",
     "noTx": "Chưa có giao dịch",
     "empty": "Chưa có dữ liệu",
@@ -678,7 +678,7 @@
     "nav": "Sự cố thực tế",
     "badge": "Bài học từ thực tế",
     "title": "Sự cố cầu nối liên chuỗi tiêu biểu",
-    "body": "Các vụ tấn công cầu nối lớn nhất những năm gần đây, nguyên nhân gốc rễ và chuyên đề nào của luận án nhắm vào đúng điểm yếu đó. Bấm \"Thử trong demo\" để xem cơ chế phòng vệ tương ứng.",
+    "body": "Các vụ tấn công cầu nối lớn nhất những năm gần đây. Chọn một sự cố để xem từng bước kẻ tấn công đã làm gì — và cùng lúc, điều gì xảy ra nếu cầu nối được trang bị công cụ của luận án.",
     "chart": "Tổn thất ước tính theo sự cố",
     "all": "Tất cả",
     "total": "Tổng tổn thất",
@@ -737,6 +737,161 @@
         "cause": "7/10 khóa multisig bị chiếm, rút tài sản khỏi vault.",
         "defense": "CĐ1: ngưỡng và phân bổ khóa; CĐ3: giám sát rút tiền bất thường và dừng có phê duyệt."
       }
+    },
+    "view": "Xem diễn biến",
+    "scene": {
+      "source": "Chuỗi nguồn",
+      "vault": "Kho tài sản",
+      "bridge": "Hợp đồng cầu nối",
+      "bug": "LỖI KHỞI TẠO",
+      "hijacked": "BỊ CHIẾM QUYỀN",
+      "accepted": "CHẤP NHẬN SAI",
+      "validators": "Validator",
+      "stolen": "bị chiếm",
+      "dest": "Chuỗi đích",
+      "unbacked": "Token không bảo chứng",
+      "attacker": "Kẻ tấn công"
+    },
+    "player": {
+      "title": "Diễn biến tấn công",
+      "pick": "Chọn sự cố",
+      "real": "Thực tế",
+      "with": "Có công cụ của luận án",
+      "step": "Bước",
+      "play": "Phát",
+      "pause": "Tạm dừng",
+      "prev": "Bước trước",
+      "next": "Bước sau",
+      "restart": "Xem lại",
+      "lost": "Tổn thất",
+      "saved": "Giữ lại được",
+      "prevented": "Bước này không thể xảy ra — cuộc tấn công đã bị chặn ở bước {n}, tài sản vẫn nằm an toàn trong kho."
+    },
+    "story": {
+      "ronin": {
+        "steps": [
+          "Kẻ tấn công gửi lời mời làm việc giả kèm tệp PDF chứa mã độc cho một kỹ sư của đơn vị vận hành. Từ máy bị nhiễm, chúng lấy được 4 trong 9 khóa validator — cả 4 khóa đều do cùng một đơn vị giữ.",
+          "Cần 5/9 chữ ký để rút tiền. Chữ ký thứ 5 đến từ một tổ chức đối tác đã \"ủy quyền ký hộ\" cho đơn vị vận hành từ nhiều tháng trước và chưa từng thu hồi.",
+          "Có đủ 5 chữ ký, kẻ tấn công tự soạn hai lệnh rút tiền hợp lệ về mặt hình thức gửi tới hợp đồng cầu nối.",
+          "Hợp đồng kiểm thấy đủ chữ ký nên giải phóng 173.600 ETH và 25,5 triệu USDC từ kho tài sản về ví kẻ tấn công.",
+          "Không có hệ thống giám sát nào báo động. Vụ việc chỉ bị phát hiện 6 ngày sau, khi một người dùng không rút được 5.000 ETH."
+        ],
+        "late": "Phát hiện sau 6 ngày",
+        "block": "CĐ1: mỗi chữ ký phải gắn với một thành viên độc lập trong ủy ban, quyền \"ký hộ\" và các khóa cùng một chủ thể không được tính trùng. Chữ ký thứ 5 bị loại — 4/9 không đạt ngưỡng nên lệnh rút không bao giờ hợp lệ.",
+        "outcome": {
+          "real": "≈ 624 triệu USD bị rút, phát hiện muộn 6 ngày — vụ tấn công cầu nối lớn nhất từng ghi nhận.",
+          "with": "Kẻ tấn công vẫn lấy được 4 khóa nhưng không đạt ngưỡng; không lệnh rút nào được chấp nhận. Nếu có, CĐ3 cũng sẽ báo động ngay khi kho bị rút đột biến."
+        }
+      },
+      "wormhole": {
+        "steps": [
+          "Trên Solana, bước kiểm chữ ký của cầu nối đọc kết quả từ một \"tài khoản hệ thống\" do người gọi truyền vào mà không kiểm tra đó có phải tài khoản thật. Kẻ tấn công truyền vào một tài khoản giả ghi sẵn \"chữ ký đã được xác minh\".",
+          "Hợp đồng cầu nối tin vào tài khoản giả và chấp nhận một thông điệp mint chưa từng được 19 guardian ký.",
+          "120.000 wETH được mint trên Solana — không có ETH nào bị khóa tương ứng ở Ethereum.",
+          "Kẻ tấn công chuyển khoảng 93.750 ETH ngược về Ethereum, rút thẳng từ kho bảo chứng của cầu nối."
+        ],
+        "block": "CĐ1: hợp đồng đích tự khôi phục từng chữ ký (ecrecover) và đếm đủ t-of-n thành viên ủy ban, không tin vào bất kỳ kết quả \"đã xác minh\" nào truyền từ ngoài vào. Không có chữ ký thật → thông điệp bị từ chối, không token nào được mint.",
+        "outcome": {
+          "real": "≈ 326 triệu USD; token trên Solana mất bảo chứng cho tới khi một nhà đầu tư bù lại 120.000 ETH.",
+          "with": "Thông điệp giả bị từ chối ngay khi đến chuỗi đích. CĐ2 cũng gắn cờ được lỗi \"thiếu kiểm chứng thông điệp\" từ trước khi triển khai."
+        }
+      },
+      "nomad": {
+        "steps": [
+          "Một bản nâng cấp hợp đồng khởi tạo sai: giá trị gốc 0x00 bị đánh dấu là \"gốc Merkle đáng tin\". Vì mọi thông điệp chưa chứng minh đều có gốc mặc định là 0x00, giờ thông điệp nào cũng được coi là hợp lệ.",
+          "Kẻ tấn công soạn một thông điệp rút tiền chưa từng được gửi từ chuỗi nguồn — hợp đồng vẫn chấp nhận.",
+          "100 WBTC rời kho tài sản ngay trong giao dịch đầu tiên.",
+          "Giao dịch tấn công công khai trên chuỗi: hàng trăm địa chỉ chỉ cần sao chép nó, thay địa chỉ nhận bằng của mình, và cùng vét sạch kho."
+        ],
+        "block": "CĐ2: trước khi bản nâng cấp được triển khai, M4 kiểm bất biến kiểm chứng thông điệp — \"thông điệp chưa được chứng minh không bao giờ được xử lý\". Gốc 0x00 được tin cậy vi phạm bất biến này nên bản nâng cấp bị chặn ngay ở cổng kiểm toán.",
+        "outcome": {
+          "real": "≈ 190 triệu USD bị rút bởi hàng trăm địa chỉ trong vài giờ — một vụ \"cướp tập thể\".",
+          "with": "Bản nâng cấp lỗi không bao giờ lên chuỗi; không có lỗ hổng nào để khai thác hay sao chép."
+        }
+      },
+      "poly": {
+        "steps": [
+          "Hợp đồng quản lý liên chuỗi cho phép thông điệp gọi một hàm tùy ý theo tên. Kẻ tấn công dò tìm một tên hàm có mã định danh 4 byte trùng với hàm \"đổi keeper\" — hàm quyết định ai được ký rút tiền.",
+          "Thông điệp được thực thi: hợp đồng quản lý (vốn có quyền cao nhất) tự gọi hàm đổi keeper và thay khóa của keeper bằng khóa của kẻ tấn công.",
+          "Giờ là \"keeper\" hợp pháp, kẻ tấn công tự ký các lệnh rút tiền và cầu nối chấp nhận.",
+          "Tài sản trên ba chuỗi (Ethereum, BSC, Polygon) bị rút về ví kẻ tấn công."
+        ],
+        "block": "CĐ2: bất biến phân quyền INV-ACL yêu cầu hàm đổi keeper chỉ được gọi qua quản trị đa chữ ký, không bao giờ từ đường xử lý thông điệp tùy ý. M1 gắn cờ \"lời gọi tùy ý tới hợp đồng có quyền cao\" — lỗ hổng được vá trước khi triển khai.",
+        "outcome": {
+          "real": "≈ 611 triệu USD bị rút trên ba chuỗi (sau đó kẻ tấn công trả lại phần lớn).",
+          "with": "Thông điệp đổi keeper bị từ chối vì sai quyền; keeper không đổi, không lệnh rút giả nào hợp lệ."
+        }
+      },
+      "qubit": {
+        "steps": [
+          "Kẻ tấn công gọi hàm nạp ETH của cầu nối nhưng không gửi đồng nào. Đường xử lý ETH dùng địa chỉ token rỗng (0x0).",
+          "Lệnh \"chuyển token\" tới địa chỉ rỗng không báo lỗi — hợp đồng tưởng đã nhận tiền và phát sự kiện nạp thành công.",
+          "Chuỗi đích thấy sự kiện nạp nên mint qXETH cho kẻ tấn công — hoàn toàn không có tài sản bảo chứng.",
+          "Số qXETH này được thế chấp để vay và rút sạch các tài sản thật trong giao thức."
+        ],
+        "block": "CĐ2: M2 xếp lỗi vào nhóm \"logic cầu nối\", M4 sinh bất biến cung INV-SUPPLY: số token mint không vượt quá tài sản thực sự bị khóa. Lần nạp 0 đồng không làm số dư tăng nên không được ghi có.",
+        "outcome": {
+          "real": "≈ 80 triệu USD bị vay rút bằng tài sản thế chấp không có thật.",
+          "with": "Lần nạp rỗng không được ghi nhận, không qXETH nào được mint — giao thức không bị ảnh hưởng."
+        }
+      },
+      "harmony": {
+        "steps": [
+          "Cầu nối dùng ví đa chữ ký chỉ 2-of-5. Kẻ tấn công chiếm được 2 khóa — vừa đủ ngưỡng.",
+          "Với 2 chữ ký, kẻ tấn công ký 11 giao dịch chuyển tài sản ra khỏi cầu nối.",
+          "Khoảng 100 triệu USD (ETH, USDC, WBTC…) bị rút và nhanh chóng chuyển qua dịch vụ trộn tiền."
+        ],
+        "block": "CĐ1: ngưỡng ủy ban được đặt theo tỉ lệ an toàn (ví dụ 4/5) trên các thành viên độc lập. Kẻ tấn công vẫn lấy được 2 khóa, nhưng 2/5 không đạt ngưỡng nên không ký được giao dịch nào.",
+        "outcome": {
+          "real": "≈ 100 triệu USD bị rút qua 11 giao dịch.",
+          "with": "2 khóa bị lộ không đủ ngưỡng; kho tài sản nguyên vẹn, có thời gian thay khóa. CĐ3 còn phát hiện được dấu hiệu thông đồng nếu signer ký bất thường."
+        }
+      },
+      "bnb": {
+        "steps": [
+          "Kẻ tấn công lợi dụng lỗi trong bộ kiểm bằng chứng Merkle (cây IAVL) để dựng một bằng chứng giả cho một gói tin chưa từng tồn tại.",
+          "Hợp đồng cầu nối kiểm bằng chứng giả và cho là hợp lệ.",
+          "2 triệu BNB được mint mới trong hai giao dịch — không có tài sản bảo chứng.",
+          "Kẻ tấn công vội chuyển hơn 100 triệu USD sang các chuỗi khác trước khi mạng bị tạm dừng."
+        ],
+        "block": "CĐ1: bằng chứng Merkle được xác minh lại đầy đủ và ràng buộc với nội dung lá (leaf binding) cùng ngữ cảnh chuỗi so với gốc đã neo. Bằng chứng giả không khớp cam kết → không mint.",
+        "outcome": {
+          "real": "≈ 570 triệu USD token được mint trái phép; cả mạng lưới phải dừng khẩn cấp.",
+          "with": "Bằng chứng giả bị từ chối; không có token mới. CĐ3 cũng phát hiện \"mint không có lock tương ứng\" nếu lọt qua."
+        }
+      },
+      "multichain": {
+        "steps": [
+          "Toàn bộ các phần khóa MPC của cầu nối nằm dưới quyền kiểm soát của một cá nhân/hạ tầng duy nhất — \"phân tán\" chỉ trên giấy.",
+          "Khi bên giữ khóa mất kiểm soát, tài sản trong kho bị chuyển đi bất thường trên nhiều cầu nối cùng lúc.",
+          "Dòng tiền ra không bị dừng; tài sản không thể thu hồi và dự án ngừng hoạt động."
+        ],
+        "late": "Không thể thu hồi",
+        "block": "CĐ1: các phần khóa ngưỡng được phân cho những thành viên độc lập, mỗi bên chỉ giữ một phần. Chiếm một bên chỉ được 1 phần — không đủ ngưỡng để ký chuyển tiền.",
+        "outcome": {
+          "real": "≈ 126 triệu USD bị chuyển đi, dự án sụp đổ.",
+          "with": "Mất một bên không làm mất cầu nối: không đủ ngưỡng ký, tài sản an toàn. CĐ3 sẽ kích hoạt R4/R5 nếu dòng tiền ra đột biến."
+        }
+      },
+      "orbit": {
+        "steps": [
+          "7 trong 10 khóa của ví đa chữ ký bị chiếm — vừa đủ ngưỡng 7/10.",
+          "Kẻ tấn công ký các lệnh rút tiền hợp lệ về mặt chữ ký.",
+          "Lệnh rút đầu tiên chuyển một phần USDT ra khỏi kho.",
+          "Các lệnh tiếp theo rút nốt USDC, ETH, WBTC, DAI — tổng cộng khoảng 81 triệu USD."
+        ],
+        "block": "CĐ3: lệnh rút đầu tiên vượt xa hồ sơ hoạt động bình thường của cầu nối. Bộ phát hiện sự kiện + kết hợp Dempster–Shafer đẩy chỉ số rủi ro CRS vượt ngưỡng → phản ứng R5 tạm dừng cầu nối (có phê duyệt) trước các lệnh còn lại.",
+        "outcome": {
+          "real": "≈ 81 triệu USD bị rút qua nhiều giao dịch liên tiếp.",
+          "with": "Chỉ lệnh rút đầu tiên lọt qua (≈ 15%); cầu nối được tạm dừng, phần lớn tài sản được giữ lại."
+        }
+      }
     }
+  },
+  "dock": {
+    "title": "Nhật ký sự kiện",
+    "empty": "Chưa có sự kiện — các kết quả giao dịch, phê duyệt và bước kịch bản sẽ hiện ở đây.",
+    "clear": "Xóa nhật ký",
+    "top": "Lên đầu trang"
   }
 }

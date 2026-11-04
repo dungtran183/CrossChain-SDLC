@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleCheck, CircleX, Info } from "lucide-react";
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { focusAnchor, logActivity } from "../lib/activity";
 
 type Kind = "success" | "error" | "info";
-type ToastItem = { id: number; kind: Kind; title: string; body?: string };
+type ToastItem = { id: number; kind: Kind; title: string; body?: string; anchor?: string };
 
 const Ctx = createContext<(t: Omit<ToastItem, "id">) => void>(() => {});
 let seq = 0;
@@ -13,13 +14,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<ToastItem[]>([]);
   const push = useCallback((t: Omit<ToastItem, "id">) => {
     const id = ++seq;
+    logActivity(t);
     setItems((xs) => [...xs.slice(-3), { ...t, id }]);
     setTimeout(() => setItems((xs) => xs.filter((x) => x.id !== id)), 4200);
   }, []);
   return (
     <Ctx.Provider value={push}>
       {children}
-      <div className="pointer-events-none fixed right-4 top-4 z-[60] flex w-[min(360px,calc(100%-2rem))] flex-col gap-2">
+      <div className="pointer-events-none fixed right-4 top-20 z-[60] flex w-[min(360px,calc(100%-2rem))] flex-col gap-2">
         <AnimatePresence>
           {items.map((t) => (
             <motion.div
@@ -28,7 +30,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               initial={{ opacity: 0, x: 60, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 60 }}
-              className={`glass pointer-events-auto flex gap-3 border-l-4 bg-surface-1/90 p-3 ${
+              onClick={() => focusAnchor(t.anchor)}
+              className={`glass pointer-events-auto flex gap-3 ${t.anchor ? "cursor-pointer" : ""} border-l-4 bg-surface-1/90 p-3 ${
                 t.kind === "success" ? "border-l-emerald-400" : t.kind === "error" ? "border-l-rose-500" : "border-l-sky-400"
               }`}
             >

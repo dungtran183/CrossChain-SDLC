@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Pause, Play, SkipForward, X, Clapperboard } from "lucide-react";
+import { Pause, Play, SkipForward, X, Swords } from "lucide-react";
 import type { Tour } from "../lib/tour";
 import { useT } from "../i18n/useT";
 import Button from "./Button";
@@ -8,7 +8,7 @@ import Button from "./Button";
 export function TourButton({ tour, accent }: { tour: Tour; accent: string }) {
   const { t } = useT();
   return (
-    <Button accent={accent} icon={<Clapperboard className="h-4 w-4" />} onClick={() => (tour.running ? tour.stop() : tour.start())}>
+    <Button accent={accent} icon={<Swords className="h-4 w-4" />} onClick={() => (tour.running ? tour.stop() : tour.start())}>
       {tour.running ? t("common.tourStop") : t("common.tourStart")}
     </Button>
   );
@@ -24,7 +24,7 @@ export default function TourBar({ tour, accent }: { tour: Tour; accent: string }
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
-          className="fixed inset-x-0 bottom-4 z-50 mx-auto w-[min(920px,calc(100%-2rem))]"
+          className="fixed inset-x-0 bottom-20 z-50 mx-auto w-[min(860px,calc(100%-2rem))]"
         >
           <div className="glass overflow-hidden border-white/20 bg-surface-1/85 shadow-2xl">
             <div className="h-1 w-full bg-white/5">

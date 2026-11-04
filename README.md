@@ -4,7 +4,7 @@
 > **EN** · Browser demo of the PhD thesis on secure cross-chain communication across the Secure SDLC.
 
 ### 🌐 Demo trực tuyến / Live demo: **https://dungtran183.github.io/CrossChain-SDLC/**
-Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài đặt). Tự cập nhật mỗi khi push lên `main`.
+Chạy hoàn toàn trên trình duyệt, không cần cài đặt. Tự cập nhật mỗi khi push lên `main`.
 
 ![Trang chủ](docs/screenshots/home.png)
 
@@ -24,7 +24,11 @@ Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài �
 | **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | 7 hợp đồng cầu nối lỗi (thêm reentrancy, thiếu domain separation) + 2 bản sửa · M1 đồ thị cấu trúc/token/thao tác liên chuỗi · M2 few-shot prototype (1-shot ↔ 5-shot) · M3 học liên kết DP-SGD 5 bên · M4 hồ sơ kiểm toán + bất biến có kiểu · **Exploit lab** chạy 7 tấn công thật trên EVM (phát lại, chữ ký trùng, nguồn giả, chiếm quyền, thao túng oracle, reentrancy, phát lại chéo chuỗi) (thành công trên bản lỗi, revert trên bản sửa) |
 | **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Cầu nối LockVault/MintGateway chạy theo tick với 18 tác nhân và 9 kịch bản (bình thường, slow-burn, thông đồng, phát lại, trì hoãn, nâng điểm, oracle lệch giá, rút cạn đột biến, mất validator) · ghép sự kiện 2 chuỗi + IsolationForest + ECA · hợp nhất Dempster–Shafer · CRS theo tác nhân–tuyến (so với điểm tích lũy truyền thống) · R0–R5 có **phê duyệt của con người** thi hành `blockActor`/`pause` on-chain · G-surv (Gini/Lorenz) và tối ưu F(Θ) |
 
-Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module. Mỗi trang có nút **Trình chiếu** tự chạy kịch bản demo kèm phụ đề song ngữ (phím Space tạm dừng, → bước tiếp, Esc thoát) — xem [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module. Mỗi trang có nút **Chạy kịch bản tấn công** tự chạy kịch bản demo kèm phụ đề song ngữ (phím Space tạm dừng, → bước tiếp, Esc thoát); trang tự cuộn tới vùng đang diễn ra sự kiện và mọi kết quả được ghi vào **Nhật ký sự kiện** nổi ở góc màn hình — xem [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+Trang **Sự cố thực tế** dựng lại từng bước 9 vụ tấn công cầu nối lớn (Ronin, Poly Network, BNB Bridge, Wormhole, Nomad, Multichain, Harmony, Orbit, Qubit) thành hai cảnh chạy song song: *Thực tế* và *Có công cụ của luận án* — thấy rõ công cụ chặn ở bước nào và giữ lại được bao nhiêu tài sản.
+
+![Diễn biến tấn công](docs/screenshots/incidents.png)
 
 | CĐ1 · Π_univ | CĐ2 · CrossGuard | CĐ3 · CrossSentry |
 |---|---|---|
