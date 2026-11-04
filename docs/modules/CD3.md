@@ -15,9 +15,9 @@
 | R0–R5 + G-surv | Ánh xạ (CRS, giá trị tài sản) → mức phản ứng; R4/R5 bật hộp thoại phê duyệt; Gini trên phân bố tác động biện pháp, đường Lorenz. |
 
 ## Hợp đồng (`contracts/src/cd3/`)
-- `LockVault.sol` (chain-A): `lock(amount, dstChain, recipient)` phát `Locked(msgId, …)`.
-- `MintGateway.sol` (chain-B): `mint(msgId, recipient, amount, sigs[])` theo xác nhận validator, phát `Minted(msgId, …)`; có `pause()` và `blockActor(addr)` (để R4/R5 tác động thật on-chain).
-- `WrappedToken.sol` (chain-B).
+- `Cd3LockVault.sol` (chain-A): `lock(amount, dstChain, recipient)` phát `Locked(msgId, …)`.
+- `Cd3MintGateway.sol` (chain-B): `mint(msgId, recipient, amount, sigs[])` theo xác nhận validator, phát `Minted(msgId, …)`; có `pause()` và `blockActor(addr)` (để R4/R5 tác động thật on-chain).
+- `Cd3WrappedToken.sol` (chain-B).
 - Bản "lỏng" có thể bật cờ trong kịch bản tấn công (vd validator thông đồng ký mint không có lock).
 
 ## Kịch bản (scenario) trong bộ sinh lưu lượng
@@ -49,3 +49,10 @@ Chạy `normal` 20 tick (mọi thứ xanh) → chuyển `slow_burn` (CRS tác nh
 ## Tiêu chí hoàn thành (test)
 - Dempster: ví dụ tay (m1, m2) cho đúng K, Bel, Pl; CRS suy giảm khi bằng chứng bình thường, nhảy khi bất thường; Gini phân bố đều = 0, dồn hết = (n−1)/n; mỗi kịch bản tấn công tạo cảnh báo đúng nhóm; R4/R5 không tự thi hành khi chưa phê duyệt.
 - `demo --export` ghi `frontend/public/replays/cd3/<scenario>.json` cho ít nhất `normal`, `slow_burn`, `collusion`.
+
+## Ghi chú hiện thực (P4)
+- 18 tác nhân: U1–U6, R1–R3, V1–V7 (t = 3), O1–O2. Relayer được phân công tất định theo msgId nên monitor quy được trách nhiệm trễ.
+- Người ký được khôi phục từ calldata của tx mint; vi phạm “giá trị ra > vào”/“mint không lock” quy cho validator theo **tỉ lệ vi phạm lịch sử** (người tình cờ cùng ký bị quy ít) — có thể vẫn đề xuất R4 cho người cùng ký, minh họa vai trò từ chối của con người.
+- Thông đồng: V4–V6 + R3. R5 được đề xuất khi ≥ 3 tác nhân ở R4 trên một tuyến hoặc bất biến cung bị phá cùng ≥ 1 tác nhân R4.
+- `blockActor` chặn cả msg.sender/người nhận và **không tính chữ ký** của validator bị cô lập.
+- G-surv = Gini của cường độ giám sát (nền 1 + mức phản ứng + biện pháp đã thi hành) — bình thường ≈ 0.

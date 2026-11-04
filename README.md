@@ -3,73 +3,122 @@
 > **VI** · Prototype minh họa luận án Tiến sĩ về an toàn giao tiếp liên chuỗi theo khung Secure SDLC (3 chuyên đề) — NCS Trần Tuấn Dũng (HD: PGS.TS. Phạm Văn Hậu, PGS.TS. Nguyễn Tấn Cầm).
 > **EN** · Browser demo of the PhD thesis on secure cross-chain communication across the Secure SDLC.
 
-⚠️ **Đây là prototype trình diễn tính năng và workflow, KHÔNG tái lập số liệu của luận án.** Các module học máy chạy trên dữ liệu tổng hợp rất nhỏ; ZKP / TSS / CP-ABE là phiên bản *đồ chơi* (toy) để minh họa luồng xử lý.
+⚠️ **Đây là prototype trình diễn tính năng và workflow, KHÔNG tái lập số liệu của luận án.** Các module học máy chạy trên dữ liệu tổng hợp rất nhỏ; ZKP / TSS / CP-ABE là phiên bản *đồ chơi* (toy) để minh họa luồng xử lý. Số liệu luận án chỉ xuất hiện trong thẻ “Kết quả luận án (trích dẫn)”, tách biệt với số đo của demo.
 ⚠️ **This is a feature/workflow showcase, NOT a reproduction of the thesis results.** ML runs on tiny synthetic data; ZKP / TSS / CP-ABE are *toy* versions that illustrate the flow.
+
+![Trang chủ](docs/screenshots/home.png)
 
 ---
 
 ## Ba module độc lập / Three independent modules
 
-| Module | Chuyên đề | Giai đoạn Secure SDLC | Nội dung demo |
+| Module | Chuyên đề | Giai đoạn Secure SDLC | Demo làm được gì |
 |---|---|---|---|
-| **CĐ1 · Π_univ** | Tăng cường tính riêng tư trong giao tiếp liên chuỗi | 1. Secure Design | Văn bằng số liên chuỗi: Merkle commitment, ZKP vị từ (toy), chữ ký ngưỡng t-of-n kiểm bằng `ecrecover` trên chuỗi đích, CP-ABE mô phỏng |
-| **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | M1 biểu diễn đa nguồn → M2 few-shot prototype → M3 học liên kết DP-SGD → M4 hồ sơ kiểm toán + bất biến; chạy thử tấn công phát lại trên EVM |
-| **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Ghép sự kiện 2 chuỗi + ECA → Dempster–Shafer + CRS theo tác nhân–tuyến → phản ứng R0–R5 có phê duyệt + G-surv (Gini) |
+| **CĐ1 · Π_univ** | Tăng cường tính riêng tư trong giao tiếp liên chuỗi | 1. Secure Design | Văn bằng số liên chuỗi: cam kết Merkle neo trên chain-A · chứng minh “GPA ≥ ngưỡng” bằng sigma-protocol (toy) mà không lộ GPA · ủy ban 5 relay ký ngưỡng 3-of-5 bằng ECDSA thật, chain-B kiểm `ecrecover` · 5 kiểu giả mạo bị từ chối on-chain · thu hồi · Shamir (t,n) · CP-ABE mô phỏng |
+| **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | 5 hợp đồng cầu nối lỗi + SafeBridge · M1 đồ thị cấu trúc/token/thao tác liên chuỗi · M2 few-shot prototype (1-shot ↔ 5-shot) · M3 học liên kết DP-SGD 5 bên · M4 hồ sơ kiểm toán + bất biến có kiểu · **Exploit lab** chạy 5 tấn công thật trên EVM (thành công trên bản lỗi, revert trên bản sửa) |
+| **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Cầu nối LockVault/MintGateway chạy theo tick với 18 tác nhân và 6 kịch bản · ghép sự kiện 2 chuỗi + IsolationForest + ECA · hợp nhất Dempster–Shafer · CRS theo tác nhân–tuyến (so với điểm tích lũy truyền thống) · R0–R5 có **phê duyệt của con người** thi hành `blockActor`/`pause` on-chain · G-surv (Gini/Lorenz) và tối ưu F(Θ) |
 
-Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module.
-Each module runs on its own page inside one web shell; there is no end-to-end pipeline coupling them.
+Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module. Mỗi trang có nút **Trình chiếu** tự chạy kịch bản demo kèm phụ đề song ngữ (phím Space tạm dừng, → bước tiếp, Esc thoát) — xem [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+| CĐ1 · Π_univ | CĐ2 · CrossGuard | CĐ3 · CrossSentry |
+|---|---|---|
+| ![CĐ1](docs/screenshots/cd1.png) | ![CĐ2](docs/screenshots/cd2.png) | ![CĐ3](docs/screenshots/cd3.png) |
 
 ```mermaid
 flowchart LR
   subgraph Browser["Trình duyệt / Browser (React + Vite + Tailwind)"]
-    Shell["Shell: VI/EN · sidebar · theme"] --> P1["/cd1 Π_univ"]
+    Shell["Shell: VI/EN · sidebar · hiệu ứng"] --> P1["/cd1 Π_univ"]
     Shell --> P2["/cd2 CrossGuard"]
     Shell --> P3["/cd3 CrossSentry"]
-    Wallet["Ví ethers.js tự sinh / in-browser wallet"]
+    Shell --> PG["/playground · ví ethers.js"]
   end
   subgraph Backend["Python backend (FastAPI)"]
     R1["/api/cd1/*"] --- Core
     R2["/api/cd2/*"] --- Core
     R3["/api/cd3/*"] --- Core
-    Core["app/core: ChainSim (2× py-evm) · artifacts · WS bus"]
+    Core["app/core: ChainSim (2× py-evm) · artifacts · WS bus · replay recorder"]
   end
   P1 <--> R1
   P2 <--> R2
   P3 <--> R3
-  Wallet -- "signed raw tx" --> Core
-  Replay[("frontend/public/replays/*.json")] -. "chế độ replay (GitHub Pages)" .-> Shell
+  PG -- "signed raw tx" --> Core
+  Replay[("frontend/public/replays/*.json<br/>(ghi bằng demo.py --export)")] -. "chế độ replay (GitHub Pages)" .-> Shell
 ```
 
 ## Công nghệ / Stack
-- **Blockchain giả lập**: 2 chuỗi EVM in-memory (`chain-A` Ethereum-like, `chain-B` BSC-like) bằng `web3.py` + `eth-tester` (py-evm). Hợp đồng Solidity **thật**, biên dịch bằng npm `solc`, ABI/bytecode được commit trong `contracts/artifacts/`.
-- **Backend**: Python 3.11+, FastAPI, numpy, scikit-learn.
-- **Frontend**: React 18 + TypeScript + Vite + Tailwind + framer-motion (các phase sau: React Flow, Recharts, ethers.js).
-- **Chế độ chạy**: *live* (có backend) và *replay* (JSON kịch bản, deploy GitHub Pages không cần backend).
+- **Blockchain giả lập**: 2 chuỗi EVM in-memory (`chain-A` id 31337, `chain-B` id 97) bằng `web3.py` + `eth-tester` (py-evm). 14 hợp đồng Solidity **thật** (`contracts/src/cd1|cd2|cd3`), biên dịch bằng npm `solc`, ABI/bytecode commit trong `contracts/artifacts/`. Giao dịch lỗi vẫn được đào thành block (status 0) kèm lý do revert để thấy trên explorer.
+- **Backend**: Python 3.11+, FastAPI, numpy, scikit-learn, cryptography, eth-account.
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind, framer-motion (hiệu ứng), React Flow (`@xyflow/react`, đồ thị), Recharts (biểu đồ), ethers v6 (ví trình duyệt), lucide-react (icon).
+- **Hai chế độ**: *live* (có backend, tính toán thật) và *replay* (phát lại các phản hồi API đã ghi — giao diện giống hệt, không cần backend, dùng cho GitHub Pages).
 
-## Bắt đầu nhanh / Quickstart (local)
+## Chạy / Run
+
+### 1. Local — chế độ live (khuyến nghị khi trình bày)
+Cần Python 3.11+ và Node 20+.
+
+Linux / macOS:
+```bash
+bash scripts/setup_local.sh
+```
+```bash
+bash scripts/dev.sh
+```
 Windows (PowerShell):
 ```powershell
 ./scripts/setup_local.ps1
 ./scripts/dev.ps1
 ```
-Linux / macOS:
-```bash
-bash scripts/setup_local.sh
-bash scripts/dev.sh
-```
-Mở http://localhost:5173 (frontend) — backend tại http://localhost:8000/api/health.
+Mở http://localhost:5173 (frontend dev) — backend tại http://localhost:8000/api/health, tài liệu API tại http://localhost:8000/docs.
 
-Kiểm tra môi trường: `python scripts/check_env.py`
+**Một cổng duy nhất** (không cần Vite dev server): build frontend rồi để backend phục vụ luôn giao diện:
+```bash
+cd frontend && npm run build
+```
+```bash
+cd backend && python -m uvicorn app.main:app --port 8000
+```
+Mở http://localhost:8000 (đặt `SERVE_FRONTEND=0` để tắt).
+
+### 2. Local — chế độ replay (không cần Python)
+```bash
+cd frontend && npm run build:replay && npx vite preview
+```
+
+### 3. GitHub Pages (replay, công khai)
+Workflow `.github/workflows/pages.yml` build chế độ replay với `VITE_BASE=/<tên-repo>/` mỗi khi push lên `main`.
+Bật một lần: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Link: `https://<user>.github.io/CrossChain-SDLC/`.
+
+### Tái sinh kịch bản replay
+Sau khi sửa logic module, ghi lại các phản hồi API thật để Pages hiển thị đúng:
+```bash
+bash scripts/export_replays.sh
+```
+(Windows: `./scripts/export_replays.ps1`.) Mỗi module cũng có CLI riêng: `cd backend && python -m app.modules.cd1_univ.demo` (thêm `--export` để ghi JSON).
+
+### Kiểm thử
+```bash
+python scripts/check_env.py
+```
+```bash
+cd backend && python -m pytest -q
+```
+```bash
+cd frontend && npm run build
+```
+```bash
+cd contracts && npm run compile
+```
 
 ## Tài liệu / Docs
-- [docs/SETUP_GITHUB_CLOUD.md](docs/SETUP_GITHUB_CLOUD.md) — đẩy repo lên GitHub & dùng Claude Code cloud (từng bước).
-- [docs/ROADMAP.md](docs/ROADMAP.md) — các phase, prompt cho từng phiên cloud, ngân sách credit.
+- [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) — kịch bản trình bày 3–5 phút mỗi module (VI + EN).
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — ranh giới module, API, live/replay.
 - [docs/modules/CD1.md](docs/modules/CD1.md) · [CD2.md](docs/modules/CD2.md) · [CD3.md](docs/modules/CD3.md) — đặc tả từng module.
+- [docs/ROADMAP.md](docs/ROADMAP.md) — các phase và prompt cho phiên cloud.
+- [docs/SETUP_GITHUB_CLOUD.md](docs/SETUP_GITHUB_CLOUD.md) — đẩy repo lên GitHub & dùng Claude Code cloud.
 
 ## Trạng thái / Status
 - [x] Phase 0-init: khung repo, môi trường, tài liệu, kế hoạch
-- [ ] P0 kiểm tra môi trường cloud · [ ] P1 lõi · [ ] P2 CĐ1 · [ ] P3 CĐ2 · [ ] P4 CĐ3 · [ ] P5 replay + Pages + polish
+- [x] P0 kiểm tra môi trường cloud · [x] P1 lõi · [x] P2 CĐ1 · [x] P3 CĐ2 · [x] P4 CĐ3 · [x] P5 replay + Pages + polish
 
 ## Công bố liên quan / Related publications
 - CĐ1: DAVE-CC (JISA 2025), Lotus (ISCIT 2025), CrossCert (2024), Medichain (2024), Zk-auction (ICIIT 2024).

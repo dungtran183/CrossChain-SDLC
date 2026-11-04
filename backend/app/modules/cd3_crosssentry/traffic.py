@@ -57,6 +57,7 @@ class Traffic:
     minted: list[Transfer] = field(default_factory=list)
     scenario: str = "normal"
     scenario_tick: int = 0
+    blocked: set = field(default_factory=set)  # validator đã bị cô lập (R4) — validator trung thực không chọn nữa
 
     def __post_init__(self) -> None:
         acc = self.a.accounts
@@ -110,7 +111,7 @@ class Traffic:
         return self.b.transact(self.gateway, "mint", t.msg_id, recipient, t.mint_amount, t.corridor, [s for _, s in sigs], sender=r.address, note=note)
 
     def signers(self, proposer: str | None = None, exclude: tuple[str, ...] = ()) -> list[str]:
-        vals = [v.id for v in self.by_role("validator") if v.id not in exclude and v.id != proposer]
+        vals = [v.id for v in self.by_role("validator") if v.id not in exclude and v.id != proposer and v.id not in self.blocked]
         chosen = self.rng.sample(vals, THRESHOLD - (1 if proposer else 0))
         return ([proposer] if proposer else []) + chosen
 
@@ -120,7 +121,7 @@ class Traffic:
         sc = self.scenario
         self.scenario_tick += 1
         users = [u.id for u in self.by_role("user")]
-        honest_vals = ("V5", "V6", "V7") if sc == "collusion" else ()
+        honest_vals = ("V4", "V5", "V6") if sc == "collusion" else ()
         n = 3
         for _ in range(n):
             s, r = self.rng.sample(users[:4] if sc == "boosting" else users, 2)
@@ -158,6 +159,6 @@ class Traffic:
             txs.append(self.mint(old, relayer="R3", note="mint (replayed msgId)"))
         if sc == "collusion":
             for _ in range(self.rng.choice([1, 2])):
-                forged = Transfer(keccak(f"forged-{tick}-{self.rng.random()}".encode()), 0, "U1", self.rng.choice(["U2", "U3"]), 0, "R3", ["V5", "V6", "V7"], tick, tick, self.rng.randint(2000, 5000), "forged")
+                forged = Transfer(keccak(f"forged-{tick}-{self.rng.random()}".encode()), 0, "U1", self.rng.choice(["U2", "U3"]), 0, "R3", ["V4", "V5", "V6"], tick, tick, self.rng.randint(2000, 5000), "forged")
                 txs.append(self.mint(forged, note="mint (no lock!)"))
         return txs

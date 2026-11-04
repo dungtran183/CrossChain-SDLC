@@ -31,6 +31,11 @@ jobs:
         run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
       - run: npm run build
         working-directory: frontend
+      - name: Build replay mode (GitHub Pages)
+        run: npm run build:replay
+        working-directory: frontend
+      - name: Check replay files
+        run: python3 scripts/check_replays.py
 
   contracts:
     runs-on: ubuntu-latest
@@ -44,3 +49,5 @@ jobs:
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
           npm run compile
+      - name: Artifacts are committed and up to date
+        run: git diff --exit-code -- contracts/artifacts

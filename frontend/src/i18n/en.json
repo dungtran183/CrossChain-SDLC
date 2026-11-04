@@ -386,7 +386,7 @@
       "s2": "Switch to slow-burn: validator V7, with a good history, starts co-signing “inflated” mints on corridor A→B.",
       "s3": "CRS of (V7, A→B) jumps while other corridors stay low → R4 isolate V7 is proposed; a human approves → blockActor on-chain.",
       "s4": "From now on mints proposed by V7 are blocked (not enough valid signatures) — the traditional cumulative score has not even caught up.",
-      "s5": "Collusion scenario: V5–V7 co-sign mints with no matching lock; total minted exceeds total locked.",
+      "s5": "Collusion scenario: V4–V6 co-sign mints with no matching lock; total minted exceeds total locked.",
       "s6": "Several actors at R4 on one corridor → R5 pause bridge is proposed; approve → pause(), every later mint reverts.",
       "s7": "G-surv: compare the optimal Θ with the concentration criterion off (w_g = 0) and on (w_g = 1) — balancing detection and fairness."
     }

@@ -27,6 +27,8 @@ jobs:
       - name: Install
         working-directory: frontend
         run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Check replay files
+        run: python3 scripts/check_replays.py
       - name: Build (replay mode)
         working-directory: frontend
         env:

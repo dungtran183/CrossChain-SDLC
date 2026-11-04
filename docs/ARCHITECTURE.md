@@ -61,41 +61,58 @@ Mọi module **bắt buộc** có:
 |---|---|---|
 | GET | `/api/cdX/status` | `{module, status, phase, ...}` |
 | POST | `/api/cdX/reset` | tạo lại ChainSim + dữ liệu của module |
+| GET | `/api/cdX/chain` · `/api/cdX/chain/{name}/info` · `/blocks?limit=` | explorer chuỗi **riêng** của module (`core.chain_routes.make_chain_router`) |
 
-Lõi (Phase P1):
+Lõi:
 | Method | Path | Ý nghĩa |
 |---|---|---|
 | GET | `/api/health` | `{status: "ok"}` |
 | GET | `/api/modules` | danh sách metadata module |
-| GET | `/api/chain/{name}/info` · `/blocks?limit=` | thông tin chuỗi, block gần nhất |
+| GET | `/api/chain` · `/api/chain/{name}/info` · `/blocks?limit=` | chuỗi "playground" của lõi |
 | POST | `/api/chain/{name}/faucet` | cấp ETH cho địa chỉ ví trình duyệt |
-| POST | `/api/chain/{name}/send_raw` | gửi tx đã ký ở trình duyệt (kiểm chain-id trước) |
-| WS | `/ws` | sự kiện `{type, source, data}`: `block`, `tx`, `log`, `module` |
+| POST | `/api/chain/{name}/send_raw` | gửi tx đã ký ở trình duyệt (backend tự kiểm chain-id → 400 nếu sai) |
+| GET | `/api/chain/{name}/balance/{addr}` | số dư + nonce |
+| WS | `/ws` | sự kiện `{type, source, data}`: `tx` (mọi giao dịch của mọi ChainSim, `source` = module) |
 
-> Từ P1, `/api/chain/*` thao tác trên một ChainSim "playground" của lõi; mỗi module có thể có route chain riêng dưới `/api/cdX/chain/*` nếu cần chuỗi độc lập.
+Quy ước phản hồi: thao tác làm đổi trạng thái trả kèm `txs[]` (tóm tắt giao dịch: hash, block, from/to + nhãn, hàm, gas,
+status, **event đã giải mã**, `reason` khi revert) và thường kèm `state` (ảnh chụp đủ để vẽ màn hình).
+Nhờ vậy UI không phải gọi thêm và chế độ replay chỉ cần phát lại đúng các phản hồi.
 
-## 5. Định dạng replay
-`frontend/public/replays/<cdX>/<scenario>.json`:
+Chạy một cổng: nếu có `frontend/dist`, `app/main.py` mount giao diện tại `/` (tắt bằng `SERVE_FRONTEND=0`).
+CORS bổ sung qua biến môi trường `CORS_ORIGINS` (phân tách bằng dấu phẩy) khi frontend chạy ở origin khác (`VITE_API_BASE`).
+
+## 5. Định dạng replay (`api-calls/v1`)
+`frontend/public/replays/<module>/<scenario>.json` được **ghi tự động** bởi `python -m app.modules.<m>.demo --export`
+(lớp `app.core.replay.Recorder` bọc FastAPI `TestClient`), vì vậy luôn khớp với backend thật:
 ```json
 {
   "module": "cd2",
-  "scenario": "replay-attack",
+  "scenario": "audit-flow",
+  "format": "api-calls/v1",
   "lang_neutral": true,
   "generated_by": "python -m app.modules.cd2_crossguard.demo --export",
-  "steps": [
-    { "t": 0, "kind": "state", "data": { } },
-    { "t": 1, "kind": "event", "data": { } }
+  "calls": [
+    { "method": "GET",  "path": "/api/cd2/samples", "body": null, "response": { } },
+    { "method": "POST", "path": "/api/cd2/exploit/run?target=vuln&sample=Cd2VulnBridgeNoNonce", "body": null, "response": { } }
   ]
 }
 ```
-Frontend module đọc `steps` và phát lại bằng cùng component như chế độ live. Văn bản hiển thị không nằm trong replay (lấy từ i18n).
+Frontend (`src/lib/api.ts → createClient(module, scenario)`) ở `VITE_MODE=replay` trả lời request từ bản ghi theo
+**dòng thời gian**: POST tìm bản ghi khớp `method+path+body` kế tiếp (quay vòng để chạy lại sau reset); GET trả bản ghi khớp
+gần nhất trước vị trí hiện tại; chỉ phản hồi có `state`/`txs` mới dời con trỏ (tính toán thuần như Shamir, ABE gọi lúc nào cũng được).
+Lựa chọn không có trong bản ghi bị làm mờ (`client.available()`). Văn bản hiển thị không nằm trong replay (lấy từ i18n).
+Tái sinh toàn bộ: `bash scripts/export_replays.sh`; kiểm tra: `python scripts/check_replays.py` (chạy trong CI).
 
 ## 6. Chuỗi giả lập (ChainSim)
 - `chain-A` (chain-id 31337, "Ethereum-like") và `chain-B` (chain-id 97, "BSC-like"); mỗi chuỗi 10 tài khoản có sẵn ETH.
 - Mỗi giao dịch được đào ngay thành một block (auto-mine) — phù hợp để trực quan hóa từng bước.
 - Relayer/validator là tiến trình Python trong module: đọc event chuỗi nguồn → ký → gọi hợp đồng chuỗi đích.
 - Ví trình duyệt (ethers.js) chỉ ký; backend kiểm chain-id rồi gửi `eth_sendRawTransaction`.
-- Biết trước: py-evm không tự từ chối tx sai chain-id → `send_raw` của lõi phải tự kiểm.
+- Biết trước: py-evm không tự từ chối tx sai chain-id → `send_raw` của lõi tự giải mã tx (EIP-2718/EIP-155) và kiểm.
+- `Chain.transact()` gọi thử (`eth_call`) trước: nếu revert vẫn gửi tx với gas cố định để được đào thành block status 0
+  và trả `reason` — explorer hiển thị "khối đỏ". Tx thành công dùng gas trần cố định (bỏ `estimate_gas`, nhanh gấp ~2).
+- Tên hợp đồng phải duy nhất toàn repo (artifact ghi phẳng) — quy ước tiền tố `Cd1…`, `Cd2…`, `Cd3…`; `compile.mjs` báo lỗi nếu trùng
+  và bỏ qua interface (không có bytecode).
 
 ## 7. Chất lượng & giới hạn
 - Backend: pytest cho từng module; mỗi API < ~3 giây.

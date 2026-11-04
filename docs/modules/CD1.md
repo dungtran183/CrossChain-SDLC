@@ -12,8 +12,8 @@
 | Hyperledger/Geth đa chuỗi | `chain-A` (trường) và `chain-B` (doanh nghiệp) từ ChainSim. |
 
 ## Hợp đồng (`contracts/src/cd1/`)
-- `CredentialRegistry.sol` (chain-A): `anchorRoot(bytes32 root, uint256 batchId)`, `revoke(bytes32 credentialHash)`, `isRevoked(bytes32)`, events `RootAnchored`, `Revoked`. Chỉ issuer được ghi.
-- `ThresholdVerifier.sol` (chain-B): khởi tạo với danh sách relay + ngưỡng t; `submitAttestation(bytes32 msgHash, bytes[] sigs)` → đếm chữ ký hợp lệ, không trùng signer, ≥ t thì lưu `accepted[msgHash]=true` và phát `AttestationAccepted`; ngược lại revert/`AttestationRejected`. `msgHash` = hash(root, statement, proofDigest, nonce, srcChainId) — có nonce chống phát lại.
+- `Cd1CredentialRegistry.sol` (chain-A): `anchorRoot(bytes32 root, uint256 batchId)`, `revoke(bytes32 credentialHash)`, `isRevoked(bytes32)`, events `RootAnchored`, `Revoked`. Chỉ issuer được ghi.
+- `Cd1ThresholdVerifier.sol` (chain-B): khởi tạo với danh sách relay + ngưỡng t; `submitAttestation(bytes32 msgHash, bytes[] sigs)` → đếm chữ ký hợp lệ, không trùng signer, ≥ t thì lưu `accepted[msgHash]=true` và phát `AttestationAccepted`; ngược lại revert/`AttestationRejected`. `msgHash` = hash(root, statement, proofDigest, nonce, srcChainId) — có nonce chống phát lại.
 
 ## Backend (`backend/app/modules/cd1_univ/`)
 - `zkp_toy.py` — `commit()`, `merkle_tree()`, `merkle_proof()`, `prove_predicate(attr, threshold)`, `verify_predicate(statement, proof)`.
@@ -47,3 +47,8 @@
 ## Tiêu chí hoàn thành (test)
 - Merkle proof đúng/sai; toy ZKP chấp nhận witness đúng, từ chối witness sai; ≥ t chữ ký → accepted, < t hoặc signer trùng → rejected; replay cùng nonce → rejected; revoke có hiệu lực.
 - `python -m app.modules.cd1_univ.demo --export` ghi `frontend/public/replays/cd1/credential-flow.json`.
+
+## Ghi chú hiện thực (P2)
+- ZKP toy: nhóm Schnorr 65-bit, cam kết Pedersen cho GPA, chứng minh khoảng bằng phân rã bit + OR-proof (CDS) + Fiat–Shamir gắn nonce của verifier.
+- Gateway gom **t chữ ký nhanh nhất** (relay có độ trễ ngẫu nhiên); `msgHash` gồm nonce của verifier ‖ lượt relay nên mỗi lần xác minh là thông điệp mới.
+- Thêm kiểu giả mạo `duplicate` (một chữ ký lặp t lần). Thẻ bản mã CP-ABE có thử giải mã với 3 bộ thuộc tính.

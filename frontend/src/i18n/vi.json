@@ -386,7 +386,7 @@
       "s2": "Chuyển sang slow-burn: validator V7 có lịch sử tốt bắt đầu ký mint “thổi phồng” trên tuyến A→B.",
       "s3": "CRS của (V7, A→B) nhảy vọt trong khi các tuyến khác vẫn thấp → đề xuất R4 cô lập V7; con người phê duyệt → blockActor on-chain.",
       "s4": "Từ đây mint do V7 đề xuất bị chặn (thiếu chữ ký hợp lệ) — điểm tích lũy truyền thống vẫn chưa kịp phát hiện.",
-      "s5": "Kịch bản thông đồng: V5–V7 cùng ký mint không có lock tương ứng; tổng mint vượt tổng khóa.",
+      "s5": "Kịch bản thông đồng: V4–V6 cùng ký mint không có lock tương ứng; tổng mint vượt tổng khóa.",
       "s6": "Nhiều tác nhân cùng ở R4 trên một tuyến → đề xuất R5 dừng cầu nối; phê duyệt → pause(), mọi mint sau đó revert.",
       "s7": "G-surv: so sánh Θ tối ưu khi tắt (w_g = 0) và bật (w_g = 1) tiêu chí tập trung giám sát — cân bằng phát hiện với công bằng."
     }

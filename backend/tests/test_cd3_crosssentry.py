@@ -49,7 +49,7 @@ def test_gini_and_levels():
 @pytest.mark.parametrize(
     "scenario,group,rule",
     [
-        ("collusion", {"V5", "V6", "V7", "R3"}, "mint_without_lock"),
+        ("collusion", {"V4", "V5", "V6", "R3"}, "mint_without_lock"),
         ("replay", {"R3"}, "double_process"),
         ("slow_burn", {"V7"}, "value_out_gt_in"),
         ("boosting", {"U5", "U6"}, "circular_small"),

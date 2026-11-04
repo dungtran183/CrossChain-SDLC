@@ -8,7 +8,7 @@ from .m2_fusion import CRS
 from .m3_response import HUMAN, LEVELS, gini, level_for, lorenz, tune
 from .traffic import CORRIDORS, SCENARIOS, Traffic
 
-ATTACKERS = {"replay": {"R3"}, "delayed": {"R2"}, "collusion": {"V5", "V6", "V7", "R3"}, "slow_burn": {"V7"}, "boosting": {"U5", "U6"}}
+ATTACKERS = {"replay": {"R3"}, "delayed": {"R2"}, "collusion": {"V4", "V5", "V6", "R3"}, "slow_burn": {"V7"}, "boosting": {"U5", "U6"}}
 
 
 class Cd3Session:
@@ -103,9 +103,12 @@ class Cd3Session:
             elif target == "bridge":
                 for a in self.impact:
                     self.impact[a] += 1
+        locked = int(self.a.call(self.vault, "totalLocked"))
+        minted = int(self.b.call(self.token, "totalSupply"))
+        breach = minted > locked * 1.05  # bất biến cung bị phá → rủi ro cấp cầu nối
         for cor, hot in corridor_hot.items():
-            if hot >= 3 and "bridge" not in self.executed and not any(q["level"] == "R5" and q["status"] == "pending" for q in self.queue):
-                self._enqueue("R5", "bridge", cor, 1.0, f"{hot} actors at R4 on {cor}")
+            if (hot >= 3 or (breach and hot >= 1)) and "bridge" not in self.executed and not any(q["level"] == "R5" and q["status"] == "pending" for q in self.queue):
+                self._enqueue("R5", "bridge", cor, 1.0, f"{hot} actor(s) at R4 on {cor}" + (" · supply invariant broken" if breach else ""))
 
     def _enqueue(self, level: str, target: str, cor: str, r: float, reason: str) -> None:
         self.seq += 1
@@ -122,6 +125,7 @@ class Cd3Session:
             if q["level"] == "R4":
                 addr = self.traffic.actors[q["target"]].address
                 txs.append(self.b.transact(self.gateway, "blockActor", addr, sender=self.guardian, note=f"blockActor({q['target']})"))
+                self.traffic.blocked.add(q["target"])
             else:
                 txs.append(self.b.transact(self.gateway, "pause", sender=self.guardian, note="pause()"))
                 self.paused = True

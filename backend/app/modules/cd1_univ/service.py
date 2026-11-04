@@ -299,7 +299,7 @@ class Cd1Session:
             abe = {k: self.abe_ct[k] for k in ("id", "policy", "policy_str", "size")} | {"preview": self.abe_ct["ciphertext_b64"][:48] + "…"}
             self.timeline.append({"phase": "abe", "ms": 0.1, "abe_bytes": self.abe_ct["size"]})
         if kind is None:
-            self.steps["verify"] = "done" if accepted else "error"
+            self.steps["verify"] = "done"  # bước đã chạy; kết quả chấp nhận/từ chối hiển thị riêng
         return jsonable(
             {
                 "kind": kind or "honest",

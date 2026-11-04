@@ -48,3 +48,8 @@ Chọn `VulnBridgeNoNonce` → M1 thấy thiếu nút `processed[...]` → M2 ph
 ## Tiêu chí hoàn thành (test)
 - M1 phát hiện đúng thao tác liên chuỗi trên mẫu; M2 1-shot & 5-shot chạy, 5-shot ≥ 1-shot trên tập seed; M3 ε tăng đơn điệu theo vòng và gradient sau clip ≤ C; M4 sinh ≥ 1 bất biến cho mỗi mẫu lỗi; exploit thành công trên bản lỗi, revert trên bản sửa. Mỗi API < 3 giây.
 - `demo --export` ghi `frontend/public/replays/cd2/audit-flow.json`.
+
+## Ghi chú hiện thực (P3)
+- Hợp đồng đặt tiền tố `Cd2…` (vd `Cd2WrappedToken`) để không trùng artifact với CĐ3; thêm `Cd2SourceVault` (chain-A) cho Exploit lab.
+- Exploit lab có 5 tấn công: replay (NoNonce), chữ ký trùng/ngưỡng yếu (WeakThreshold), cầu nguồn giả (NoSourceCheck), chiếm quyền relayer (Access), thao túng giá oracle (Oracle); mỗi tấn công chạy cả trên SafeBridge. Bất biến tương ứng chuyển sang `verified` sau khi SafeBridge chặn được.
+- M2: 1-shot ≈ 0,73 → 5-shot ≈ 0,90 trên tập tổng hợp (mẫu có “mồi nhử” từ lớp khác). M3 trung bình 4 seed; ε dùng tỉ lệ lấy mẫu như thể mỗi client có 400 bản ghi (ghi nhãn toy).
