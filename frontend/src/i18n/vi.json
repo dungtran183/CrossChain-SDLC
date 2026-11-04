@@ -69,7 +69,97 @@
       "Thu hồi"
     ],
     "short": "ZKP · TSS · CP-ABE",
-    "pubs": "DAVE-CC · Lotus · CrossCert"
+    "pubs": "DAVE-CC · Lotus · CrossCert",
+    "btn": {
+      "setup": "Thiết lập",
+      "issue": "Cấp lô văn bằng",
+      "student": "Người học",
+      "prove": "Sinh ZKP",
+      "verify": "Xác minh liên chuỗi",
+      "revoke": "Thu hồi"
+    },
+    "toast": {
+      "setup": "Đã triển khai Registry (chain-A) và ThresholdVerifier (chain-B)",
+      "issue": "Đã neo Merkle root lên chain-A",
+      "accepted": "chain-B chấp nhận xác nhận",
+      "rejected": "chain-B từ chối",
+      "revoked": "Đã thu hồi văn bằng trên chain-A"
+    },
+    "stage": {
+      "issuer": "Issuer · Trường (chain-A)",
+      "issuerShort": "Trường",
+      "committee": "Ủy ban relay (t-of-n)",
+      "verifier": "Verifier · ACME (chain-B)",
+      "verifierShort": "Doanh nghiệp",
+      "noBatch": "Chưa cấp lô văn bằng",
+      "anchored": "Merkle root on-chain:",
+      "waiting": "Chờ xác nhận liên chuỗi"
+    },
+    "ring": {
+      "sigs": "chữ ký hợp lệ",
+      "threshold": "Ngưỡng"
+    },
+    "sw": {
+      "title": "Statement vs Witness",
+      "statement": "Statement — công khai, đi qua cầu",
+      "statementHint": "Relay và chuỗi đích chỉ thấy phần này.",
+      "witness": "Witness — bí mật của người học",
+      "witnessHint": "Không bao giờ rời máy Holder; chỉ dùng để sinh bằng chứng.",
+      "predicate": "Vị từ",
+      "hashes": "hash",
+      "proof": "Bằng chứng",
+      "neverLeaves": "không rời máy Holder",
+      "holderPeek": "Chỉ Holder thấy",
+      "unsat": "không thỏa vị từ → bằng chứng sẽ sai"
+    },
+    "kind": {
+      "honest": "Trung thực",
+      "below_threshold": "Thiếu ngưỡng",
+      "signature": "Chữ ký giả",
+      "duplicate": "Signer trùng",
+      "proof": "Proof sai",
+      "replay": "Phát lại"
+    },
+    "tamper": {
+      "title": "Phòng thí nghiệm giả mạo",
+      "body": "Mỗi nút chạy lại bước xác minh với một kiểu tấn công; hợp đồng trên chain-B tự quyết định từ chối bằng ecrecover, ngưỡng và nonce."
+    },
+    "chains": "Hai chuỗi (mỗi giao dịch = một khối)",
+    "shamir": {
+      "title": "Shamir (t, n) — không ai giữ toàn bộ khóa",
+      "body": "Bí mật 1234 được chia thành 5 mảnh bằng đa thức bậc t−1 = 2. Chọn mảnh: đủ 3 mảnh thì nội suy Lagrange tại x = 0 ra đúng bí mật; 2 mảnh thì sai.",
+      "recovered": "Khôi phục tại x = 0",
+      "shares": "mảnh",
+      "ok": "Đúng bí mật ✓",
+      "fail": "Sai — chưa đủ ngưỡng ✗"
+    },
+    "charts": {
+      "time": "Thời gian từng giai đoạn (ms, backend demo)",
+      "size": "Kích thước dữ liệu (byte)",
+      "empty": "Chạy các bước để xem số đo"
+    },
+    "thesis": {
+      "source": "Báo cáo CĐ1",
+      "latency": "Độ trễ toàn trình",
+      "proof": "Proof ZKP (Groth16)",
+      "sig": "Chữ ký TSS",
+      "abe": "Bản mã CP-ABE",
+      "tps": "Xác minh với 30 worker"
+    },
+    "tour": {
+      "s0": "Đặt lại phiên: hai chuỗi EVM mới — chain-A (trường) và chain-B (doanh nghiệp).",
+      "s1": "Thiết lập: triển khai CredentialRegistry trên chain-A và ThresholdVerifier với 5 relay, ngưỡng t = 3, trên chain-B.",
+      "s2": "Trường cấp lô 5 văn bằng: mỗi văn bằng là cam kết (hash + Pedersen), chỉ Merkle root được neo lên chain-A.",
+      "s3": "Sinh viên S3 chứng minh “GPA ≥ 3.2” bằng ZKP — statement công khai, GPA và độ ngẫu nhiên ở lại máy.",
+      "s4": "Relay độc lập kiểm Merkle, thu hồi, ZKP rồi ký; gateway gom 3/5 chữ ký nhanh nhất → chain-B kiểm ecrecover và chấp nhận.",
+      "s5": "Bản ghi xác nhận được mã hóa CP-ABE (toy): chỉ HR của ACME hoặc Auditor giải mã được.",
+      "s6": "Giả mạo: chỉ 2 relay ký (dưới ngưỡng) → hợp đồng phát AttestationRejected.",
+      "s7": "Giả mạo: chữ ký từ khóa ngoài ủy ban → ecrecover ra địa chỉ lạ, 0 chữ ký hợp lệ.",
+      "s8": "Phát lại thông điệp đã được chấp nhận → giao dịch revert “replay: already accepted”.",
+      "s9": "Trường thu hồi văn bằng S3 trên chain-A.",
+      "s10": "S3 chứng minh lại: relay đọc trạng thái thu hồi trên chain-A và từ chối ký → chain-B từ chối.",
+      "s11": "Tóm tắt: chuỗi đích quyết định dựa trên bằng chứng mật mã, không dựa vào uy tín relay. (Số liệu luận án ở thẻ trích dẫn.)"
+    }
   },
   "cd2": {
     "name": "CrossGuard",

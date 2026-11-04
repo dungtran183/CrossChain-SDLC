@@ -106,7 +106,7 @@ function SdlcTimeline() {
           {phases.map((p, i) => {
             const mod = MODULES.find((m) => m.sdlc.includes(i + 1));
             return (
-              <motion.div key={p} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="relative">
+              <motion.div key={p} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="relative">
                 <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full border-2 bg-ink-900 text-sm font-bold" style={{ borderColor: PHASE_COLORS[i], boxShadow: `0 0 24px -6px ${PHASE_COLORS[i]}` }}>
                   {i + 1}
                 </div>
@@ -216,7 +216,7 @@ export default function Home() {
           { icon: <Cpu className="h-5 w-5" />, k: "ml" },
           { icon: MODE === "replay" ? <Globe className="h-5 w-5" /> : <Laptop className="h-5 w-5" />, k: "modes" },
         ].map((x, i) => (
-          <motion.div key={x.k} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="glass p-5">
+          <motion.div key={x.k} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="glass p-5">
             <div className="mb-2 flex items-center gap-2 font-semibold">
               <span className="text-slate-300">{x.icon}</span>
               {t(`home.tech.${x.k}.title`)}

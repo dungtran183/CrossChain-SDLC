@@ -101,6 +101,7 @@ class Chain:
     on_event: EventHook | None = None
     _topics: dict[bytes, tuple[str, Any]] = field(default_factory=dict)
     _labels: dict[str, str] = field(default_factory=dict)  # địa chỉ → nhãn hiển thị
+    last_deploy: dict | None = None  # tx_summary của lần deploy gần nhất
 
     # ------------------------------------------------------------------ cơ bản
     @property
@@ -134,7 +135,8 @@ class Chain:
         for item in art["abi"]:
             if item.get("type") == "event":
                 self._topics[bytes(event_abi_to_log_topic(item))] = (item["name"], contract)
-        self._emit("tx", self.tx_summary(tx_hash, fn=f"deploy {key}"))
+        self.last_deploy = self.tx_summary(tx_hash, fn=f"deploy {key}")
+        self._emit("tx", self.last_deploy)
         return contract
 
     # ------------------------------------------------------------- giao dịch

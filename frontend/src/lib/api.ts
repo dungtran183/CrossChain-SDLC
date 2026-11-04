@@ -115,9 +115,12 @@ class ReplayPlayer {
   respond(method: "GET" | "POST", path: string, body: unknown): unknown {
     const i = this.find(method, path, body);
     if (i < 0) throw new ApiError(`Replay: no recording for ${method} ${path}`, 404);
-    if (method === "POST") this.pos = i;
-    else if (this.pos < 0) this.pos = i;
     const call = this.file.calls[i];
+    // Chỉ các thao tác làm đổi trạng thái (phản hồi có "state"/"txs") mới dời con trỏ dòng thời gian;
+    // các tính toán thuần (vd Shamir, ABE) có thể gọi bất kỳ lúc nào.
+    const r = call.response as Record<string, unknown> | null;
+    const stateful = !!r && typeof r === "object" && ("state" in r || "txs" in r);
+    if (method === "POST" && stateful) this.pos = i;
     if (call.status && call.status >= 400) {
       const d = (call.response as { detail?: unknown })?.detail;
       throw new ApiError(`${call.status} ${typeof d === "string" ? d : JSON.stringify(d)} — ${method} ${path}`, call.status);

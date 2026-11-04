@@ -69,7 +69,97 @@
       "Revocation"
     ],
     "short": "ZKP · TSS · CP-ABE",
-    "pubs": "DAVE-CC · Lotus · CrossCert"
+    "pubs": "DAVE-CC · Lotus · CrossCert",
+    "btn": {
+      "setup": "Setup",
+      "issue": "Issue batch",
+      "student": "Student",
+      "prove": "Generate ZKP",
+      "verify": "Cross-chain verify",
+      "revoke": "Revoke"
+    },
+    "toast": {
+      "setup": "Deployed Registry (chain-A) and ThresholdVerifier (chain-B)",
+      "issue": "Merkle root anchored on chain-A",
+      "accepted": "chain-B accepted the attestation",
+      "rejected": "chain-B rejected",
+      "revoked": "Credential revoked on chain-A"
+    },
+    "stage": {
+      "issuer": "Issuer · University (chain-A)",
+      "issuerShort": "University",
+      "committee": "Relay committee (t-of-n)",
+      "verifier": "Verifier · ACME (chain-B)",
+      "verifierShort": "Employer",
+      "noBatch": "No credential batch yet",
+      "anchored": "On-chain Merkle root:",
+      "waiting": "Waiting for cross-chain attestation"
+    },
+    "ring": {
+      "sigs": "valid signatures",
+      "threshold": "Threshold"
+    },
+    "sw": {
+      "title": "Statement vs Witness",
+      "statement": "Statement — public, crosses the bridge",
+      "statementHint": "Relays and the destination chain only see this.",
+      "witness": "Witness — the student's secret",
+      "witnessHint": "Never leaves the holder's device; only used to build the proof.",
+      "predicate": "Predicate",
+      "hashes": "hashes",
+      "proof": "Proof",
+      "neverLeaves": "never leaves the holder",
+      "holderPeek": "Holder-only view",
+      "unsat": "predicate not satisfied → proof will fail"
+    },
+    "kind": {
+      "honest": "Honest",
+      "below_threshold": "Below threshold",
+      "signature": "Forged signature",
+      "duplicate": "Duplicate signer",
+      "proof": "Bad proof",
+      "replay": "Replay"
+    },
+    "tamper": {
+      "title": "Tampering lab",
+      "body": "Each button re-runs verification under an attack; the chain-B contract itself rejects it via ecrecover, threshold and nonce."
+    },
+    "chains": "Two chains (one block per transaction)",
+    "shamir": {
+      "title": "Shamir (t, n) — nobody holds the whole key",
+      "body": "Secret 1234 is split into 5 shares with a degree t−1 = 2 polynomial. Pick shares: with 3 shares Lagrange interpolation at x = 0 gives the secret; with 2 it fails.",
+      "recovered": "Recovered at x = 0",
+      "shares": "shares",
+      "ok": "Correct secret ✓",
+      "fail": "Wrong — below threshold ✗"
+    },
+    "charts": {
+      "time": "Time per phase (ms, demo backend)",
+      "size": "Data size (bytes)",
+      "empty": "Run the steps to see measurements"
+    },
+    "thesis": {
+      "source": "CĐ1 report",
+      "latency": "End-to-end latency",
+      "proof": "ZKP proof (Groth16)",
+      "sig": "TSS signature",
+      "abe": "CP-ABE ciphertext",
+      "tps": "Verification with 30 workers"
+    },
+    "tour": {
+      "s0": "Reset the session: two fresh EVM chains — chain-A (university) and chain-B (employer).",
+      "s1": "Setup: deploy CredentialRegistry on chain-A and ThresholdVerifier with 5 relays and threshold t = 3 on chain-B.",
+      "s2": "The university issues 5 credentials: each is a commitment (hash + Pedersen); only the Merkle root is anchored on chain-A.",
+      "s3": "Student S3 proves “GPA ≥ 3.2” in zero knowledge — the statement is public, GPA and randomness stay on the device.",
+      "s4": "Relays independently check Merkle, revocation and ZKP, then sign; the gateway submits the fastest 3/5 → chain-B verifies with ecrecover and accepts.",
+      "s5": "The attestation record is CP-ABE encrypted (toy): only ACME's HR or an Auditor can decrypt it.",
+      "s6": "Tamper: only 2 relays sign (below threshold) → the contract emits AttestationRejected.",
+      "s7": "Tamper: signatures from keys outside the committee → ecrecover yields unknown addresses, 0 valid signatures.",
+      "s8": "Replay an already accepted message → the transaction reverts “replay: already accepted”.",
+      "s9": "The university revokes S3's credential on chain-A.",
+      "s10": "S3 proves again: relays read the revocation on chain-A and refuse to sign → chain-B rejects.",
+      "s11": "Summary: the destination chain decides on cryptographic evidence, not on relay reputation. (Thesis figures are in the cited card.)"
+    }
   },
   "cd2": {
     "name": "CrossGuard",

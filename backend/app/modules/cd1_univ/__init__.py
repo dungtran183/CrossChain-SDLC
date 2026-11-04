@@ -1,6 +1,6 @@
 """CĐ1 · Π_univ — xác thực ngữ nghĩa liên chuỗi bảo toàn riêng tư (ZKP + TSS + CP-ABE, toy).
 
-Đặc tả: docs/modules/CD1.md — hiện thực ở Phase P2.
+Đặc tả: docs/modules/CD1.md.
 """
 from .router import router
 
@@ -9,7 +9,7 @@ MODULE = {
     "package": "cd1_univ",
     "name": "Π_univ",
     "sdlc_phase": "Secure Design",
-    "status": "planned",
+    "status": "ready",
     "phase": "P2",
 }
 
