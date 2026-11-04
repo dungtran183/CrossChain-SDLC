@@ -45,6 +45,19 @@ const errors = (output.errors || []).filter((e) => e.severity === "error");
 for (const e of output.errors || []) console.error(e.formattedMessage);
 if (errors.length) process.exit(1);
 
+// Tên contract phải duy nhất toàn repo (artifact ghi phẳng vào artifacts/<Name>.json).
+// Quy ước: contract của module đặt tiền tố Cd1/Cd2/Cd3 (vd Cd2WrappedToken, Cd3WrappedToken).
+const seen = new Map();
+for (const [source, contracts] of Object.entries(output.contracts || {})) {
+  for (const name of Object.keys(contracts)) {
+    if (seen.has(name)) {
+      console.error(`Duplicate contract name "${name}" in ${seen.get(name)} and ${source} — rename one (use Cd1/Cd2/Cd3 prefix).`);
+      process.exit(1);
+    }
+    seen.set(name, source);
+  }
+}
+
 fs.mkdirSync(outDir, { recursive: true });
 let n = 0;
 for (const [source, contracts] of Object.entries(output.contracts || {})) {

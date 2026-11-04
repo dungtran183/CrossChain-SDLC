@@ -8,13 +8,49 @@
     "backendOk": "Backend đang chạy",
     "backendDown": "Không kết nối được backend",
     "home": "Tổng quan",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "modules": "Chuyên đề",
+    "tools": "Công cụ",
+    "playground": "Playground lõi",
+    "source": "Mã nguồn trên GitHub",
+    "author": "NCS Trần Tuấn Dũng · HD: PGS.TS. Phạm Văn Hậu, PGS.TS. Nguyễn Tấn Cầm",
+    "replayHint": "Dữ liệu phát lại từ kịch bản ghi sẵn; chạy local để có backend thật."
   },
   "home": {
     "heroTitle": "An toàn liên chuỗi xuyên suốt vòng đời phần mềm",
     "heroBody": "Ba module độc lập minh họa ba chuyên đề của luận án: thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai và giám sát sau triển khai trên hai chuỗi EVM giả lập.",
     "open": "Mở module",
-    "sdlc": "Giai đoạn Secure SDLC"
+    "sdlc": "Giai đoạn Secure SDLC",
+    "badge": "Luận án Tiến sĩ · An toàn liên chuỗi",
+    "stats": [
+      "3|chuyên đề độc lập",
+      "2|chuỗi EVM giả lập",
+      "5|giai đoạn Secure SDLC"
+    ],
+    "sdlcLabel": "Khung Secure SDLC",
+    "sdlcTitle": "Ba chuyên đề phủ năm giai đoạn",
+    "sdlcBody": "Mỗi chuyên đề là một module tự chứa, có trang riêng; không có luồng tổng nối các module.",
+    "phases": [
+      "Thiết kế an toàn",
+      "Lập trình an toàn",
+      "Kiểm thử & kiểm toán",
+      "Vận hành & giám sát",
+      "Đánh giá & tối ưu"
+    ],
+    "tech": {
+      "chain": {
+        "title": "Hợp đồng Solidity thật",
+        "body": "Hai chuỗi EVM in-memory (py-evm): chain-A (id 31337) và chain-B (id 97). Mỗi giao dịch đào thành một khối để dễ quan sát."
+      },
+      "ml": {
+        "title": "Thuật toán tượng trưng, chạy nhanh",
+        "body": "ZKP/TSS/CP-ABE phiên bản toy, ML numpy/scikit-learn trên dữ liệu tổng hợp nhỏ, seed cố định — mỗi thao tác dưới 3 giây."
+      },
+      "modes": {
+        "title": "Live hoặc Replay",
+        "body": "Chạy local với backend FastAPI (live), hoặc xem trên GitHub Pages bằng kịch bản ghi sẵn (replay) — giao diện giống hệt."
+      }
+    }
   },
   "status": {
     "planned": "Đang lên kế hoạch",
@@ -25,20 +61,90 @@
     "topic": "Tăng cường tính riêng tư trong giao tiếp liên chuỗi",
     "sdlc": "1 · Thiết kế an toàn",
     "summary": "Văn bằng số liên chuỗi: chuỗi nguồn neo cam kết Merkle, người học sinh bằng chứng ZKP cho điều kiện nghiệp vụ, ủy ban relay ký ngưỡng t-of-n và chuỗi đích kiểm tra bằng ecrecover.",
-    "steps": ["Thiết lập & sinh khóa", "Cấp văn bằng", "Sinh bằng chứng ZKP", "Xác minh liên chuỗi", "Thu hồi"]
+    "steps": [
+      "Thiết lập & sinh khóa",
+      "Cấp văn bằng",
+      "Sinh bằng chứng ZKP",
+      "Xác minh liên chuỗi",
+      "Thu hồi"
+    ],
+    "short": "ZKP · TSS · CP-ABE",
+    "pubs": "DAVE-CC · Lotus · CrossCert"
   },
   "cd2": {
     "name": "CrossGuard",
     "topic": "Phát hiện lỗ hổng và kiểm toán hợp đồng thông minh liên chuỗi",
     "sdlc": "2–3 · Lập trình an toàn · Kiểm thử & Kiểm toán",
     "summary": "Kiểm toán hợp đồng cầu nối trước triển khai: biểu diễn đa nguồn, phân loại few-shot, học liên kết có riêng tư vi phân và hồ sơ kiểm toán kèm bất biến giao thức.",
-    "steps": ["M1 · Biểu diễn đa nguồn", "M2 · Lõi phát hiện few-shot", "M3 · Học liên kết DP-SGD", "M4 · Hồ sơ kiểm toán", "Exploit lab"]
+    "steps": [
+      "M1 · Biểu diễn đa nguồn",
+      "M2 · Lõi phát hiện few-shot",
+      "M3 · Học liên kết DP-SGD",
+      "M4 · Hồ sơ kiểm toán",
+      "Exploit lab"
+    ],
+    "short": "Kiểm toán hợp đồng cầu nối",
+    "pubs": "CrossGuard · FedVuln"
   },
   "cd3": {
     "name": "CrossSentry",
     "topic": "Phát hiện bất thường và đánh giá tin cậy thích ứng trong giao tiếp liên chuỗi",
     "sdlc": "4–5 · Vận hành & Giám sát · Đánh giá & Tối ưu",
     "summary": "Giám sát cầu nối đang chạy: ghép sự kiện hai chuỗi và đánh giá độ đầy đủ bằng chứng, hợp nhất Dempster–Shafer, rủi ro theo tác nhân–tuyến và phản ứng R0–R5 có phê duyệt.",
-    "steps": ["M1 · Sự kiện & bằng chứng (ECA)", "M2 · Hợp nhất DS & CRS", "M3 · Phản ứng R0–R5 & G-surv"]
+    "steps": [
+      "M1 · Sự kiện & bằng chứng (ECA)",
+      "M2 · Hợp nhất DS & CRS",
+      "M3 · Phản ứng R0–R5 & G-surv"
+    ],
+    "short": "Giám sát & tin cậy thích ứng",
+    "pubs": "CrossTrust-IoT · ChronosRep"
+  },
+  "common": {
+    "toy": "toy · minh họa",
+    "toyTooltip": "Phiên bản đồ chơi để minh họa luồng — không dùng thực tế",
+    "thesisResults": "Kết quả luận án (trích dẫn)",
+    "source": "Nguồn",
+    "thesisNote": "Số liệu trích từ báo cáo chuyên đề, KHÔNG được tái lập bởi demo này.",
+    "tourStart": "Trình chiếu",
+    "tourStop": "Dừng trình chiếu",
+    "tourKeys": "Space: tạm dừng · →: bước tiếp · Esc: thoát",
+    "head": "đỉnh",
+    "noTx": "Chưa có giao dịch",
+    "empty": "Chưa có dữ liệu",
+    "loading": "Đang tải…",
+    "backendHint": "Chạy backend: cd backend && python -m uvicorn app.main:app --port 8000 (hoặc bash scripts/dev.sh)",
+    "refresh": "Làm mới",
+    "reset": "Đặt lại",
+    "run": "Chạy",
+    "runStep": "Chạy bước",
+    "accepted": "Chấp nhận",
+    "rejected": "Từ chối",
+    "reason": "Lý do",
+    "measured": "Số đo của demo",
+    "download": "Tải JSON",
+    "chainA": "chain-A",
+    "chainB": "chain-B",
+    "replayMiss": "Thao tác này không có trong kịch bản replay — chạy local để thử tự do.",
+    "step": "Bước",
+    "done": "Xong",
+    "details": "Chi tiết"
+  },
+  "pg": {
+    "title": "Playground lõi",
+    "body": "Kiểm tra lõi dùng chung: explorer hai chuỗi, ví trình duyệt (ethers.js) ký giao dịch thô, backend tự kiểm chain-id; cùng bộ UI kit dùng cho ba module.",
+    "explorer": "Explorer hai chuỗi",
+    "wallet": "Ví trình duyệt",
+    "address": "Địa chỉ ví",
+    "walletNote": "Khóa riêng sinh ngẫu nhiên, chỉ lưu trong sessionStorage của tab này.",
+    "faucet": "Faucet 1 ETH",
+    "send": "Ký & gửi 0.01",
+    "wrongChain": "Ký sai chain-id",
+    "faucetOk": "Đã cấp ETH",
+    "sentOk": "Giao dịch thô được chấp nhận",
+    "rejected": "Bị từ chối",
+    "replayNote": "Replay: chữ ký được tạo thật trong trình duyệt, kết quả lấy từ kịch bản ghi sẵn.",
+    "kit": "UI kit dùng chung",
+    "pulse": "Gửi gói tin",
+    "jsonHint": "Gửi một giao dịch để xem chi tiết"
   }
 }

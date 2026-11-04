@@ -8,13 +8,49 @@
     "backendOk": "Backend is running",
     "backendDown": "Backend not reachable",
     "home": "Overview",
-    "language": "Language"
+    "language": "Language",
+    "modules": "Studies",
+    "tools": "Tools",
+    "playground": "Core playground",
+    "source": "Source on GitHub",
+    "author": "PhD candidate Tran Tuan Dung · Advisors: Assoc. Prof. Pham Van Hau, Assoc. Prof. Nguyen Tan Cam",
+    "replayHint": "Data replayed from a recorded scenario; run locally for the real backend."
   },
   "home": {
     "heroTitle": "Cross-chain security across the software lifecycle",
     "heroBody": "Three independent modules illustrate the three thesis studies: privacy-preserving design, pre-deployment contract auditing and post-deployment monitoring on two simulated EVM chains.",
     "open": "Open module",
-    "sdlc": "Secure SDLC phase"
+    "sdlc": "Secure SDLC phase",
+    "badge": "PhD thesis · Cross-chain security",
+    "stats": [
+      "3|independent studies",
+      "2|simulated EVM chains",
+      "5|Secure SDLC phases"
+    ],
+    "sdlcLabel": "Secure SDLC framework",
+    "sdlcTitle": "Three studies covering five phases",
+    "sdlcBody": "Each study is a self-contained module with its own page; there is no end-to-end pipeline coupling them.",
+    "phases": [
+      "Secure design",
+      "Secure coding",
+      "Testing & audit",
+      "Operations & monitoring",
+      "Evaluation & optimization"
+    ],
+    "tech": {
+      "chain": {
+        "title": "Real Solidity contracts",
+        "body": "Two in-memory EVM chains (py-evm): chain-A (id 31337) and chain-B (id 97). Every transaction is mined into its own block for easy observation."
+      },
+      "ml": {
+        "title": "Symbolic, fast algorithms",
+        "body": "Toy ZKP/TSS/CP-ABE, numpy/scikit-learn ML on small synthetic data with fixed seeds — every action runs under 3 seconds."
+      },
+      "modes": {
+        "title": "Live or Replay",
+        "body": "Run locally with the FastAPI backend (live), or view on GitHub Pages from recorded scenarios (replay) — the UI is identical."
+      }
+    }
   },
   "status": {
     "planned": "Planned",
@@ -25,20 +61,90 @@
     "topic": "Enhancing privacy in cross-chain communication",
     "sdlc": "1 · Secure Design",
     "summary": "Cross-chain academic credentials: the source chain anchors a Merkle commitment, the holder proves a business predicate in zero knowledge, a relay committee co-signs t-of-n and the destination chain verifies with ecrecover.",
-    "steps": ["Setup & key generation", "Issue credential", "Generate ZK proof", "Cross-chain verification", "Revocation"]
+    "steps": [
+      "Setup & key generation",
+      "Issue credential",
+      "Generate ZK proof",
+      "Cross-chain verification",
+      "Revocation"
+    ],
+    "short": "ZKP · TSS · CP-ABE",
+    "pubs": "DAVE-CC · Lotus · CrossCert"
   },
   "cd2": {
     "name": "CrossGuard",
     "topic": "Vulnerability detection and auditing of cross-chain smart contracts",
     "sdlc": "2–3 · Secure Coding · Testing & Audit",
     "summary": "Pre-deployment audit of bridge contracts: multi-source representation, few-shot classification, differentially private federated training and an audit report with protocol invariants.",
-    "steps": ["M1 · Multi-source representation", "M2 · Few-shot detection core", "M3 · DP-SGD federated training", "M4 · Audit report", "Exploit lab"]
+    "steps": [
+      "M1 · Multi-source representation",
+      "M2 · Few-shot detection core",
+      "M3 · DP-SGD federated training",
+      "M4 · Audit report",
+      "Exploit lab"
+    ],
+    "short": "Bridge contract auditing",
+    "pubs": "CrossGuard · FedVuln"
   },
   "cd3": {
     "name": "CrossSentry",
     "topic": "Anomaly detection and adaptive trust assessment in cross-chain communication",
     "sdlc": "4–5 · Operations & Monitoring · Evaluation & Optimization",
     "summary": "Monitoring a live bridge: two-chain event matching with evidence competence, Dempster–Shafer fusion, actor–corridor risk scores and R0–R5 responses with human approval.",
-    "steps": ["M1 · Events & evidence (ECA)", "M2 · DS fusion & CRS", "M3 · R0–R5 response & G-surv"]
+    "steps": [
+      "M1 · Events & evidence (ECA)",
+      "M2 · DS fusion & CRS",
+      "M3 · R0–R5 response & G-surv"
+    ],
+    "short": "Monitoring & adaptive trust",
+    "pubs": "CrossTrust-IoT · ChronosRep"
+  },
+  "common": {
+    "toy": "toy · illustrative",
+    "toyTooltip": "Toy version to illustrate the flow — not for real use",
+    "thesisResults": "Thesis results (cited)",
+    "source": "Source",
+    "thesisNote": "Figures quoted from the study report — NOT reproduced by this demo.",
+    "tourStart": "Presentation",
+    "tourStop": "Stop presentation",
+    "tourKeys": "Space: pause · →: next step · Esc: exit",
+    "head": "head",
+    "noTx": "No transactions yet",
+    "empty": "No data yet",
+    "loading": "Loading…",
+    "backendHint": "Start the backend: cd backend && python -m uvicorn app.main:app --port 8000 (or bash scripts/dev.sh)",
+    "refresh": "Refresh",
+    "reset": "Reset",
+    "run": "Run",
+    "runStep": "Run step",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "reason": "Reason",
+    "measured": "Demo measurements",
+    "download": "Download JSON",
+    "chainA": "chain-A",
+    "chainB": "chain-B",
+    "replayMiss": "This action is not in the replay scenario — run locally to explore freely.",
+    "step": "Step",
+    "done": "Done",
+    "details": "Details"
+  },
+  "pg": {
+    "title": "Core playground",
+    "body": "Exercise the shared core: a two-chain explorer, an in-browser wallet (ethers.js) signing raw transactions, chain-id checked by the backend; plus the UI kit shared by all three modules.",
+    "explorer": "Two-chain explorer",
+    "wallet": "Browser wallet",
+    "address": "Wallet address",
+    "walletNote": "Random private key, kept only in this tab's sessionStorage.",
+    "faucet": "Faucet 1 ETH",
+    "send": "Sign & send 0.01",
+    "wrongChain": "Sign wrong chain-id",
+    "faucetOk": "ETH granted",
+    "sentOk": "Raw transaction accepted",
+    "rejected": "Rejected",
+    "replayNote": "Replay: signatures are really produced in the browser; results come from the recorded scenario.",
+    "kit": "Shared UI kit",
+    "pulse": "Send packet",
+    "jsonHint": "Send a transaction to see its details"
   }
 }

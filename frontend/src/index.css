@@ -6,6 +6,10 @@
   color-scheme: dark;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   @apply bg-ink-950 text-slate-100 font-sans antialiased;
   background-image:
@@ -16,11 +20,73 @@ body {
   min-height: 100vh;
 }
 
+::selection {
+  background: rgba(139, 92, 246, 0.45);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
 @layer components {
   .glass {
     @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-xl;
   }
   .chip {
     @apply inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-slate-300;
+  }
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-slate-400;
+  }
+  .mono {
+    @apply font-mono text-[12px];
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+  }
+}
+
+/* React Flow — theme tối */
+.react-flow__attribution {
+  display: none;
+}
+.react-flow__controls button {
+  @apply border-white/10 bg-ink-800 fill-slate-300 text-slate-300;
+}
+.react-flow__controls button:hover {
+  @apply bg-ink-700;
+}
+
+/* Recharts */
+.recharts-default-tooltip {
+  @apply rounded-xl !border-white/10 !bg-ink-900/95 text-xs shadow-xl;
+}
+.recharts-cartesian-axis-tick text {
+  @apply fill-slate-400 text-[11px];
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
