@@ -29,7 +29,7 @@ export default function ChainPanel({ name, chainId, txs, color = "#22d3ee", max 
   const head = txs.length ? txs[txs.length - 1].block : 0;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-ink-950/50 p-3">
+    <div className="rounded-2xl border border-white/10 bg-surface-0/50 p-3">
       <div className="mb-2 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2 font-semibold">
           <span className="relative flex h-2.5 w-2.5">

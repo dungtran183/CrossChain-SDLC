@@ -35,7 +35,7 @@ export default function CommitteeRing({ relays, threshold, checks, signers, vali
             <stop offset="1" stopColor={center} stopOpacity={0} />
           </radialGradient>
         </defs>
-        <circle cx={cx} cy={cy} r={R} fill="none" stroke="rgba(255,255,255,0.08)" strokeDasharray="3 5" />
+        <circle cx={cx} cy={cy} r={R} fill="none" className="stroke-white/20" strokeDasharray="3 5" />
         <motion.circle cx={cx} cy={cy} r={58} fill="url(#ringGlow)" key={`g${pulse}`} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }} />
         {names.map((name, i) => {
           const p = pos(i);
@@ -67,7 +67,7 @@ export default function CommitteeRing({ relays, threshold, checks, signers, vali
             <motion.g key={`${name}${pulse}`} initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ delay: 0.08 * i, type: "spring" }} style={{ transformOrigin: `${p.x}px ${p.y}px` }}>
               {isSigner && <circle cx={p.x} cy={p.y} r={22} fill="none" stroke="#22d3ee" strokeOpacity={0.4} className="animate-pulse" />}
               <circle cx={p.x} cy={p.y} r={17} fill={fill} stroke={stroke} strokeWidth={1.6} style={isSigner ? { filter: "drop-shadow(0 0 8px #22d3ee)" } : undefined} />
-              <text x={p.x} y={p.y + 4} textAnchor="middle" fontSize={11} fontWeight={700} fill="#e2e8f0">
+              <text x={p.x} y={p.y + 4} textAnchor="middle" fontSize={11} fontWeight={700} className="fill-slate-100">
                 {name}
               </text>
               {c && (
@@ -78,11 +78,11 @@ export default function CommitteeRing({ relays, threshold, checks, signers, vali
             </motion.g>
           );
         })}
-        <circle cx={cx} cy={cy} r={34} fill="rgba(6,8,22,0.9)" stroke={center} strokeWidth={1.5} />
-        <text x={cx} y={cy - 4} textAnchor="middle" fontSize={18} fontWeight={800} fill="#f8fafc">
+        <circle cx={cx} cy={cy} r={34} className="fill-surface-1" stroke={center} strokeWidth={1.5} />
+        <text x={cx} y={cy - 4} textAnchor="middle" fontSize={18} fontWeight={800} className="fill-slate-50">
           {valid ?? 0}/{threshold}
         </text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fontSize={8} fill="#94a3b8">
+        <text x={cx} y={cy + 12} textAnchor="middle" fontSize={8} className="fill-slate-400">
           {t("cd1.ring.sigs")}
         </text>
       </svg>

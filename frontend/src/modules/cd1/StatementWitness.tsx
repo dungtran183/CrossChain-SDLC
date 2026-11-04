@@ -41,7 +41,7 @@ export default function StatementWitness({ data }: { data: ProveRes }) {
             <KeyValueTable rows={Object.entries(data.witness_hidden).map(([k, v]) => [k, String(v).repeat(3)])} />
           </div>
           <div className="absolute inset-0 grid place-items-center">
-            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-ink-900/90 px-3 py-1.5 text-xs">
+            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-surface-1/90 px-3 py-1.5 text-xs">
               <Lock className="h-3.5 w-3.5 text-amber-300" /> {t("cd1.sw.neverLeaves")}
             </div>
           </div>

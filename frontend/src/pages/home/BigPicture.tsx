@@ -87,7 +87,7 @@ export default function BigPicture() {
               const lit = !focus || st.threats.some((th) => th.by.includes(focus));
               return (
                 <motion.div key={st.key} animate={{ opacity: lit ? 1 : 0.3 }} className="relative space-y-2">
-                  <div className="relative z-10 mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-white/15 bg-ink-900 text-2xl shadow-lg">{["📐", "⌨️", "🔒", "🛰️", "🪙", "📡"][i]}</div>
+                  <div className="relative z-10 mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-white/15 bg-surface-1 text-2xl shadow-lg">{["📐", "⌨️", "🔒", "🛰️", "🪙", "📡"][i]}</div>
                   <div className="text-center text-sm font-semibold">{t(`big.stage.${st.key}`)}</div>
                   <div className="text-center text-[11px] text-slate-400">{t(`big.stageSub.${st.key}`)}</div>
                   <div className="space-y-1.5">
@@ -155,7 +155,7 @@ export default function BigPicture() {
               {tl(`big.${m.id}.results`).map((r) => {
                 const [v, l] = r.split("|");
                 return (
-                  <div key={r} className="rounded-lg bg-ink-950/50 px-2 py-1.5">
+                  <div key={r} className="rounded-lg bg-surface-0/50 px-2 py-1.5">
                     <div className="text-base font-extrabold" style={{ color: COLOR[m.id] }}>
                       {v}
                     </div>

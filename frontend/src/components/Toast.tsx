@@ -28,7 +28,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               initial={{ opacity: 0, x: 60, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 60 }}
-              className={`glass pointer-events-auto flex gap-3 border-l-4 bg-ink-900/90 p-3 ${
+              className={`glass pointer-events-auto flex gap-3 border-l-4 bg-surface-1/90 p-3 ${
                 t.kind === "success" ? "border-l-emerald-400" : t.kind === "error" ? "border-l-rose-500" : "border-l-sky-400"
               }`}
             >

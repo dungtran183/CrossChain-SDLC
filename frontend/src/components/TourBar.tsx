@@ -26,7 +26,7 @@ export default function TourBar({ tour, accent }: { tour: Tour; accent: string }
           exit={{ y: 80, opacity: 0 }}
           className="fixed inset-x-0 bottom-4 z-50 mx-auto w-[min(920px,calc(100%-2rem))]"
         >
-          <div className="glass overflow-hidden border-white/20 bg-ink-900/85 shadow-2xl">
+          <div className="glass overflow-hidden border-white/20 bg-surface-1/85 shadow-2xl">
             <div className="h-1 w-full bg-white/5">
               <motion.div className={`h-full bg-gradient-to-r ${accent}`} animate={{ width: `${((tour.index + 1) / tour.total) * 100}%` }} />
             </div>

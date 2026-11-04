@@ -38,7 +38,7 @@ export default function CodeViewer({ source, risky, maxHeight = 460 }: { source:
     return s;
   }, [risky]);
   return (
-    <div ref={box} className="relative overflow-auto rounded-xl border border-white/10 bg-ink-950/80 font-mono text-[12px] leading-[1.55]" style={{ maxHeight }}>
+    <div ref={box} className="theme-dark card-brut relative overflow-auto rounded-xl border border-white/10 bg-surface-0 font-mono text-slate-100 text-[12px] leading-[1.55]" style={{ maxHeight }}>
       <motion.div
         key={source.length}
         className="pointer-events-none absolute inset-x-0 h-10 bg-gradient-to-b from-transparent via-violet-400/15 to-transparent"

@@ -13,11 +13,13 @@
     "playground": "Core playground",
     "source": "Source on GitHub",
     "author": "PhD candidate Tran Tuan Dung · Advisors: Assoc. Prof. Pham Van Hau, Assoc. Prof. Nguyen Tan Cam",
-    "replayHint": "Data replayed from a recorded scenario; run locally for the real backend."
+    "replayHint": "Data replayed from a recorded scenario; run locally for the real backend.",
+    "toDark": "Switch to dark theme",
+    "toLight": "Switch to light theme"
   },
   "home": {
     "heroTitle": "Cross-chain security across the software lifecycle",
-    "heroBody": "A journey through the five Secure SDLC phases on a two-chain map: every checkpoint is one thesis study — privacy-preserving design, pre-deployment contract auditing, post-deployment monitoring and optimization.",
+    "heroBody": "The cross-chain Secure SDLC is a closed lifecycle of five phases; the three thesis studies secure the design phase, pre-deployment coding and auditing, and post-deployment operations and optimization.",
     "open": "Open module",
     "sdlc": "Secure SDLC phase",
     "badge": "PhD thesis · Cross-chain security",
@@ -471,28 +473,15 @@
   },
   "world": {
     "title": "Cross-chain Secure SDLC map",
-    "play": "Start the journey",
-    "player": "Player",
-    "quests": "quests",
-    "levels": [
-      "Cross-chain rookie",
-      "Secure designer",
-      "Bridge auditor",
-      "Bridge guardian",
-      "Cross-chain security architect"
-    ],
-    "chainA": "CHAIN-A CONTINENT · Ethereum-like",
-    "chainB": "CHAIN-B CONTINENT · BSC-like",
+    "play": "Explore the Secure SDLC framework",
     "bridge": "CROSS-CHAIN BRIDGE",
-    "start": "Requirements",
-    "goal": "Secure bridge",
-    "hint": "Click a checkpoint to inspect · double-click to enter",
+    "hint": "Select a phase for details · double-click to open the study",
     "phase": "Phase",
     "threats": "Threats",
     "contrib": "Thesis contributions",
-    "missions": "Missions in this level",
-    "enter": "Enter level",
-    "questDone": "Quest completed",
+    "missions": "Demonstrations",
+    "enter": "Open study",
+    "questDone": "Demonstrated",
     "p1": {
       "story": "Before any code is written, the protocol must be designed so the destination chain trusts cryptographic evidence — not relays — without leaking user data.",
       "threats": [
@@ -561,33 +550,37 @@
         "G-surv: Gini index of monitoring intensity",
         "Objective F(Θ) = w_d·U_det − w_g·G_surv − w_c·C_op"
       ]
-    }
+    },
+    "label": "Thesis overview",
+    "coverage": "Demonstration coverage",
+    "feedback": "FEEDBACK & CONTINUOUS IMPROVEMENT",
+    "cycle": "closed lifecycle · 5 phases"
   },
   "quest": {
     "cd1": {
-      "setup": "Set up the 5-relay committee",
-      "issue": "Anchor a credential batch root",
+      "setup": "Set up the 5-relay committee and both contracts",
+      "issue": "Anchor the credential batch Merkle root",
       "prove": "Prove a predicate",
-      "accepted": "Get accepted on chain-B",
-      "tamper": "Block a forgery",
-      "revoke": "Revoke a credential",
-      "shamir": "Try Shamir secret sharing",
-      "abe": "Decrypt with CP-ABE attributes"
+      "accepted": "Attestation accepted on chain-B",
+      "tamper": "Contract rejects a forgery",
+      "revoke": "Revoke a credential and re-verify",
+      "shamir": "Shamir (t, n) secret sharing",
+      "abe": "Attribute-based CP-ABE decryption"
     },
     "cd2": {
-      "m1": "Inspect the multi-source view (M1)",
+      "m1": "Multi-source representation (M1)",
       "m2": "Few-shot classification (M2)",
-      "m3": "Run DP-SGD federated learning (M3)",
-      "m4": "Read the audit report (M4)",
-      "exploit": "Exploit a buggy bridge",
-      "fixed": "Get stopped by the fix"
+      "m3": "DP-SGD federated learning (M3)",
+      "m4": "Audit report and invariants (M4)",
+      "exploit": "Exploit a buggy contract on the EVM",
+      "fixed": "The fix blocks the attack"
     },
     "cd3": {
-      "run": "Run the bridge",
-      "attack": "Trigger an attack scenario",
+      "run": "Monitor bridge traffic",
+      "attack": "Attack scenario detected",
       "approve": "Approve isolating an actor (R4)",
       "pause": "Approve pausing the bridge (R5)",
-      "tune": "Optimise Θ"
+      "tune": "Tune Θ with G-surv"
     }
   },
   "big": {

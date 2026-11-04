@@ -35,7 +35,7 @@ function FedDiagram({ round, res }: { round: number; res: M3Res | null }) {
               </>
             )}
             <rect x={x - 26} y={y - 18} width={52} height={36} rx={9} fill="rgba(139,92,246,0.12)" stroke="#8b5cf6" strokeOpacity={0.6} />
-            <text x={x} y={y - 3} textAnchor="middle" fontSize={10} fontWeight={700} fill="#e9d5ff">
+            <text x={x} y={y - 3} textAnchor="middle" fontSize={10} fontWeight={700} className="fill-purple-200">
               {c.client}
             </text>
             {c.label_hist.map((v, k) => {
@@ -49,11 +49,11 @@ function FedDiagram({ round, res }: { round: number; res: M3Res | null }) {
       })}
       <motion.g animate={round > 0 ? { scale: [1, 1.08, 1] } : {}} transition={{ duration: 0.5 }} key={round} style={{ transformOrigin: `${cx}px ${cy}px` }}>
         <circle cx={cx} cy={cy} r={26} fill="rgba(99,102,241,0.2)" stroke="#818cf8" />
-        <text x={cx} y={cy + 4} textAnchor="middle" fontSize={10} fontWeight={700} fill="#e0e7ff">
+        <text x={cx} y={cy + 4} textAnchor="middle" fontSize={10} fontWeight={700} className="fill-indigo-100">
           FedAvg
         </text>
       </motion.g>
-      <text x={cx} y={cy - 36} textAnchor="middle" fontSize={11} fill="#a5b4fc">
+      <text x={cx} y={cy - 36} textAnchor="middle" fontSize={11} className="fill-indigo-300">
         round {round}/{res?.rounds ?? "–"}
       </text>
     </svg>
@@ -79,7 +79,7 @@ export default function M3Panel({ res, eps, alpha, setEps, setAlpha, run, busy, 
   return (
     <div className="grid gap-4 xl:grid-cols-[1fr_1.4fr]">
       <div className="space-y-3">
-        <div className="rounded-xl border border-white/10 bg-ink-950/60 p-2">
+        <div className="rounded-xl border border-white/10 bg-surface-0/60 p-2">
           <FedDiagram round={round} res={res} />
         </div>
         <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
@@ -116,7 +116,7 @@ export default function M3Panel({ res, eps, alpha, setEps, setAlpha, run, busy, 
             </div>
           ))}
         </div>
-        <div className="h-52 rounded-xl border border-white/10 bg-ink-950/60 p-2">
+        <div className="h-52 rounded-xl border border-white/10 bg-surface-0/60 p-2">
           <ResponsiveContainer>
             <LineChart data={hist} margin={{ top: 8, right: 12, left: -10, bottom: 0 }}>
               <CartesianGrid stroke={CHART.grid} />
@@ -130,7 +130,7 @@ export default function M3Panel({ res, eps, alpha, setEps, setAlpha, run, busy, 
           </ResponsiveContainer>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
-          <div className="h-40 rounded-xl border border-white/10 bg-ink-950/60 p-2">
+          <div className="h-40 rounded-xl border border-white/10 bg-surface-0/60 p-2">
             <div className="label px-2">{t("cd2.m3.epsCurve")}</div>
             <ResponsiveContainer height="85%">
               <AreaChart data={hist} margin={{ top: 6, right: 8, left: -20, bottom: 0 }}>
@@ -148,7 +148,7 @@ export default function M3Panel({ res, eps, alpha, setEps, setAlpha, run, busy, 
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="h-40 rounded-xl border border-white/10 bg-ink-950/60 p-2">
+          <div className="h-40 rounded-xl border border-white/10 bg-surface-0/60 p-2">
             <div className="label flex items-center gap-1 px-2">
               <ShieldCheck className="h-3 w-3" /> {t("cd2.m3.clip")}
             </div>

@@ -56,7 +56,7 @@ export default function ResponsePanel({ st, decide, busy, tune, w, setW, runTune
           {st.queue.length === 0 && <div className="text-xs text-slate-500">{t("cd3.m3.noQueue")}</div>}
           <div className="space-y-1.5">
             {[...st.queue].reverse().map((q) => (
-              <motion.div key={q.id} layout initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-xs ${q.status === "pending" ? "border-rose-400/50 bg-rose-500/10" : "border-white/10 bg-ink-950/40"}`}>
+              <motion.div key={q.id} layout initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-xs ${q.status === "pending" ? "border-rose-400/50 bg-rose-500/10" : "border-white/10 bg-surface-0/40"}`}>
                 <span className="rounded-md px-1.5 py-0.5 font-bold text-ink-950" style={{ background: LEVEL_COLORS[Number(q.level[1])] }}>
                   {q.level}
                 </span>
@@ -103,7 +103,7 @@ export default function ResponsePanel({ st, decide, busy, tune, w, setW, runTune
             <AnimatedNumber value={st.gsurv.gini} decimals={3} className="text-3xl font-extrabold text-amber-200" />
             <div className="mt-1 text-[10px] text-slate-400">{t("cd3.m3.giniHint")}</div>
           </div>
-          <div className="h-40 rounded-xl border border-white/10 bg-ink-950/60 p-2">
+          <div className="h-40 rounded-xl border border-white/10 bg-surface-0/60 p-2">
             <ResponsiveContainer>
               <AreaChart data={st.gsurv.lorenz} margin={{ top: 6, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid stroke={CHART.grid} />

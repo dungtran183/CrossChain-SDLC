@@ -36,7 +36,7 @@ export default function M2Panel({ m2, emb, k, setK, catLabel }: Props) {
   const nearest = emb.prototypes.find((p) => p.cls === m2.label);
   return (
     <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
-      <div className="rounded-xl border border-white/10 bg-ink-950/60 p-3">
+      <div className="rounded-xl border border-white/10 bg-surface-0/60 p-3">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <div className="text-xs font-semibold">{t("cd2.m2.space")}</div>
           <div className="flex rounded-lg border border-white/10 p-0.5 text-xs">

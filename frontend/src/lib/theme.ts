@@ -18,8 +18,8 @@ export const ACCENTS: Record<"cd1" | "cd2" | "cd3" | "core", Accent> = {
 
 /** Bảng màu biểu đồ dùng chung (đủ tương phản trên nền tối). */
 export const CHART = {
-  grid: "rgba(255,255,255,0.06)",
-  axis: "rgba(148,163,184,0.6)",
+  grid: "rgb(var(--c-white) / 0.08)",
+  axis: "rgb(var(--c-slate-400))",
   good: "#34d399",
   bad: "#fb7185",
   warn: "#fbbf24",

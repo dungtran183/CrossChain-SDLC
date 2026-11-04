@@ -86,7 +86,7 @@ export default function ShamirPanel({ api }: { api: Client }) {
             <CartesianGrid stroke={CHART.grid} />
             <XAxis type="number" dataKey="x" domain={[0, 5.5]} ticks={[0, 1, 2, 3, 4, 5]} stroke={CHART.axis} />
             <YAxis type="number" dataKey="y" stroke={CHART.axis} width={48} />
-            <Tooltip cursor={{ stroke: "rgba(255,255,255,0.2)" }} />
+            <Tooltip cursor={{ stroke: "rgb(var(--c-white) / 0.2)" }} />
             <Line data={data?.curve ?? []} dataKey="y" stroke="#22d3ee" dot={false} strokeWidth={2} isAnimationActive />
             <Scatter data={(data?.shares ?? []).filter((s) => use.includes(s.x))} fill="#5eead4" />
             <Scatter data={(data?.shares ?? []).filter((s) => !use.includes(s.x))} fill="#475569" />

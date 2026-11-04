@@ -11,9 +11,10 @@ Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài �
 ---
 
 ## Trải nghiệm / Experience
-- **Trang chủ = bản đồ thế giới kiểu game**: hai lục địa chain-A / chain-B nối bằng cây cầu; con đường Secure SDLC đi qua 5 cửa ải (Thiết kế → Lập trình → Kiểm thử & kiểm toán → Vận hành → Tối ưu). Bấm cửa ải để xem câu chuyện, mối đe dọa, đóng góp và nhiệm vụ; bấm "Vào màn chơi" để vào chuyên đề. Mỗi thao tác quan trọng là một nhiệm vụ (+100 XP), có cấp độ, sao và cúp cho từng chuyên đề.
+- **Bản đồ khung Secure SDLC** (trang chủ): năm giai đoạn (Thiết kế → Lập trình → Kiểm thử & kiểm toán → Vận hành & giám sát → Đánh giá & tối ưu) trên một **vòng đời khép kín** — giai đoạn 5 phản hồi về giai đoạn 1 — bao quanh cây cầu liên chuỗi giữa chain-A và chain-B. Ba cung màu đánh dấu phạm vi CĐ1, CĐ2, CĐ3. Chọn một giai đoạn để xem mô tả, mối đe dọa, đóng góp và các nội dung trình diễn; "Mở chuyên đề" để vào trang chi tiết. Mức độ trình diễn (đã trình diễn x/19 nội dung) được ghi nhận khi thao tác trong các chuyên đề.
 - **Bức tranh tổng thể**: luận điểm, 3 câu hỏi nghiên cứu, vòng đời một thông điệp liên chuỗi với mối đe dọa ở từng chặng và chuyên đề phòng vệ, thẻ đóng góp + kết quả của từng chuyên đề.
 - **Sự cố thực tế**: 9 vụ tấn công cầu nối tiêu biểu (Ronin, Wormhole, Nomad, Poly Network, BNB Bridge…) ánh xạ sang chuyên đề và màn demo tương ứng.
+- **Giao diện sáng / tối**: mặc định sáng theo nhận diện blockchainist.net (nền giấy, viền mực, bóng đổ cứng; Unbounded · Space Grotesk · JetBrains Mono); nút mặt trăng/mặt trời ở góc phải trên để chuyển sang giao diện tối.
 
 ## Ba module độc lập / Three independent modules
 

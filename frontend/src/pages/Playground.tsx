@@ -133,7 +133,7 @@ export default function Playground() {
           <GlassCard title={t("pg.wallet")} icon={<WalletIcon className="h-4 w-4" />} accent={ACCENTS.core.grad} className="h-full">
             <div className="relative space-y-4">
               <Burst trigger={flash?.tone === "success" ? flash.k : undefined} />
-              <div className="rounded-xl border border-white/10 bg-ink-950/60 p-3">
+              <div className="rounded-xl border border-white/10 bg-surface-0/60 p-3">
                 <div className="label mb-1 flex items-center gap-1">
                   <KeyRound className="h-3 w-3" /> {t("pg.address")}
                 </div>

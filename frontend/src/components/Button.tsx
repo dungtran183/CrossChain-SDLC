@@ -26,7 +26,7 @@ export default function Button({ variant = "primary", accent = "from-sky-400 to-
     success: "bg-gradient-to-r from-emerald-400 to-teal-500 text-ink-950 shadow-lg hover:brightness-110",
   };
   return (
-    <button {...rest} disabled={disabled || loading} className={`group ${BASE} ${sz} ${v[variant]} ${className}`}>
+    <button {...rest} disabled={disabled || loading} className={`group btn-brut ${BASE} ${sz} ${v[variant]} ${className}`}>
       {(variant === "primary" || variant === "danger" || variant === "success") && (
         <span className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-[120%] skew-x-[-20deg] bg-white/40 opacity-0 blur-md transition group-hover:animate-shimmer group-hover:opacity-100" />
       )}

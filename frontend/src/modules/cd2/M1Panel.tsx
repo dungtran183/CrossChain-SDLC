@@ -5,6 +5,7 @@ import "@xyflow/react/dist/style.css";
 import { Check, Minus, Network, Text, Workflow } from "lucide-react";
 import type { M1Res } from "./types";
 import { useT } from "../../i18n/useT";
+import { useTheme } from "../../lib/themeMode";
 
 const TYPE_STYLE: Record<string, { bg: string; border: string; col: number }> = {
   modifier: { bg: "rgba(96,165,250,0.15)", border: "#60a5fa", col: 0 },
@@ -30,7 +31,7 @@ function layout(m1: M1Res): { nodes: Node[]; edges: Edge[] } {
       style: {
         background: st.bg,
         border: `1px solid ${st.border}`,
-        color: "#e2e8f0",
+        color: "rgb(var(--c-slate-100))",
         borderRadius: 10,
         fontSize: 11,
         fontFamily: "JetBrains Mono, monospace",
@@ -54,11 +55,12 @@ function layout(m1: M1Res): { nodes: Node[]; edges: Edge[] } {
 /** M1 · biểu diễn đa nguồn: đồ thị cấu trúc (≈CPG), văn bản (token), tương tác liên chuỗi. */
 export default function M1Panel({ m1 }: { m1: M1Res }) {
   const { t } = useT();
+  const { mode } = useTheme();
   const g = useMemo(() => layout(m1), [m1]);
   const maxTop = Math.max(...m1.tokens.top.map((x) => x.n), 1);
   return (
     <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-      <div className="rounded-xl border border-white/10 bg-ink-950/60">
+      <div className="rounded-xl border border-white/10 bg-surface-0/60">
         <div className="flex items-center justify-between px-3 py-2 text-xs">
           <span className="flex items-center gap-2 font-semibold">
             <Workflow className="h-3.5 w-3.5 text-violet-300" /> {t("cd2.m1.structure")}
@@ -68,8 +70,8 @@ export default function M1Panel({ m1 }: { m1: M1Res }) {
           </span>
         </div>
         <div className="h-[420px]">
-          <ReactFlow nodes={g.nodes} edges={g.edges} fitView proOptions={{ hideAttribution: true }} nodesDraggable panOnScroll={false} zoomOnScroll={false} colorMode="dark">
-            <Background color="rgba(255,255,255,0.06)" gap={20} />
+          <ReactFlow nodes={g.nodes} edges={g.edges} fitView proOptions={{ hideAttribution: true }} nodesDraggable panOnScroll={false} zoomOnScroll={false} colorMode={mode}>
+            <Background color={mode === "light" ? "rgba(22,20,15,0.1)" : "rgba(255,255,255,0.06)"} gap={20} />
           </ReactFlow>
         </div>
         <div className="flex flex-wrap gap-2 px-3 pb-3 text-[10px]">

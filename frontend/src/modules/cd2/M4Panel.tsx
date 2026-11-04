@@ -52,7 +52,7 @@ export default function M4Panel({ r, catLabel }: { r: M4Res; catLabel: (c: strin
           <div className="label mb-2">{t("cd2.m4.invariants")}</div>
           <div className="space-y-2">
             {r.invariants.map((inv, i) => (
-              <motion.div key={inv.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }} className="rounded-lg border border-white/5 bg-ink-950/50 p-2">
+              <motion.div key={inv.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }} className="rounded-lg border border-white/5 bg-surface-0/50 p-2">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="font-mono font-bold text-slate-100">{inv.id}</span>
                   <span className={`rounded-full border px-2 py-0.5 text-[10px] ${inv.kind === "hard" ? "border-rose-400/40 text-rose-200" : "border-slate-400/40 text-slate-300"}`}>{inv.kind}</span>

@@ -7,7 +7,7 @@ type Tab = { id: string; label: ReactNode; icon?: ReactNode };
 export default function Tabs({ tabs, value, onChange, accent = "from-sky-400 to-fuchsia-500" }: { tabs: Tab[]; value: string; onChange: (id: string) => void; accent?: string }) {
   const id = useId();
   return (
-    <div className="flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.03] p-1" role="tablist">
+    <div className="tabs-brut flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.03] p-1" role="tablist">
       {tabs.map((t) => (
         <button
           key={t.id}

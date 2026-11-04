@@ -14,7 +14,7 @@ export default function Gauge({ value, label, size = 150, colors = ["#34d399", "
     <div className="relative inline-grid place-items-center" style={{ width: size, height: size * 0.82 }}>
       <svg viewBox="0 0 120 110" width={size} height={size * 0.92} className="absolute top-0">
         <g transform="rotate(150 60 60)">
-          <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="9" strokeDasharray={`${arc} ${C}`} strokeLinecap="round" />
+          <circle cx="60" cy="60" r={r} fill="none" className="stroke-white/10" strokeWidth="9" strokeDasharray={`${arc} ${C}`} strokeLinecap="round" />
           <motion.circle
             cx="60"
             cy="60"

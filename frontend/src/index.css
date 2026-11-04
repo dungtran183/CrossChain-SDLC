@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Hai theme (html[data-theme]):
+ *  - light (mặc định): phong cách blockchainist.net — giấy kem có lưới, viền mực 2px, bóng đổ cứng lệch,
+ *    màu nhấn tươi; tiêu đề Unbounded, thân Space Grotesk, mã JetBrains Mono.
+ *  - dark: nền tối, kính mờ, phát sáng.
+ * Màu cụ thể nằm ở biến CSS sinh trong tailwind.config.js.
+ */
 :root {
+  --ink: #16140f;
+  --paper: #f6f3ec;
+  --yellow: #ffc730;
+  --radius: 14px;
+  color-scheme: light;
+}
+html[data-theme="dark"] {
   color-scheme: dark;
 }
 
@@ -11,17 +25,41 @@ html {
 }
 
 body {
-  @apply bg-ink-950 text-slate-100 font-sans antialiased;
+  @apply bg-surface-0 text-slate-100 font-sans antialiased;
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+html[data-theme="dark"] body {
   background-image:
     radial-gradient(1200px 600px at 10% -10%, rgba(34, 211, 238, 0.12), transparent 60%),
     radial-gradient(900px 500px at 90% 0%, rgba(139, 92, 246, 0.14), transparent 60%),
     radial-gradient(900px 600px at 50% 110%, rgba(245, 158, 11, 0.08), transparent 60%);
-  background-attachment: fixed;
-  min-height: 100vh;
+}
+html[data-theme="light"] body {
+  /* lưới sổ cái mờ */
+  background-image:
+    linear-gradient(#efebe1 1px, transparent 1px),
+    linear-gradient(90deg, #efebe1 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+h1,
+h2 {
+  @apply font-display;
+  letter-spacing: -0.02em;
 }
 
 ::selection {
   background: rgba(139, 92, 246, 0.45);
+}
+html[data-theme="light"] ::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
+:focus-visible {
+  outline: 3px solid #3d8bff;
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar {
@@ -29,13 +67,10 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(var(--c-white) / 0.12);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.16);
 }
 
 @layer components {
@@ -46,15 +81,15 @@ body {
     @apply inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-slate-300;
   }
   .label {
-    @apply text-[11px] font-semibold uppercase tracking-wider text-slate-400;
+    @apply font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-400;
   }
   .mono {
     @apply font-mono text-[12px];
   }
   .grid-bg {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      linear-gradient(rgb(var(--c-white) / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-white) / 0.035) 1px, transparent 1px);
     background-size: 28px 28px;
   }
   .text-gradient {
@@ -62,23 +97,98 @@ body {
   }
 }
 
-/* React Flow — theme tối */
+/* ----------------------------------------------------------- theme sáng: neo-brutalist -- */
+html[data-theme="light"] .glass {
+  background: #fffdf8;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 5px 5px 0 var(--ink);
+  backdrop-filter: none;
+}
+html[data-theme="light"] .glass .glass {
+  box-shadow: 3px 3px 0 var(--ink);
+}
+html[data-theme="light"] .chip {
+  border: 2px solid var(--ink);
+  background: #fffdf8;
+  color: var(--ink);
+  font-weight: 600;
+}
+html[data-theme="light"] .btn-brut {
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+html[data-theme="light"] .btn-brut:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink);
+  filter: none;
+}
+html[data-theme="light"] .btn-brut:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+html[data-theme="light"] .tabs-brut {
+  border: 2px solid var(--ink);
+  background: #fffdf8;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+html[data-theme="light"] .tabs-brut [aria-selected="true"] > span:first-child {
+  border: 2px solid var(--ink);
+}
+html[data-theme="light"] .card-brut {
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+html[data-theme="light"] .brand-title {
+  color: var(--ink);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+html[data-theme="light"] .hero-title {
+  background: none;
+  color: var(--ink);
+  -webkit-text-fill-color: currentColor;
+}
+html[data-theme="light"] .hero-title .hl {
+  color: var(--yellow);
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+}
+
+html[data-theme="light"] .mod-title {
+  background: linear-gradient(transparent 58%, var(--hl) 58%);
+  color: var(--ink);
+  -webkit-text-fill-color: currentColor;
+  padding: 0 4px;
+}
+
+/* React Flow */
 .react-flow__attribution {
   display: none;
 }
 .react-flow__controls button {
-  @apply border-white/10 bg-ink-800 fill-slate-300 text-slate-300;
+  @apply border-white/10 bg-surface-2 fill-slate-300 text-slate-300;
 }
 .react-flow__controls button:hover {
-  @apply bg-ink-700;
+  @apply bg-surface-3;
 }
 
-/* Recharts */
+/* Recharts: lưới/trục theo theme (CSS ghi đè thuộc tính SVG) */
 .recharts-default-tooltip {
-  @apply rounded-xl !border-white/10 !bg-ink-900/95 text-xs shadow-xl;
+  @apply rounded-xl !border-white/10 !bg-surface-1/95 text-xs shadow-xl;
 }
 .recharts-cartesian-axis-tick text {
   @apply fill-slate-400 text-[11px];
+}
+.recharts-cartesian-grid line {
+  stroke: rgb(var(--c-white) / 0.08);
+}
+.recharts-cartesian-axis-line {
+  stroke: rgb(var(--c-white) / 0.35);
+}
+.recharts-legend-item-text {
+  color: rgb(var(--c-slate-300)) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

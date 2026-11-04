@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Flame, FlaskConical, GitBranch, House, Menu, Radio, X } from "lucide-react";
+import { Flame, FlaskConical, GitBranch, House, Menu, Moon, Radio, Sun, X } from "lucide-react";
 import { useT, type Lang } from "./i18n/useT";
 import { MODULES } from "./modules/registry";
 import { MODE, checkHealth } from "./lib/api";
@@ -9,7 +9,8 @@ import Home from "./pages/Home";
 import ParticleField from "./components/fx/ParticleField";
 import { Loading } from "./components/States";
 import { useToast } from "./components/Toast";
-import { onQuest, XP_PER_QUEST } from "./lib/progress";
+import { onQuest } from "./lib/progress";
+import { useTheme } from "./lib/themeMode";
 
 const Playground = lazy(() => import("./pages/Playground"));
 const Incidents = lazy(() => import("./pages/Incidents"));
@@ -23,13 +24,23 @@ function LangToggle() {
         <button
           key={l}
           onClick={() => setLang(l)}
-          className={`relative rounded-full px-3 py-1 text-xs font-semibold uppercase transition ${lang === l ? "text-ink-950" : "text-slate-300 hover:text-white"}`}
+          className={`relative rounded-full px-3 py-1 text-xs font-semibold uppercase transition ${lang === l ? "text-surface-0" : "text-slate-300 hover:text-white"}`}
         >
           {lang === l && <motion.span layoutId="lang-pill" className="absolute inset-0 rounded-full bg-white" />}
           <span className="relative">{l}</span>
         </button>
       ))}
     </div>
+  );
+}
+
+function ThemeToggle() {
+  const { mode, toggle } = useTheme();
+  const { t } = useT();
+  return (
+    <button onClick={toggle} className="btn-brut grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10" title={t(mode === "light" ? "app.toDark" : "app.toLight")} aria-label={t(mode === "light" ? "app.toDark" : "app.toLight")}>
+      {mode === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+    </button>
   );
 }
 
@@ -108,8 +119,11 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+const PARTICLES_LIGHT = ["22,20,15", "61,139,255", "162,107,255"];
+
 export default function App() {
   const { t } = useT();
+  const { mode } = useTheme();
   const location = useLocation();
   const [menu, setMenu] = useState(false);
   const toast = useToast();
@@ -118,7 +132,7 @@ export default function App() {
   useEffect(
     () =>
       onQuest((id) => {
-        if (id) toast({ kind: "success", title: `🏅 ${t("world.questDone")} +${XP_PER_QUEST} XP`, body: t(`quest.${id}`) });
+        if (id) toast({ kind: "info", title: t("world.questDone"), body: t(`quest.${id}`) });
       }),
     [toast, t],
   );
@@ -129,11 +143,11 @@ export default function App() {
 
   return (
     <>
-      <ParticleField className="fixed inset-0 -z-10 h-full w-full opacity-70" />
+      <ParticleField key={mode} className="fixed inset-0 -z-10 h-full w-full opacity-70" colors={mode === "light" ? PARTICLES_LIGHT : undefined} density={mode === "light" ? 0.6 : 1} />
       <div className="mx-auto flex min-h-screen max-w-[1680px] gap-6 px-3 py-4 sm:px-5 lg:py-6">
         <aside className="glass sticky top-6 hidden h-[calc(100vh-3rem)] w-64 shrink-0 flex-col p-4 lg:flex">
           <div className="mb-6 px-2">
-            <div className="bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text text-lg font-extrabold tracking-tight text-transparent">{t("app.title")}</div>
+            <div className="brand-title bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text font-display text-base font-extrabold leading-tight tracking-tight text-transparent">{t("app.title")}</div>
             <div className="text-xs text-slate-400">{t("app.subtitle")}</div>
           </div>
           <NavItems />
@@ -146,16 +160,17 @@ export default function App() {
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-5">
-          <header className="glass sticky top-3 z-40 flex flex-wrap items-center justify-between gap-3 bg-ink-900/60 px-4 py-2.5">
+          <header className="glass sticky top-3 z-40 flex flex-wrap items-center justify-between gap-3 bg-surface-1/60 px-4 py-2.5">
             <div className="flex items-center gap-3">
               <button className="rounded-lg p-1.5 hover:bg-white/10 lg:hidden" onClick={() => setMenu(true)} aria-label="menu">
                 <Menu className="h-5 w-5" />
               </button>
-              <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text text-sm font-bold text-transparent lg:hidden">{t("app.title")}</span>
+              <span className="brand-title bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text font-display text-sm font-bold text-transparent lg:hidden">{t("app.title")}</span>
             </div>
             <div className="flex items-center gap-2">
               <ModeBadge />
               <LangToggle />
+              <ThemeToggle />
             </div>
           </header>
 
@@ -193,7 +208,7 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="glass h-full w-72 rounded-none bg-ink-900/95 p-4"
+              className="glass h-full w-72 rounded-none bg-surface-1/95 p-4"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 flex items-center justify-between px-2">

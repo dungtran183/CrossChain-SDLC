@@ -35,7 +35,7 @@ function BridgeHero() {
       {blocks.map((i) => (
         <motion.g key={`a${i}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 * i }}>
           <rect x={40} y={14 + i * 40} width={86} height={30} rx={8} fill="rgba(34,211,238,0.08)" stroke="url(#hA)" strokeWidth={1.2} />
-          <text x={50} y={33 + i * 40} fill="#a5f3fc" fontSize={10} fontFamily="JetBrains Mono">
+          <text x={50} y={33 + i * 40} className="fill-cyan-200" fontSize={10} fontFamily="JetBrains Mono">
             A · #{120 + i}
           </text>
           {i < 3 && <line x1={83} y1={44 + i * 40} x2={83} y2={54 + i * 40} stroke="#22d3ee" strokeOpacity={0.5} />}
@@ -45,7 +45,7 @@ function BridgeHero() {
       {blocks.map((i) => (
         <motion.g key={`b${i}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 * i + 0.3 }}>
           <rect x={434} y={14 + i * 40} width={86} height={30} rx={8} fill="rgba(245,158,11,0.08)" stroke="url(#hB)" strokeWidth={1.2} />
-          <text x={444} y={33 + i * 40} fill="#fde68a" fontSize={10} fontFamily="JetBrains Mono">
+          <text x={444} y={33 + i * 40} className="fill-amber-200" fontSize={10} fontFamily="JetBrains Mono">
             B · #{87 + i}
           </text>
           {i < 3 && <line x1={477} y1={44 + i * 40} x2={477} y2={54 + i * 40} stroke="#f59e0b" strokeOpacity={0.5} />}
@@ -101,7 +101,7 @@ export default function Home() {
               </span>
               <span className="chip">{MODE === "replay" ? t("app.replayMode") : t("app.liveMode")}</span>
             </div>
-            <h1 className="animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-3xl font-extrabold leading-tight tracking-tight text-transparent sm:text-4xl">
+            <h1 className="hero-title animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-3xl font-extrabold leading-tight tracking-tight text-transparent sm:text-4xl">
               {t("home.heroTitle")}
             </h1>
             <p className="mt-3 max-w-2xl text-base text-slate-300">{t("home.heroBody")}</p>

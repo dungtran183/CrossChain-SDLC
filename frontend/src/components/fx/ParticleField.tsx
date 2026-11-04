@@ -6,11 +6,9 @@ type Props = { className?: string; density?: number; colors?: string[] };
  * Nền "mạng nút" bằng canvas: các hạt trôi chậm, nối nhau khi gần, phản ứng nhẹ với chuột.
  * Nhẹ (~60 hạt), tạm dừng khi tab ẩn, tắt chuyển động khi prefers-reduced-motion.
  */
-export default function ParticleField({
-  className = "",
-  density = 1,
-  colors = ["34,211,238", "139,92,246", "245,158,11"],
-}: Props) {
+const DEFAULT_COLORS = ["34,211,238", "139,92,246", "245,158,11"];
+
+export default function ParticleField({ className = "", density = 1, colors = DEFAULT_COLORS }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

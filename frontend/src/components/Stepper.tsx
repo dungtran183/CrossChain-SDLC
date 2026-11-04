@@ -43,8 +43,8 @@ export default function Stepper({ steps, states, accent, onSelect }: Props) {
                       : st === "error"
                         ? "border-rose-400 bg-rose-500/20 text-rose-200"
                         : st === "active"
-                          ? "border-white/60 bg-ink-800 text-white"
-                          : "border-white/15 bg-ink-900 text-slate-500"
+                          ? "border-white/60 bg-surface-2 text-white"
+                          : "border-white/15 bg-surface-1 text-slate-500"
                   }`}
                   animate={st === "done" ? { scale: [1, 1.15, 1] } : { scale: 1 }}
                 >

@@ -239,7 +239,7 @@ export default function Cd3Page() {
             { k: t("cd3.kpi.pending"), v: pendingCount, c: pendingCount ? "text-rose-300" : "text-slate-300" },
             { k: t("cd3.kpi.bridge"), v: st?.paused ? `⏸ ${t("cd3.kpi.paused")}` : `● ${t("cd3.kpi.running")}`, c: st?.paused ? "text-rose-300" : "text-emerald-300" },
           ].map((x) => (
-            <div key={x.k} className="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2">
+            <div key={x.k} className="rounded-xl border border-white/10 bg-surface-0/40 px-3 py-2">
               <div className={`text-xl font-bold tabular-nums ${x.c}`}>{x.v}</div>
               <div className="text-[11px] text-slate-400">{x.k}</div>
             </div>
@@ -276,7 +276,7 @@ export default function Cd3Page() {
                   <ActorGraph graph={st.graph} executed={st.executed} />
                   <div className="max-h-[420px] overflow-auto rounded-xl border border-white/10">
                     <table className="w-full text-[11px]">
-                      <thead className="sticky top-0 bg-ink-900 text-slate-400">
+                      <thead className="sticky top-0 bg-surface-1 text-slate-400">
                         <tr>
                           {["t", t("cd3.ev.kind"), t("cd3.ev.actors"), "p̂", "κ_L", "κ_P", t("cd3.ev.rules"), "Bel"].map((h) => (
                             <th key={h} className="px-2 py-1.5 text-left font-semibold">
@@ -337,7 +337,7 @@ export default function Cd3Page() {
                         </button>
                       ))}
                     </div>
-                    <div className="h-72 rounded-xl border border-white/10 bg-ink-950/60 p-2">
+                    <div className="h-72 rounded-xl border border-white/10 bg-surface-0/60 p-2">
                       {sel ? (
                         <ResponsiveContainer>
                           <LineChart data={chartData} margin={{ top: 10, right: 12, left: -16, bottom: 0 }}>
@@ -393,7 +393,7 @@ export default function Cd3Page() {
       <AnimatePresence>
         {modal && (
           <motion.div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <motion.div initial={{ scale: 0.85, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0 }} className="glass w-full max-w-md overflow-hidden border-rose-500/40 bg-ink-900/95">
+            <motion.div initial={{ scale: 0.85, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0 }} className="glass w-full max-w-md overflow-hidden border-rose-500/40 bg-surface-1/95">
               <div className="h-1 w-full animate-gradient-x bg-gradient-to-r from-rose-500 via-amber-400 to-rose-500 bg-[length:200%_auto]" />
               <div className="space-y-4 p-6">
                 <div className="flex items-center gap-3">
@@ -408,7 +408,7 @@ export default function Cd3Page() {
                     </div>
                   </div>
                 </div>
-                <div className="space-y-1 rounded-xl bg-ink-950/60 p-3 text-sm">
+                <div className="space-y-1 rounded-xl bg-surface-0/60 p-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-slate-400">{t("cd3.modal.corridor")}</span>
                     <span>{modal.corridor}</span>

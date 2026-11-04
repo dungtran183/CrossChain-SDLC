@@ -42,7 +42,7 @@ function Node({ k, v, depth }: { k?: string; v: unknown; depth: number }) {
 export default function JsonViewer({ data, className = "", maxHeight = 320 }: { data: unknown; className?: string; maxHeight?: number }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className={`relative rounded-xl border border-white/10 bg-ink-950/70 ${className}`}>
+    <div className={`theme-dark card-brut relative rounded-xl border border-white/10 bg-surface-0 text-slate-100 ${className}`}>
       <button
         className="absolute right-2 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 hover:text-white"
         onClick={() => {

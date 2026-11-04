@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <title>Cross-Chain Secure SDLC Demo</title>
   </head>
   <body>
+    <script>
+      // đặt theme trước khi React chạy để không nháy màu
+      try { document.documentElement.dataset.theme = localStorage.getItem("xchain-theme") || "light"; } catch (e) { document.documentElement.dataset.theme = "light"; }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { useT } from "../i18n/useT";
 
+// màu tô nền tiêu đề ở theme sáng (kiểu "highlighter" của blockchainist.net)
+const HL: Record<string, string> = { cd1: "#7ff0e0", cd2: "#d9c2ff", cd3: "#ffc7a0" };
+
 type Props = { ns: string; accent: string; glyph: string; actions?: ReactNode };
 
 /** Tiêu đề module: biểu tượng gradient phát sáng, chuyên đề, giai đoạn SDLC, tóm tắt. */
@@ -26,7 +29,9 @@ export default function ModuleHeader({ ns, accent, glyph, actions }: Props) {
             <span className="chip">{t(`${ns}.sdlc`)}</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            <span className={`bg-gradient-to-r ${accent} bg-clip-text text-transparent`}>{t(`${ns}.name`)}</span>{" "}
+            <span className={`mod-title bg-gradient-to-r ${accent} bg-clip-text text-transparent`} style={{ ["--hl" as string]: HL[ns] ?? "#ffc730" }}>
+              {t(`${ns}.name`)}
+            </span>{" "}
             <span className="font-medium text-slate-400">— {t(`${ns}.topic`)}</span>
           </h1>
           <p className="max-w-4xl text-sm text-slate-300">{t(`${ns}.summary`)}</p>

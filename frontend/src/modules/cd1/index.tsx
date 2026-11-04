@@ -254,7 +254,7 @@ export default function Cd1Page() {
           <div className="flex flex-wrap items-end gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-1.5 pl-3">
             <label className="text-xs text-slate-400">
               {t("cd1.btn.scenario")}
-              <select value={preset} onChange={(e) => setPreset(e.target.value)} className="ml-2 max-w-[340px] rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
+              <select value={preset} onChange={(e) => setPreset(e.target.value)} className="ml-2 max-w-[340px] rounded-lg border border-white/10 bg-surface-1 px-2 py-1 text-sm text-slate-100">
                 {PRESETS.map((p) => (
                   <option key={p.id} value={p.id}>
                     {t(`cd1.preset.${p.id}`)}
@@ -265,7 +265,7 @@ export default function Cd1Page() {
             </label>
             {preset === "custom" && (
               <>
-                <select value={student} onChange={(e) => setStudent(e.target.value)} className="rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
+                <select value={student} onChange={(e) => setStudent(e.target.value)} className="rounded-lg border border-white/10 bg-surface-1 px-2 py-1 text-sm text-slate-100">
                   {(state?.students ?? []).map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.id} · {s.name}
@@ -275,16 +275,16 @@ export default function Cd1Page() {
                 </select>
                 <label className="text-xs text-slate-400">
                   GPA ≥
-                  <input type="number" step={0.1} min={0} max={4} value={thr} onChange={(e) => setThr(Number(e.target.value))} className="ml-1 w-16 rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100" />
+                  <input type="number" step={0.1} min={0} max={4} value={thr} onChange={(e) => setThr(Number(e.target.value))} className="ml-1 w-16 rounded-lg border border-white/10 bg-surface-1 px-2 py-1 text-sm text-slate-100" />
                 </label>
-                <select value={discAttr} onChange={(e) => setDiscAttr(e.target.value as typeof discAttr)} className="rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
+                <select value={discAttr} onChange={(e) => setDiscAttr(e.target.value as typeof discAttr)} className="rounded-lg border border-white/10 bg-surface-1 px-2 py-1 text-sm text-slate-100">
                   <option value="none">{t("cd1.preset.noDisclose")}</option>
                   <option value="degree">degree =</option>
                   <option value="major">major =</option>
                   <option value="year">year =</option>
                 </select>
                 {discAttr !== "none" && (
-                  <input value={discValue} onChange={(e) => setDiscValue(e.target.value)} placeholder="Master" className="w-36 rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100" />
+                  <input value={discValue} onChange={(e) => setDiscValue(e.target.value)} placeholder="Master" className="w-36 rounded-lg border border-white/10 bg-surface-1 px-2 py-1 text-sm text-slate-100" />
                 )}
               </>
             )}
@@ -325,7 +325,7 @@ export default function Cd1Page() {
               <Empty icon={<GraduationCap className="h-6 w-6" />}>{t("cd1.stage.noBatch")}</Empty>
             )}
             {state?.root && (
-              <div className="rounded-lg bg-ink-950/60 p-2 text-[11px]">
+              <div className="rounded-lg bg-surface-0/60 p-2 text-[11px]">
                 <span className="text-slate-400">{t("cd1.stage.anchored")} </span>
                 <ScrambleText text={short(state.root, 10)} className="text-cyan-200" />
               </div>

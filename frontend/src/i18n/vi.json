@@ -13,11 +13,13 @@
     "playground": "Playground lõi",
     "source": "Mã nguồn trên GitHub",
     "author": "NCS Trần Tuấn Dũng · HD: PGS.TS. Phạm Văn Hậu, PGS.TS. Nguyễn Tấn Cầm",
-    "replayHint": "Dữ liệu phát lại từ kịch bản ghi sẵn; chạy local để có backend thật."
+    "replayHint": "Dữ liệu phát lại từ kịch bản ghi sẵn; chạy local để có backend thật.",
+    "toDark": "Chuyển sang giao diện tối",
+    "toLight": "Chuyển sang giao diện sáng"
   },
   "home": {
     "heroTitle": "An toàn liên chuỗi xuyên suốt vòng đời phần mềm",
-    "heroBody": "Hành trình qua năm giai đoạn Secure SDLC trên bản đồ hai chuỗi khối: mỗi cửa ải là một chuyên đề của luận án — thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai, giám sát và tối ưu sau triển khai.",
+    "heroBody": "Khung Secure SDLC cho giao tiếp liên chuỗi là một vòng đời khép kín gồm năm giai đoạn; ba chuyên đề của luận án lần lượt bảo đảm an toàn ở giai đoạn thiết kế, lập trình – kiểm toán trước triển khai, và vận hành – tối ưu sau triển khai.",
     "open": "Mở module",
     "sdlc": "Giai đoạn Secure SDLC",
     "badge": "Luận án Tiến sĩ · An toàn liên chuỗi",
@@ -470,29 +472,16 @@
     "jsonHint": "Gửi một giao dịch để xem chi tiết"
   },
   "world": {
-    "title": "Bản đồ Secure SDLC liên chuỗi",
-    "play": "Bắt đầu hành trình",
-    "player": "Người chơi",
-    "quests": "nhiệm vụ",
-    "levels": [
-      "Tân binh liên chuỗi",
-      "Nhà thiết kế an toàn",
-      "Kiểm toán viên cầu nối",
-      "Người gác cầu",
-      "Kiến trúc sư an toàn liên chuỗi"
-    ],
-    "chainA": "LỤC ĐỊA CHAIN-A · Ethereum-like",
-    "chainB": "LỤC ĐỊA CHAIN-B · BSC-like",
+    "title": "Bản đồ khung Secure SDLC liên chuỗi",
+    "play": "Khám phá khung Secure SDLC",
     "bridge": "CẦU NỐI LIÊN CHUỖI",
-    "start": "Yêu cầu",
-    "goal": "Cầu nối an toàn",
-    "hint": "Bấm một cửa ải để xem · bấm đúp để vào màn",
+    "hint": "Chọn một giai đoạn để xem chi tiết · nhấp đúp để mở chuyên đề",
     "phase": "Giai đoạn",
     "threats": "Mối đe dọa",
     "contrib": "Đóng góp của luận án",
-    "missions": "Nhiệm vụ trong màn",
-    "enter": "Vào màn chơi",
-    "questDone": "Hoàn thành nhiệm vụ",
+    "missions": "Nội dung trình diễn",
+    "enter": "Mở chuyên đề",
+    "questDone": "Đã trình diễn",
     "p1": {
       "story": "Trước khi viết dòng mã nào, giao thức phải được thiết kế để chuỗi đích chỉ tin vào bằng chứng mật mã — không tin vào relay — và không làm lộ dữ liệu người dùng.",
       "threats": [
@@ -561,33 +550,37 @@
         "G-surv: chỉ số Gini của cường độ giám sát",
         "Hàm mục tiêu F(Θ) = w_d·U_det − w_g·G_surv − w_c·C_op"
       ]
-    }
+    },
+    "label": "Tổng quan luận án",
+    "coverage": "Mức độ trình diễn",
+    "feedback": "PHẢN HỒI & CẢI TIẾN LIÊN TỤC",
+    "cycle": "vòng đời khép kín · 5 giai đoạn"
   },
   "quest": {
     "cd1": {
-      "setup": "Thiết lập ủy ban 5 relay",
-      "issue": "Neo Merkle root lô văn bằng",
+      "setup": "Thiết lập ủy ban 5 relay và hai hợp đồng",
+      "issue": "Neo Merkle root của lô văn bằng",
       "prove": "Sinh bằng chứng cho một vị từ",
-      "accepted": "Được chain-B chấp nhận",
-      "tamper": "Chặn một cuộc giả mạo",
-      "revoke": "Thu hồi văn bằng",
-      "shamir": "Thử chia sẻ bí mật Shamir",
+      "accepted": "Xác nhận được chain-B chấp nhận",
+      "tamper": "Hợp đồng từ chối một phép giả mạo",
+      "revoke": "Thu hồi văn bằng và xác minh lại",
+      "shamir": "Chia sẻ bí mật Shamir (t, n)",
       "abe": "Giải mã CP-ABE theo thuộc tính"
     },
     "cd2": {
-      "m1": "Xem biểu diễn đa nguồn (M1)",
+      "m1": "Biểu diễn đa nguồn (M1)",
       "m2": "Phân loại few-shot (M2)",
-      "m3": "Chạy học liên kết DP-SGD (M3)",
-      "m4": "Đọc hồ sơ kiểm toán (M4)",
-      "exploit": "Khai thác một bản lỗi",
-      "fixed": "Bị bản sửa chặn lại"
+      "m3": "Học liên kết DP-SGD (M3)",
+      "m4": "Hồ sơ kiểm toán và bất biến (M4)",
+      "exploit": "Khai thác hợp đồng lỗi trên EVM",
+      "fixed": "Bản sửa chặn được tấn công"
     },
     "cd3": {
-      "run": "Cho cầu nối chạy",
-      "attack": "Kích hoạt một kịch bản tấn công",
+      "run": "Giám sát lưu lượng cầu nối",
+      "attack": "Kịch bản tấn công được phát hiện",
       "approve": "Phê duyệt cô lập tác nhân (R4)",
-      "pause": "Phê duyệt dừng cầu nối (R5)",
-      "tune": "Tối ưu tham số Θ"
+      "pause": "Phê duyệt tạm dừng cầu nối (R5)",
+      "tune": "Tối ưu tham số Θ với G-surv"
     }
   },
   "big": {

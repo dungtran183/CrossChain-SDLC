@@ -3,11 +3,13 @@ import { Background, ReactFlow, type Edge, type Node } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import type { Cd3State } from "./types";
 import { RISK_COLOR } from "./types";
+import { useTheme } from "../../lib/themeMode";
 
 const COL: Record<string, number> = { user: 0, contract: 1, relayer: 2, validator: 3, oracle: 2 };
 
 /** Đồ thị cầu nối: tác nhân ↔ hợp đồng, màu nút theo rủi ro tối đa, độ dày cạnh theo số tương tác. */
 export default function ActorGraph({ graph, executed }: { graph: Cd3State["graph"]; executed: Record<string, string> }) {
+  const { mode } = useTheme();
   const { nodes, edges } = useMemo(() => {
     const rows: Record<number, number> = {};
     const ns: Node[] = graph.nodes.map((n) => {
@@ -22,7 +24,7 @@ export default function ActorGraph({ graph, executed }: { graph: Cd3State["graph
         style: {
           background: n.type === "contract" ? "rgba(139,92,246,0.25)" : `${c}22`,
           border: `1.5px solid ${c}`,
-          color: "#e2e8f0",
+          color: "rgb(var(--c-slate-100))",
           borderRadius: n.type === "contract" ? 12 : 999,
           fontSize: 11,
           fontFamily: "JetBrains Mono, monospace",
@@ -48,9 +50,9 @@ export default function ActorGraph({ graph, executed }: { graph: Cd3State["graph
     return { nodes: ns, edges: es };
   }, [graph, executed]);
   return (
-    <div className="h-[420px] rounded-xl border border-white/10 bg-ink-950/60">
-      <ReactFlow nodes={nodes} edges={edges} fitView proOptions={{ hideAttribution: true }} zoomOnScroll={false} colorMode="dark">
-        <Background color="rgba(255,255,255,0.05)" gap={22} />
+    <div className="h-[420px] rounded-xl border border-white/10 bg-surface-0/60">
+      <ReactFlow nodes={nodes} edges={edges} fitView proOptions={{ hideAttribution: true }} zoomOnScroll={false} colorMode={mode}>
+        <Background color={mode === "light" ? "rgba(22,20,15,0.1)" : "rgba(255,255,255,0.05)"} gap={22} />
       </ReactFlow>
     </div>
   );

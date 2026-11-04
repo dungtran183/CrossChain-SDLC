@@ -15,9 +15,9 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 
 ---
 
-## Bản đồ thế giới / World map (≈ 1 phút)
-**VI.** “Trang chủ là bản đồ: hai lục địa là hai chuỗi khối, cây cầu ở giữa là cầu nối liên chuỗi. Con đường Secure SDLC đi qua 5 cửa ải; mỗi cửa ải thuộc một chuyên đề. Bấm cửa ải 1 → câu chuyện, mối đe dọa, đóng góp, nhiệm vụ → Vào màn chơi.” Kéo xuống *Bức tranh tổng thể*: rê chuột lên CĐ1/CĐ2/CĐ3 để thấy mỗi chuyên đề phòng vệ chặng nào của vòng đời thông điệp. Trang *Sự cố thực tế* nối 9 vụ tấn công lớn với màn demo tương ứng.
-**EN.** “The home page is a map: two continents are the two chains, the bridge sits between them. The Secure SDLC road crosses five checkpoints, each owned by one study.” Hover a study in *Big picture* to see which lifecycle stage it defends; *Real incidents* links nine major hacks to the matching demo.
+## Bản đồ khung Secure SDLC / Secure SDLC map (≈ 1 phút)
+**VI.** “Khung Secure SDLC của luận án là một vòng đời khép kín gồm năm giai đoạn; kết quả đánh giá ở giai đoạn 5 phản hồi trở lại thiết kế. Ở trung tâm là cây cầu liên chuỗi — đối tượng cần bảo vệ. Ba cung màu là phạm vi ba chuyên đề: CĐ1 ở thiết kế, CĐ2 ở lập trình và kiểm toán, CĐ3 ở vận hành và tối ưu.” Chọn lần lượt các giai đoạn để giới thiệu mối đe dọa và đóng góp, rồi “Mở chuyên đề”. Kéo xuống *Bức tranh tổng thể*: rê chuột lên CĐ1/CĐ2/CĐ3 để thấy mỗi chuyên đề phòng vệ chặng nào. Trang *Sự cố thực tế* nối 9 vụ tấn công lớn với phần trình diễn tương ứng.
+**EN.** “The thesis Secure SDLC is a closed five-phase lifecycle; evaluation in phase 5 feeds back into design. The cross-chain bridge in the centre is the asset to protect; three coloured arcs mark the scope of the three studies.” Select each phase to introduce threats and contributions, then “Open study”.
 
 ---
 

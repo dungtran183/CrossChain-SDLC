@@ -23,8 +23,8 @@ export default function Lanes({ lanes, hover, setHover }: { lanes: LaneEvent[]; 
             chain-{c}
             <div className="font-normal text-slate-400">{c === "A" ? "LockVault" : "MintGateway"}</div>
           </div>
-          <div className="relative flex min-h-[54px] flex-1 items-center gap-1.5 overflow-hidden rounded-xl border border-white/5 bg-ink-950/50 px-2">
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-ink-950 to-transparent" />
+          <div className="relative flex min-h-[54px] flex-1 items-center gap-1.5 overflow-hidden rounded-xl border border-white/5 bg-surface-0/50 px-2">
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-surface-0 to-transparent" />
             <AnimatePresence initial={false}>
               {row(c).map((e, i) => (
                 <motion.div

@@ -30,8 +30,8 @@ export default function Slider({ label, value, min, max, step = 0.01, onChange, 
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(snap(Number(e.target.value)))}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-ink-950 [&::-webkit-slider-thumb]:shadow-lg"
-        style={{ background: `linear-gradient(90deg, ${color} ${pct}%, rgba(255,255,255,0.1) ${pct}%)` }}
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-surface-0 [&::-webkit-slider-thumb]:shadow-lg"
+        style={{ background: `linear-gradient(90deg, ${color} ${pct}%, rgb(var(--c-white) / 0.12) ${pct}%)` }}
       />
     </label>
   );

@@ -1,5 +1,5 @@
-// Tiến độ "chơi" demo: mỗi thao tác quan trọng trong module là một nhiệm vụ (quest) +100 XP.
-// Lưu trong localStorage của trình duyệt (chỉ người xem hiện tại); bản đồ thế giới đọc để hiện sao/cấp độ.
+// Mức độ trình diễn: mỗi thao tác quan trọng trong module là một nội dung trình diễn.
+// Lưu trong localStorage của trình duyệt (chỉ người xem hiện tại); bản đồ Secure SDLC đọc để hiện tiến độ.
 import { useEffect, useState } from "react";
 
 export type ModuleId = "cd1" | "cd2" | "cd3";
@@ -19,8 +19,6 @@ export const PHASES: { n: number; module: ModuleId; quests: string[]; tab?: stri
   { n: 5, module: "cd3", quests: ["tune"], tab: "m3" },
 ];
 
-export const XP_PER_QUEST = 100;
-export const LEVELS = [0, 300, 800, 1300, 1900];
 const KEY = "xchain-progress";
 const EVENT = "xchain-quest";
 
@@ -65,25 +63,14 @@ export function onQuest(fn: (id: string | null) => void) {
   return () => window.removeEventListener(EVENT, h);
 }
 
-export function levelOf(xp: number) {
-  let lv = 0;
-  for (let i = 0; i < LEVELS.length; i++) if (xp >= LEVELS[i]) lv = i;
-  const next = LEVELS[lv + 1] ?? LEVELS[lv];
-  const prev = LEVELS[lv];
-  return { level: lv, progress: next === prev ? 1 : (xp - prev) / (next - prev), next };
-}
-
-/** Hook: tập nhiệm vụ đã xong + XP + cấp độ, tự cập nhật khi có nhiệm vụ mới. */
+/** Hook: tập nội dung đã trình diễn, tự cập nhật khi có nội dung mới. */
 export function useProgress() {
   const [done, setDone] = useState<Set<string>>(() => new Set(state()));
   useEffect(() => onQuest(() => setDone(new Set(state()))), []);
-  const xp = done.size * XP_PER_QUEST;
   const total = Object.values(QUESTS).flat().length;
   return {
     done,
-    xp,
     total,
-    ...levelOf(xp),
     has: (m: ModuleId, q: string) => done.has(`${m}.${q}`),
     moduleDone: (m: ModuleId) => QUESTS[m].filter((q) => done.has(`${m}.${q}`)).length,
   };
