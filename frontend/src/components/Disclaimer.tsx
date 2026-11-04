@@ -1,6 +1,6 @@
 import { TriangleAlert } from "lucide-react";
 
-/** Dòng cảnh báo song ngữ luôn hiển thị (CLAUDE.md): hiển thị cả hai ngôn ngữ. */
+/** Dòng cảnh báo song ngữ luôn hiển thị (quy ước dự án): hiển thị cả hai ngôn ngữ. */
 export default function Disclaimer({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2 text-xs text-amber-200/80 ${className}`}>

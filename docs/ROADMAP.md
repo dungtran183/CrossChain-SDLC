@@ -2,7 +2,7 @@
 
 ## Trạng thái
 - [x] P0 môi trường · [x] P1 lõi chung · [x] P2 CĐ1 · [x] P3 CĐ2 · [x] P4 CĐ3 · [x] P5 replay + Pages + polish
-  (hoàn thành trong một phiên; các commit tách theo phase trên nhánh `claude/vigilant-hawking-pzu3rn`).
+  (các commit tách theo phase).
 - Từ đây dùng mục **Phiên sửa lỗi / góp ý** ở cuối tài liệu. Sau khi sửa logic module nhớ chạy `bash scripts/export_replays.sh`.
 
 Mỗi phase = **một phiên cloud** (claude.ai/code). Copy nguyên khối *Prompt* vào ô chat của phiên mới.

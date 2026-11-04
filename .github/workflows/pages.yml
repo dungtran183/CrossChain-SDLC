@@ -1,5 +1,6 @@
-# Deploy frontend ở chế độ replay (không cần backend) lên GitHub Pages.
-# Bật trước: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Deploy frontend ở chế độ replay (không cần backend) lên GitHub Pages: https://<owner>.github.io/<repo>/
+# Tự động mỗi lần push lên main (hoặc chạy tay: Actions → Deploy demo → Run workflow).
+# Bản build được đẩy lên nhánh gh-pages; GitHub Pages phục vụ nhánh này (Settings → Pages → Deploy from a branch → gh-pages).
 name: Deploy demo (GitHub Pages)
 
 on:
@@ -8,16 +9,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,17 +32,17 @@ jobs:
         working-directory: frontend
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
-        run: npm run build:replay
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: frontend/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+        run: |
+          npm run build:replay
+          touch dist/.nojekyll
+          cp dist/index.html dist/404.html
+      - name: Publish to gh-pages branch
+        working-directory: frontend/dist
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name="${{ github.repository_owner }}" -c user.email="${{ github.repository_owner_id }}+${{ github.repository_owner }}@users.noreply.github.com" \
+            commit -q -m "deploy: ${{ github.sha }}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git" gh-pages

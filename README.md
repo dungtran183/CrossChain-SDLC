@@ -6,6 +6,9 @@
 ⚠️ **Đây là prototype trình diễn tính năng và workflow, KHÔNG tái lập số liệu của luận án.** Các module học máy chạy trên dữ liệu tổng hợp rất nhỏ; ZKP / TSS / CP-ABE là phiên bản *đồ chơi* (toy) để minh họa luồng xử lý. Số liệu luận án chỉ xuất hiện trong thẻ “Kết quả luận án (trích dẫn)”, tách biệt với số đo của demo.
 ⚠️ **This is a feature/workflow showcase, NOT a reproduction of the thesis results.** ML runs on tiny synthetic data; ZKP / TSS / CP-ABE are *toy* versions that illustrate the flow.
 
+### 🌐 Demo trực tuyến / Live demo: **https://dungtran183.github.io/CrossChain-SDLC/**
+Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài đặt). Tự cập nhật mỗi khi push lên `main`.
+
 ![Trang chủ](docs/screenshots/home.png)
 
 ---
@@ -84,9 +87,9 @@ Mở http://localhost:8000 (đặt `SERVE_FRONTEND=0` để tắt).
 cd frontend && npm run build:replay && npx vite preview
 ```
 
-### 3. GitHub Pages (replay, công khai)
-Workflow `.github/workflows/pages.yml` build chế độ replay với `VITE_BASE=/<tên-repo>/` mỗi khi push lên `main`.
-Bật một lần: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Link: `https://<user>.github.io/CrossChain-SDLC/`.
+### 3. GitHub Pages (replay, công khai) — https://dungtran183.github.io/CrossChain-SDLC/
+Workflow `.github/workflows/pages.yml` build chế độ replay với `VITE_BASE=/<tên-repo>/` mỗi khi push lên `main` và đẩy bản build lên nhánh `gh-pages`.
+Nếu trang chưa hiện: **Settings → Pages → Build and deployment → Source: Deploy from a branch → `gh-pages` / `(root)`** (chỉ cần một lần).
 
 ### Tái sinh kịch bản replay
 Sau khi sửa logic module, ghi lại các phản hồi API thật để Pages hiển thị đúng:

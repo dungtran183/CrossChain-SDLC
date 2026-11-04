@@ -1,4 +1,4 @@
-// Màu nhận diện module (CLAUDE.md): CĐ1 cyan/teal · CĐ2 violet/indigo · CĐ3 amber/rose.
+// Màu nhận diện module: CĐ1 cyan/teal · CĐ2 violet/indigo · CĐ3 amber/rose.
 export type Accent = {
   grad: string;
   hex: string;

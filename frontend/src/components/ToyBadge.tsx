@@ -1,7 +1,7 @@
 import { FlaskConical } from "lucide-react";
 import { useT } from "../i18n/useT";
 
-/** Nhãn bắt buộc cho mật mã/ML "đồ chơi" (CLAUDE.md). */
+/** Nhãn bắt buộc cho mật mã/ML "đồ chơi" (quy ước dự án). */
 export default function ToyBadge({ label }: { label?: string }) {
   const { t } = useT();
   return (
