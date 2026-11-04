@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Boxes, Cpu, Globe, Laptop, ShieldCheck } from "lucide-react";
+import { Boxes, Cpu, Flame, Gamepad2, Globe, Laptop, ShieldCheck } from "lucide-react";
 import { useT } from "../i18n/useT";
-import { MODULES } from "../modules/registry";
-import Spotlight from "../components/fx/Spotlight";
+import WorldMap from "./home/WorldMap";
+import BigPicture from "./home/BigPicture";
 import { MODE } from "../lib/api";
 
 /** Hai chuỗi khối và cây cầu: gói tin chạy liên tục giữa chuỗi A và B. */
@@ -86,129 +86,46 @@ function BridgeHero() {
   );
 }
 
-const PHASE_COLORS = ["#22d3ee", "#8b5cf6", "#818cf8", "#f59e0b", "#f43f5e"];
-
-function SdlcTimeline() {
-  const { t, tl } = useT();
-  const phases = tl("home.phases");
-  return (
-    <section className="glass p-6">
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <div className="label">{t("home.sdlcLabel")}</div>
-          <h2 className="text-xl font-bold">{t("home.sdlcTitle")}</h2>
-        </div>
-        <p className="max-w-xl text-sm text-slate-400">{t("home.sdlcBody")}</p>
-      </div>
-      <div className="relative">
-        <div className="absolute left-0 right-0 top-6 hidden h-[2px] bg-gradient-to-r from-cyan-400 via-violet-500 to-rose-500 opacity-40 md:block" />
-        <div className="grid gap-4 md:grid-cols-5">
-          {phases.map((p, i) => {
-            const mod = MODULES.find((m) => m.sdlc.includes(i + 1));
-            return (
-              <motion.div key={p} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="relative">
-                <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full border-2 bg-ink-900 text-sm font-bold" style={{ borderColor: PHASE_COLORS[i], boxShadow: `0 0 24px -6px ${PHASE_COLORS[i]}` }}>
-                  {i + 1}
-                </div>
-                <div className="text-center text-sm font-semibold">{p}</div>
-                {mod && (
-                  <Link to={mod.path} className="mx-auto mt-2 flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs hover:bg-white/10">
-                    <span className={`h-2 w-2 rounded-full bg-gradient-to-br ${mod.accent}`} />
-                    {mod.id.toUpperCase()} · {t(`${mod.id}.name`)}
-                  </Link>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function Home() {
-  const { t, tl } = useT();
-  const stats = tl("home.stats");
+  const { t } = useT();
   return (
     <div className="space-y-6">
       <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="glass relative overflow-hidden">
         <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 animate-float rounded-full bg-gradient-to-br from-cyan-400/25 via-violet-500/25 to-amber-400/25 blur-3xl" />
         <div className="grid-bg pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
-        <div className="relative grid items-center gap-6 p-6 sm:p-10 xl:grid-cols-[1.1fr_1fr]">
+        <div className="relative grid items-center gap-6 p-6 sm:p-8 xl:grid-cols-[1.25fr_1fr]">
           <div>
-            <div className="mb-4 flex flex-wrap gap-2">
+            <div className="mb-3 flex flex-wrap gap-2">
               <span className="chip">
                 <ShieldCheck className="h-3 w-3" /> {t("home.badge")}
               </span>
               <span className="chip">{MODE === "replay" ? t("app.replayMode") : t("app.liveMode")}</span>
             </div>
-            <h1 className="animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-4xl font-extrabold leading-tight tracking-tight text-transparent sm:text-5xl">
+            <h1 className="animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-3xl font-extrabold leading-tight tracking-tight text-transparent sm:text-4xl">
               {t("home.heroTitle")}
             </h1>
-            <p className="mt-4 max-w-2xl text-base text-slate-300 sm:text-lg">{t("home.heroBody")}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {MODULES.map((m) => (
-                <Link key={m.id} to={m.path} className={`group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r ${m.accent} px-4 py-2 text-sm font-semibold text-ink-950 shadow-lg transition hover:brightness-110`}>
-                  {m.id.toUpperCase()} · {t(`${m.id}.name`)}
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                </Link>
-              ))}
-            </div>
-            <div className="mt-8 grid max-w-xl grid-cols-3 gap-3">
-              {stats.map((s, i) => {
-                const [v, l] = s.split("|");
-                return (
-                  <motion.div key={s} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.1 }} className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-                    <div className="text-xl font-extrabold">{v}</div>
-                    <div className="text-[11px] text-slate-400">{l}</div>
-                  </motion.div>
-                );
-              })}
+            <p className="mt-3 max-w-2xl text-base text-slate-300">{t("home.heroBody")}</p>
+            <p className="mt-2 text-xs text-slate-400">{t("app.author")}</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a href="#world" onClick={(e) => (e.preventDefault(), document.getElementById("world")?.scrollIntoView({ behavior: "smooth" }))} className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-violet-500 to-amber-400 px-5 py-2.5 text-sm font-bold text-ink-950 shadow-lg transition hover:brightness-110">
+                <Gamepad2 className="h-4 w-4" /> {t("world.play")}
+              </a>
+              <Link to="/incidents" className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5">
+                <Flame className="h-4 w-4 text-rose-300" /> {t("inc.title")}
+              </Link>
             </div>
           </div>
-          <div className="h-[220px] sm:h-[280px]">
+          <div className="hidden h-[200px] sm:block">
             <BridgeHero />
           </div>
         </div>
       </motion.section>
 
-      <section className="grid gap-5 lg:grid-cols-3">
-        {MODULES.map((m, i) => (
-          <motion.div key={m.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + 0.1 * i, duration: 0.45 }} whileHover={{ y: -6, rotateX: 2, rotateY: -2 }} style={{ perspective: 800 }}>
-            <Link to={m.path} className="glass group block h-full overflow-hidden transition hover:border-white/25">
-              <Spotlight className="flex h-full flex-col gap-4 p-6">
-                <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${m.accent}`} />
-                <div className={`pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br ${m.accent} opacity-10 blur-2xl transition group-hover:opacity-30`} />
-                <div className="flex items-center gap-3">
-                  <div className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${m.accent} text-lg font-extrabold text-ink-950 shadow-lg transition group-hover:rotate-6 group-hover:scale-110`}>{m.glyph}</div>
-                  <div>
-                    <div className="text-xl font-bold">{t(`${m.id}.name`)}</div>
-                    <div className="text-xs uppercase tracking-wider text-slate-400">{t(`${m.id}.sdlc`)}</div>
-                  </div>
-                </div>
-                <div className="font-medium text-slate-200">{t(`${m.id}.topic`)}</div>
-                <p className="text-sm text-slate-400">{t(`${m.id}.summary`)}</p>
-                <ul className="flex-1 space-y-1.5">
-                  {tl(`${m.id}.steps`).map((s) => (
-                    <li key={s} className="flex items-center gap-2 text-xs text-slate-300">
-                      <span className={`h-1.5 w-1.5 rounded-full bg-gradient-to-br ${m.accent}`} />
-                      {s}
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="chip">{t(`${m.id}.pubs`)}</span>
-                  <span className="flex items-center gap-1 text-slate-300 transition group-hover:translate-x-1">
-                    {t("home.open")} <ArrowRight className="h-4 w-4" />
-                  </span>
-                </div>
-              </Spotlight>
-            </Link>
-          </motion.div>
-        ))}
-      </section>
+      <div id="world" className="scroll-mt-20">
+        <WorldMap />
+      </div>
 
-      <SdlcTimeline />
+      <BigPicture />
 
       <section className="grid gap-5 md:grid-cols-3">
         {[

@@ -6,6 +6,7 @@ import type { Client } from "../../lib/api";
 import { MODE } from "../../lib/api";
 import type { ShamirRes } from "./types";
 import { useT } from "../../i18n/useT";
+import { complete } from "../../lib/progress";
 import { CHART } from "../../lib/theme";
 
 /** Shamir (t, n): chọn mảnh → khôi phục bí mật tại x = 0; đủ t mảnh mới đúng. */
@@ -27,7 +28,7 @@ export default function ShamirPanel({ api }: { api: Client }) {
     };
   }, [api, body]);
 
-  const toggle = (x: number) => setUse((u) => (u.includes(x) ? u.filter((v) => v !== x) : [...u, x]));
+  const toggle = (x: number) => (complete("cd1", "shamir"), setUse((u) => (u.includes(x) ? u.filter((v) => v !== x) : [...u, x])));
   const presets = MODE === "replay" ? [[1, 2, 3], [1, 2], [2, 4, 5], [1, 2, 3, 4, 5]] : null;
 
   return (
@@ -57,7 +58,7 @@ export default function ShamirPanel({ api }: { api: Client }) {
         {presets && (
           <div className="flex flex-wrap gap-2">
             {presets.map((p) => (
-              <button key={p.join()} onClick={() => setUse(p)} className={`chip ${p.join() === [...use].sort().join() ? "border-cyan-300/60 text-cyan-100" : ""}`}>
+              <button key={p.join()} onClick={() => (complete("cd1", "shamir"), setUse(p))} className={`chip ${p.join() === [...use].sort().join() ? "border-cyan-300/60 text-cyan-100" : ""}`}>
                 {"{"}
                 {p.map((x) => `R${x}`).join(", ")}
                 {"}"}

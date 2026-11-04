@@ -8,7 +8,7 @@ from .m2_fusion import CRS
 from .m3_response import HUMAN, LEVELS, gini, level_for, lorenz, tune
 from .traffic import CORRIDORS, SCENARIOS, Traffic
 
-ATTACKERS = {"replay": {"R3"}, "delayed": {"R2"}, "collusion": {"V4", "V5", "V6", "R3"}, "slow_burn": {"V7"}, "boosting": {"U5", "U6"}}
+ATTACKERS = {"replay": {"R3"}, "delayed": {"R2"}, "collusion": {"V4", "V5", "V6", "R3"}, "slow_burn": {"V7"}, "boosting": {"U5", "U6"}, "oracle_skew": {"O1"}, "flash_drain": {"U3"}, "liveness": set()}
 
 
 class Cd3Session:
@@ -105,7 +105,7 @@ class Cd3Session:
                     self.impact[a] += 1
         locked = int(self.a.call(self.vault, "totalLocked"))
         minted = int(self.b.call(self.token, "totalSupply"))
-        breach = minted > locked * 1.05  # bất biến cung bị phá → rủi ro cấp cầu nối
+        breach = minted > locked * 1.2  # bất biến cung bị phá → rủi ro cấp cầu nối
         for cor, hot in corridor_hot.items():
             if (hot >= 3 or (breach and hot >= 1)) and "bridge" not in self.executed and not any(q["level"] == "R5" and q["status"] == "pending" for q in self.queue):
                 self._enqueue("R5", "bridge", cor, 1.0, f"{hot} actor(s) at R4 on {cor}" + (" · supply invariant broken" if breach else ""))
@@ -151,7 +151,7 @@ class Cd3Session:
             trad_hit = next((first + i for i, v in enumerate(th) if v >= 0.6), None)
             out.append({
                 "key": f"{k[0]}|{k[1]}", "actor": k[0], "corridor": k[1],
-                "r": h[-40:], "trad": th[-40:], "start": first + max(0, len(h) - 40),
+                "r": h[-30:], "trad": th[-30:], "start": first + max(0, len(h) - 30),
                 "traditional": round(self.crs.traditional(k), 4), "peak": max(h),
                 "crs_detect": crs_hit, "trad_detect": trad_hit,
             })
@@ -170,7 +170,7 @@ class Cd3Session:
         """Toàn bộ trạng thái cho UI (một lần gọi — tiện cho replay)."""
         rk = self.risk()
         risk_of = {a: max(row) for a, row in zip(rk["actors"], rk["matrix"])}
-        lanes = list(self.m1.recent)[-40:]
+        lanes = list(self.m1.recent)[-28:]
         return jsonable(
             {
                 "tick": self.tick_no,
@@ -178,7 +178,7 @@ class Cd3Session:
                 "scenarios": SCENARIOS,
                 "paused": self.paused,
                 "lanes": lanes,
-                "evidence": self.evidence[-14:],
+                "evidence": self.evidence[-12:],
                 "risk": rk,
                 "series": self.series(),
                 "levels": {k: v for k, v in self.levels.items() if v != "R0"},

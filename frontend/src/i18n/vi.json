@@ -17,7 +17,7 @@
   },
   "home": {
     "heroTitle": "An toàn liên chuỗi xuyên suốt vòng đời phần mềm",
-    "heroBody": "Ba module độc lập tương ứng ba chuyên đề của luận án: thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai và giám sát sau triển khai trên hai chuỗi EVM.",
+    "heroBody": "Hành trình qua năm giai đoạn Secure SDLC trên bản đồ hai chuỗi khối: mỗi cửa ải là một chuyên đề của luận án — thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai, giám sát và tối ưu sau triển khai.",
     "open": "Mở module",
     "sdlc": "Giai đoạn Secure SDLC",
     "badge": "Luận án Tiến sĩ · An toàn liên chuỗi",
@@ -42,7 +42,7 @@
         "body": "Hai chuỗi EVM in-memory (py-evm): chain-A (id 31337) và chain-B (id 97). Mỗi giao dịch đào thành một khối để dễ quan sát."
       },
       "ml": {
-        "title": "Thuật toán tượng trưng, chạy nhanh",
+        "title": "Thuật toán gọn, phản hồi tức thì",
         "body": "ZKP, chữ ký ngưỡng, CP-ABE, học máy numpy/scikit-learn với seed cố định — mỗi thao tác phản hồi dưới 3 giây."
       },
       "modes": {
@@ -313,14 +313,17 @@
     "pause": "Tạm dừng",
     "step": "Bước",
     "replayEnd": "Đã hết kịch bản ghi sẵn — bấm Đặt lại hoặc chọn kịch bản khác.",
-    "replayNote": "Replay: mỗi kịch bản là một bản ghi riêng (khởi động bằng lưu lượng bình thường rồi chuyển sang tấn công). Chạy local để thử đủ 6 kịch bản.",
+    "replayNote": "Replay: mỗi kịch bản là một bản ghi riêng (khởi động bằng lưu lượng bình thường rồi chuyển sang kịch bản). Chạy local để kết hợp tự do nhiều kịch bản.",
     "sc": {
       "normal": "Bình thường",
       "replay": "Phát lại",
       "delayed": "Trì hoãn",
       "collusion": "Thông đồng",
       "slow_burn": "Slow-burn",
-      "boosting": "Nâng điểm"
+      "boosting": "Nâng điểm",
+      "oracle_skew": "Oracle lệch giá",
+      "flash_drain": "Rút cạn đột biến",
+      "liveness": "Mất validator"
     },
     "kpi": {
       "locked": "Đã khóa (A)",
@@ -408,6 +411,17 @@
       "s5": "Kịch bản thông đồng: V4–V6 cùng ký mint không có lock tương ứng; tổng mint vượt tổng khóa.",
       "s6": "Nhiều tác nhân cùng ở R4 trên một tuyến → đề xuất R5 dừng cầu nối; phê duyệt → pause(), mọi mint sau đó revert.",
       "s7": "G-surv: so sánh Θ tối ưu khi tắt (w_g = 0) và bật (w_g = 1) tiêu chí tập trung giám sát — cân bằng phát hiện với công bằng."
+    },
+    "scHint": {
+      "normal": "Lưu lượng hợp lệ, mọi sự kiện ghép đúng.",
+      "slow_burn": "V7 lịch sử tốt bắt đầu ký mint thổi phồng trên A→B.",
+      "collusion": "V4–V6 + R3 mint không có lock — phá bất biến cung.",
+      "replay": "R3 nộp lại msgId đã mint (cổng ở chế độ lỏng).",
+      "delayed": "R2 giữ thông điệp lâu bất thường.",
+      "boosting": "U5–U6 chuyển vòng giá trị nhỏ để nâng uy tín.",
+      "oracle_skew": "Oracle O1 báo giá lệch +20–40 % trên tuyến qua oracle.",
+      "flash_drain": "U3 đột ngột chuyển khối lượng rất lớn liên tục — không luật nào bắt, chỉ kênh học thấy.",
+      "liveness": "V1, V2 ngoại tuyến — trễ lan trên mọi relayer: sự cố hệ thống, không quy oan."
     }
   },
   "common": {
@@ -454,5 +468,282 @@
     "kit": "UI kit dùng chung",
     "pulse": "Gửi gói tin",
     "jsonHint": "Gửi một giao dịch để xem chi tiết"
+  },
+  "world": {
+    "title": "Bản đồ Secure SDLC liên chuỗi",
+    "play": "Bắt đầu hành trình",
+    "player": "Người chơi",
+    "quests": "nhiệm vụ",
+    "levels": [
+      "Tân binh liên chuỗi",
+      "Nhà thiết kế an toàn",
+      "Kiểm toán viên cầu nối",
+      "Người gác cầu",
+      "Kiến trúc sư an toàn liên chuỗi"
+    ],
+    "chainA": "LỤC ĐỊA CHAIN-A · Ethereum-like",
+    "chainB": "LỤC ĐỊA CHAIN-B · BSC-like",
+    "bridge": "CẦU NỐI LIÊN CHUỖI",
+    "start": "Yêu cầu",
+    "goal": "Cầu nối an toàn",
+    "hint": "Bấm một cửa ải để xem · bấm đúp để vào màn",
+    "phase": "Giai đoạn",
+    "threats": "Mối đe dọa",
+    "contrib": "Đóng góp của luận án",
+    "missions": "Nhiệm vụ trong màn",
+    "enter": "Vào màn chơi",
+    "questDone": "Hoàn thành nhiệm vụ",
+    "p1": {
+      "story": "Trước khi viết dòng mã nào, giao thức phải được thiết kế để chuỗi đích chỉ tin vào bằng chứng mật mã — không tin vào relay — và không làm lộ dữ liệu người dùng.",
+      "threats": [
+        "Lộ dữ liệu riêng tư",
+        "Relay giả mạo xác nhận",
+        "Phát lại thông điệp",
+        "Một bên giữ toàn bộ khóa"
+      ],
+      "contrib": [
+        "Khung Π_univ: tách statement công khai khỏi witness bí mật",
+        "ZKP vị từ + chữ ký ngưỡng t-of-n kiểm on-chain",
+        "Tiết lộ chọn lọc, thu hồi, CP-ABE cho kiểm soát truy cập"
+      ]
+    },
+    "p2": {
+      "story": "Hợp đồng cầu nối được biểu diễn đa nguồn (cấu trúc, văn bản, thao tác liên chuỗi) để lõi few-shot nhận ra lỗ hổng ngay cả khi có rất ít mẫu, và học liên kết giữa nhiều bên mà không chia sẻ mã nguồn.",
+      "threats": [
+        "Lỗi logic cầu nối",
+        "Reentrancy",
+        "Thiếu kiểm nguồn",
+        "Dữ liệu lỗ hổng khan hiếm"
+      ],
+      "contrib": [
+        "Biểu diễn đa nguồn CPG + token + kiểu thao tác liên chuỗi",
+        "Lõi phát hiện few-shot (prototype, attention fusion)",
+        "Học liên kết DP-SGD bảo toàn riêng tư (FedVuln)"
+      ]
+    },
+    "p3": {
+      "story": "Kết quả phát hiện được chuyển thành hồ sơ kiểm toán: mức rủi ro, bằng chứng, bất biến có kiểu và gợi ý sửa — rồi chứng minh hậu quả bằng tấn công thật trên EVM.",
+      "threats": [
+        "Phát lại",
+        "Chữ ký trùng / ngưỡng yếu",
+        "Chiếm quyền quản trị",
+        "Thao túng oracle",
+        "Phát lại chéo chuỗi"
+      ],
+      "contrib": [
+        "Hồ sơ kiểm toán có bất biến (declared / candidate / verified)",
+        "Exploit lab xác minh bất biến trên bản lỗi và bản sửa"
+      ]
+    },
+    "p4": {
+      "story": "Sau triển khai, CrossSentry ghép sự kiện hai chuỗi, đánh giá độ đầy đủ bằng chứng (ECA), hợp nhất Dempster–Shafer và theo dõi rủi ro theo từng cặp tác nhân–tuyến.",
+      "threats": [
+        "Validator thông đồng",
+        "Slow-burn",
+        "Oracle lệch giá",
+        "Rút cạn đột biến"
+      ],
+      "contrib": [
+        "Bằng chứng có hệ số năng lực κ_L, κ_P (ECA)",
+        "Hợp nhất Dempster–Shafer có xung đột K",
+        "CRS theo tác nhân–tuyến, suy giảm + bước nhảy",
+        "Phản ứng R0–R5 có con người phê duyệt"
+      ]
+    },
+    "p5": {
+      "story": "Tham số giám sát được tối ưu định kỳ: cân bằng khả năng phát hiện, chi phí vận hành và mức tập trung của biện pháp giám sát (G-surv) để không \"soi\" dồn vào một nhóm nhỏ.",
+      "threats": [
+        "Giám sát thiên lệch",
+        "Báo động giả",
+        "Sự cố hệ thống bị quy oan"
+      ],
+      "contrib": [
+        "G-surv: chỉ số Gini của cường độ giám sát",
+        "Hàm mục tiêu F(Θ) = w_d·U_det − w_g·G_surv − w_c·C_op"
+      ]
+    }
+  },
+  "quest": {
+    "cd1": {
+      "setup": "Thiết lập ủy ban 5 relay",
+      "issue": "Neo Merkle root lô văn bằng",
+      "prove": "Sinh bằng chứng cho một vị từ",
+      "accepted": "Được chain-B chấp nhận",
+      "tamper": "Chặn một cuộc giả mạo",
+      "revoke": "Thu hồi văn bằng",
+      "shamir": "Thử chia sẻ bí mật Shamir",
+      "abe": "Giải mã CP-ABE theo thuộc tính"
+    },
+    "cd2": {
+      "m1": "Xem biểu diễn đa nguồn (M1)",
+      "m2": "Phân loại few-shot (M2)",
+      "m3": "Chạy học liên kết DP-SGD (M3)",
+      "m4": "Đọc hồ sơ kiểm toán (M4)",
+      "exploit": "Khai thác một bản lỗi",
+      "fixed": "Bị bản sửa chặn lại"
+    },
+    "cd3": {
+      "run": "Cho cầu nối chạy",
+      "attack": "Kích hoạt một kịch bản tấn công",
+      "approve": "Phê duyệt cô lập tác nhân (R4)",
+      "pause": "Phê duyệt dừng cầu nối (R5)",
+      "tune": "Tối ưu tham số Θ"
+    }
+  },
+  "big": {
+    "label": "Bức tranh tổng thể",
+    "title": "Luận án trong một khung hình",
+    "thesisLabel": "Luận điểm",
+    "thesis": "An toàn giao tiếp liên chuỗi phải được bảo đảm xuyên suốt vòng đời phát triển: thiết kế dựa trên bằng chứng mật mã, kiểm toán hợp đồng trước triển khai, và giám sát thích ứng sau triển khai.",
+    "problem": "Cầu nối liên chuỗi giữ lượng tài sản rất lớn và là mục tiêu của nhiều vụ tấn công quy mô hàng trăm triệu USD. Mỗi giai đoạn của vòng đời có kiểu lỗ hổng riêng, nên không một kỹ thuật đơn lẻ nào đủ.",
+    "rq": [
+      "Làm sao để chuỗi đích chấp nhận thông điệp dựa trên bằng chứng mật mã mà vẫn bảo toàn riêng tư dữ liệu?",
+      "Làm sao phát hiện lỗ hổng hợp đồng cầu nối khi dữ liệu lỗ hổng khan hiếm và không thể chia sẻ mã nguồn?",
+      "Làm sao phát hiện bất thường và phản ứng có kiểm soát, công bằng khi cầu nối đang vận hành?"
+    ],
+    "lifecycle": "Vòng đời một thông điệp liên chuỗi — mối đe dọa & chuyên đề phòng vệ (rê chuột lên chuyên đề để lọc)",
+    "stage": {
+      "design": "Thiết kế",
+      "code": "Lập trình",
+      "lock": "Khóa trên A",
+      "relay": "Relay / Validator",
+      "mint": "Mint trên B",
+      "operate": "Vận hành"
+    },
+    "stageSub": {
+      "design": "giao thức & mật mã",
+      "code": "hợp đồng cầu nối",
+      "lock": "sự kiện Locked",
+      "relay": "ký & chuyển tiếp",
+      "mint": "phát hành token",
+      "operate": "giám sát & tối ưu"
+    },
+    "threat": {
+      "privacy": "Lộ dữ liệu",
+      "trust": "Tin mù quáng vào relay",
+      "logic": "Lỗi logic",
+      "reentrancy": "Reentrancy",
+      "access": "Thiếu phân quyền",
+      "fakeSource": "Nguồn giả",
+      "forgery": "Giả mạo xác nhận",
+      "collusion": "Validator thông đồng",
+      "replay": "Phát lại",
+      "oracle": "Oracle thao túng",
+      "drain": "Rút cạn đột biến",
+      "slowburn": "Slow-burn",
+      "outage": "Sự cố hệ thống"
+    },
+    "problemLabel": "Bài toán",
+    "contribLabel": "Đóng góp chính",
+    "cd1": {
+      "problem": "Xác thực liên chuỗi thường dựa vào uy tín relay và để lộ dữ liệu khi chứng minh điều kiện nghiệp vụ.",
+      "contrib": [
+        "Khung Π_univ ba lớp: nền tảng số học → logic riêng tư → xác nhận liên kết",
+        "ZKP (Groth16) cho vị từ, tách statement/witness",
+        "Ủy ban TSS t-of-n kiểm trên chuỗi đích, chống phát lại bằng nonce",
+        "CP-ABE cho kiểm soát truy cập theo thuộc tính"
+      ],
+      "results": [
+        "2,41 s|độ trễ toàn trình",
+        "175 B|proof ZKP",
+        "64 B|chữ ký TSS",
+        "140 TPS|30 worker"
+      ]
+    },
+    "cd2": {
+      "problem": "Lỗ hổng hợp đồng cầu nối đa dạng, dữ liệu có nhãn khan hiếm và các bên không muốn chia sẻ mã nguồn.",
+      "contrib": [
+        "CrossGuard 4 module M1–M4 cho kiểm toán trước triển khai",
+        "Biểu diễn đa nguồn + lõi few-shot (unitary encoder, Neural ODE, attention)",
+        "FedVuln: học liên kết DP-SGD + RDP + tổng hợp DAA",
+        "Hồ sơ kiểm toán với bất biến giao thức có kiểu"
+      ],
+      "results": [
+        "86,17%|F1 gộp",
+        "0,88|PR-AUC",
+        "0,71→0,88|1-shot → 10-shot",
+        "86,7%|FL tại ε = 1,0"
+      ]
+    },
+    "cd3": {
+      "problem": "Tấn công trong vận hành diễn ra từ từ hoặc phối hợp; điểm uy tín tích lũy phản ứng chậm và biện pháp giám sát dễ thiên lệch.",
+      "contrib": [
+        "CrossSentry: bằng chứng có năng lực (ECA) từ hai chuỗi",
+        "Hợp nhất Dempster–Shafer + CRS theo tác nhân–tuyến",
+        "Phản ứng R0–R5, R4/R5 cần con người phê duyệt",
+        "G-surv: tối ưu có xét mức tập trung giám sát"
+      ],
+      "results": [
+        "0,812|macro-F1",
+        "0,013|FPR",
+        "−92,7%|thời gian phát hiện",
+        "0,32|Gini @ F1 0,91"
+      ]
+    }
+  },
+  "inc": {
+    "nav": "Sự cố thực tế",
+    "badge": "Bài học từ thực tế",
+    "title": "Sự cố cầu nối liên chuỗi tiêu biểu",
+    "body": "Các vụ tấn công cầu nối lớn nhất những năm gần đây, nguyên nhân gốc rễ và chuyên đề nào của luận án nhắm vào đúng điểm yếu đó. Bấm \"Thử trong demo\" để xem cơ chế phòng vệ tương ứng.",
+    "chart": "Tổn thất ước tính theo sự cố",
+    "all": "Tất cả",
+    "total": "Tổng tổn thất",
+    "cases": "sự cố",
+    "lessons": "Bài học theo chuyên đề",
+    "lesson": {
+      "cd1": "Nhiều vụ lớn nhất đến từ khóa validator/MPC bị chiếm hoặc bằng chứng bị giả: chấp nhận dựa trên bằng chứng mật mã + ngưỡng phân tán làm giảm điểm lỗi đơn lẻ.",
+      "cd2": "Lỗi kiểm chứng thông điệp, khởi tạo sai và thiếu phân quyền có thể phát hiện trước triển khai bằng kiểm toán có bất biến.",
+      "cd3": "Dòng tiền bất thường thường kéo dài nhiều giờ trước khi bị phát hiện: giám sát hai chuỗi + phản ứng có phê duyệt rút ngắn thời gian thiệt hại."
+    },
+    "cause": "Nguyên nhân",
+    "defense": "Phòng vệ trong luận án",
+    "try": "Thử trong demo",
+    "source": "Số liệu tổn thất ước tính, tổng hợp từ báo cáo công khai của các dự án và các tổ chức phân tích bảo mật.",
+    "cat": {
+      "validator_oracle": "Validator / oracle",
+      "bridge_logic": "Logic cầu nối",
+      "message_verification": "Kiểm chứng thông điệp",
+      "access_control": "Kiểm soát truy cập",
+      "protocol_rule": "Quy tắc giao thức"
+    },
+    "items": {
+      "poly": {
+        "cause": "Một lời gọi liên chuỗi được dựng khéo đã đổi khóa \"keeper\" của hợp đồng quản lý — kẻ tấn công tự cấp quyền rút tài sản.",
+        "defense": "CĐ2: bất biến phân quyền (INV-ACL) cho hàm quản trị; CĐ3: rút tiền bất thường bị phát hiện và tạm dừng có phê duyệt."
+      },
+      "qubit": {
+        "cause": "Lỗi logic khi nạp: địa chỉ token rỗng vẫn được ghi có, cho phép mint tài sản không có bảo chứng.",
+        "defense": "CĐ2: lỗi logic cầu nối được M2 phân loại và M4 sinh bất biến cung (INV-SUPPLY)."
+      },
+      "wormhole": {
+        "cause": "Bỏ qua bước kiểm chữ ký của tập guardian, cho phép giả mạo thông điệp mint.",
+        "defense": "CĐ1: chuỗi đích tự kiểm t-of-n chữ ký bằng ecrecover; CĐ2: phát hiện thiếu kiểm chứng thông điệp."
+      },
+      "ronin": {
+        "cause": "5/9 khóa validator bị chiếm (4 khóa nằm dưới một thực thể), đủ ngưỡng để ký rút tiền.",
+        "defense": "CĐ1: ủy ban ngưỡng phân tán, không ai giữ toàn bộ khóa; CĐ3: CRS + R5 dừng cầu nối khi bất biến cung bị phá."
+      },
+      "harmony": {
+        "cause": "Multisig chỉ 2-of-5; hai khóa bị lộ là đủ chuyển tài sản.",
+        "defense": "CĐ1: ngưỡng hợp lý + loại signer trùng; CĐ3: phát hiện thông đồng validator (kịch bản Thông đồng)."
+      },
+      "nomad": {
+        "cause": "Nâng cấp khởi tạo sai khiến mọi thông điệp đều được coi là hợp lệ; hàng trăm địa chỉ sao chép giao dịch tấn công.",
+        "defense": "CĐ2: bất biến kiểm chứng thông điệp (INV-NONCE/INV-DOMAIN); CĐ3: hàng loạt mint không có lock bị gắn cờ."
+      },
+      "bnb": {
+        "cause": "Bằng chứng Merkle (IAVL) bị giả để mint lượng lớn token mới.",
+        "defense": "CĐ1: xác minh bằng chứng Merkle + ràng buộc cam kết với lá; CĐ3: mint không có lock tương ứng bị phát hiện."
+      },
+      "multichain": {
+        "cause": "Khóa MPC tập trung trong tay một bên; tài sản bị chuyển đi bất thường.",
+        "defense": "CĐ1: TSS phân tán thực sự; CĐ3: dòng tiền ra đột biến kích hoạt R4/R5."
+      },
+      "orbit": {
+        "cause": "7/10 khóa multisig bị chiếm, rút tài sản khỏi vault.",
+        "defense": "CĐ1: ngưỡng và phân bổ khóa; CĐ3: giám sát rút tiền bất thường và dừng có phê duyệt."
+      }
+    }
   }
 }

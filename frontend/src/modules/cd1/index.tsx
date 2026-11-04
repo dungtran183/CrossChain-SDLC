@@ -20,6 +20,7 @@ import { useTour, type TourStep } from "../../lib/tour";
 import { ACCENTS } from "../../lib/theme";
 import { short, type TxSummary } from "../../lib/types";
 import { useT } from "../../i18n/useT";
+import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
 import GlassCard from "../../components/GlassCard";
 import Button from "../../components/Button";
@@ -121,6 +122,7 @@ export default function Cd1Page() {
   const doSetup = () =>
     run("setup", async () => {
       const r = await api.post<SetupRes>("/api/cd1/setup");
+      complete("cd1", "setup");
       absorb(r);
       setIssue(null);
       setProve(null);
@@ -134,6 +136,7 @@ export default function Cd1Page() {
       const r = await api.post<IssueRes>("/api/cd1/issue");
       absorb(r);
       setIssue(r);
+      complete("cd1", "issue");
       setBeamIssue((x) => x + 1);
       toast({ kind: "success", title: t("cd1.toast.issue"), body: `root ${short(r.root, 6)}` });
     });
@@ -143,10 +146,13 @@ export default function Cd1Page() {
       const r = await api.post<ProveRes>("/api/cd1/prove", { student_id: req.sid, predicates: req.preds });
       absorb(r);
       setProve(r);
+      complete("cd1", "prove");
       setVerify(null);
     });
 
   const showVerify = (r: VerifyRes) => {
+    if (r.accepted && r.kind === "honest") complete("cd1", "accepted");
+    if (!r.accepted && r.kind !== "honest") complete("cd1", "tamper");
     absorb(r);
     setVerify(r);
     setAttempts((xs) => [r, ...xs].slice(0, 8));
@@ -166,6 +172,7 @@ export default function Cd1Page() {
   const doRevoke = (sid = request().sid) =>
     run("revoke", async () => {
       const r = await api.post<RevokeRes>("/api/cd1/revoke", { student_id: sid });
+      complete("cd1", "revoke");
       absorb(r);
       setBeamIssue((x) => x + 1);
       toast({ kind: "info", title: t("cd1.toast.revoked"), body: `${sid} · ${short(r.credential_hash, 6)}` });
@@ -174,6 +181,7 @@ export default function Cd1Page() {
   const doAbe = (attrs: Record<string, string>) =>
     run("abe", async () => {
       const r = await api.post<AbeRes>("/api/cd1/abe", { attrs });
+      complete("cd1", "abe");
       setAbe((xs) => [r, ...xs.filter((x) => JSON.stringify(x.attrs) !== JSON.stringify(attrs))].slice(0, 4));
     });
 

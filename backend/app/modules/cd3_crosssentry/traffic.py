@@ -17,7 +17,7 @@ from web3 import Web3
 from ...core.chainsim import Chain
 
 CORRIDORS = ["A→B", "B→A", "A→B·oracle"]
-SCENARIOS = ["normal", "replay", "delayed", "collusion", "slow_burn", "boosting"]
+SCENARIOS = ["normal", "replay", "delayed", "collusion", "slow_burn", "boosting", "oracle_skew", "flash_drain", "liveness"]
 THRESHOLD = 3
 
 
@@ -85,6 +85,11 @@ class Traffic:
         return next((x for x in self.actors.values() if x.address == addr), None)
 
     @staticmethod
+    def oracle_for(msg_id: bytes) -> str:
+        """Oracle chứng thực giá cho tuyến qua oracle — phân công tất định theo msgId."""
+        return f"O{(msg_id[-1] & 0xF) % 2 + 1}"
+
+    @staticmethod
     def relayer_for(msg_id: bytes) -> str:
         return f"R{int.from_bytes(msg_id[-2:], 'big') % 3 + 1}"
 
@@ -121,18 +126,28 @@ class Traffic:
         sc = self.scenario
         self.scenario_tick += 1
         users = [u.id for u in self.by_role("user")]
-        honest_vals = ("V4", "V5", "V6") if sc == "collusion" else ()
+        honest_vals = ("V4", "V5", "V6") if sc == "collusion" else ("V1", "V2") if sc == "liveness" else ()
         n = 3
         for _ in range(n):
-            s, r = self.rng.sample(users[:4] if sc == "boosting" else users, 2)
-            corridor = self.rng.choices([0, 1, 2], weights=[5, 2, 3])[0]
+            s, r = self.rng.sample(users[:4] if sc in ("boosting", "flash_drain") else users, 2)
+            corridor = self.rng.choices([0, 1, 2], weights=[3, 2, 5] if sc == "oracle_skew" else [5, 2, 3])[0]
             amount = int(self.rng.lognormvariate(5.4, 0.35))
             delay = self.rng.choice([0, 0, 1])
+            if sc == "liveness" and self.rng.random() < 0.4:
+                delay = self.rng.choice([4, 5])  # V1, V2 ngoại tuyến → gom đủ chữ ký chậm, ảnh hưởng mọi relayer
             tx, t = self.lock(tick, s, r, amount, corridor, delay, self.signers(exclude=honest_vals))
             txs.append(tx)
             if t and sc == "delayed" and t.relayer == "R2":
                 t.due_tick = tick + 6
                 t.kind = "delayed"
+            if t and sc == "oracle_skew" and corridor == 2 and self.oracle_for(t.msg_id) == "O1":
+                # O1 báo giá lệch +20–40 % → lượng mint trên tuyến oracle lớn hơn lượng khóa
+                t.mint_amount = int(t.amount * (1.2 + 0.2 * self.rng.random()))
+                t.kind = "oracle_skew"
+        if sc == "flash_drain":
+            # U3 đột ngột khóa/rút khối lượng lớn liên tục (không vi phạm luật nào — chỉ kênh học thấy bất thường)
+            for _ in range(5):
+                txs.append(self.lock(tick, "U3", self.rng.choice(["U4", "U5"]), int(self.rng.lognormvariate(8.0, 0.25)), 0, 0, self.signers(), kind="flash")[0])
         if sc == "slow_burn":
             # V7 có lịch sử tốt, giờ đề xuất mint "thổi phồng" trên tuyến A→B (các tuyến khác vẫn bình thường).
             s, r = self.rng.sample(users, 2)

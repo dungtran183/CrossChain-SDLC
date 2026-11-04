@@ -1,5 +1,6 @@
 // CĐ3 · CrossSentry — giám sát cầu nối sau triển khai: M1 sự kiện & ECA → M2 DS + CRS → M3 R0–R5 + G-surv.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { CartesianGrid, Legend, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Activity, Gauge as GaugeIcon, Pause, Play, RotateCcw, ShieldAlert, SkipForward, Siren, Workflow, Scale } from "lucide-react";
@@ -8,6 +9,7 @@ import { useAction } from "../../lib/useAsync";
 import { useTour, type TourStep } from "../../lib/tour";
 import { ACCENTS, CHART } from "../../lib/theme";
 import { useT } from "../../i18n/useT";
+import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
 import GlassCard from "../../components/GlassCard";
 import Button from "../../components/Button";
@@ -26,8 +28,8 @@ import ResponsePanel from "./ResponsePanel";
 import { CORRIDOR_COLORS, RISK_COLOR, type Approval, type Cd3State, type StepRes, type TuneRes } from "./types";
 
 const A = ACCENTS.cd3;
-const REPLAY_FILES = ["normal", "slow_burn", "collusion"];
-const ALL_SCENARIOS = ["normal", "replay", "delayed", "collusion", "slow_burn", "boosting"];
+const ALL_SCENARIOS = ["normal", "slow_burn", "collusion", "replay", "delayed", "boosting", "oracle_skew", "flash_drain", "liveness"];
+const REPLAY_FILES = ALL_SCENARIOS;
 const SPEEDS = [1500, 900, 450];
 type TabId = "m1" | "m2" | "m3";
 
@@ -40,7 +42,8 @@ export default function Cd3Page() {
   const [st, setSt] = useState<Cd3State | null>(null);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
-  const [tab, setTab] = useState<TabId>("m2");
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<TabId>(() => (["m1", "m2", "m3"].includes(params.get("tab") ?? "") ? (params.get("tab") as TabId) : "m2"));
   const [selKey, setSelKey] = useState<string | null>(null);
   const [selEv, setSelEv] = useState<number | null>(null);
   const [hover, setHover] = useState<string | null>(null);
@@ -83,7 +86,7 @@ export default function Cd3Page() {
     });
   }, [api, run]);
 
-  const tick = useCallback(() => run("tick", async () => absorb((await api.post<StepRes>("/api/cd3/tick?n=1")).state)), [api, run, absorb]);
+  const tick = useCallback(() => run("tick", async () => (absorb((await api.post<StepRes>("/api/cd3/tick?n=1")).state), complete("cd3", "run"))), [api, run, absorb]);
 
   useEffect(() => {
     if (!playing) return;
@@ -95,9 +98,11 @@ export default function Cd3Page() {
     run("start", async () => {
       if (MODE === "replay") {
         if (REPLAY_FILES.includes(sc)) setFile(sc);
+        if (sc !== "normal") complete("cd3", "attack");
         return;
       }
       absorb((await api.post<StepRes>(`/api/cd3/start?scenario=${sc}`)).state);
+      if (sc !== "normal") complete("cd3", "attack");
       toast({ kind: "info", title: `${t("cd3.scenario")}: ${t(`cd3.sc.${sc}`)}` });
     });
 
@@ -114,12 +119,14 @@ export default function Cd3Page() {
       setSeen((s) => new Set(s).add(id));
       setModal(null);
       const r = await api.post<StepRes>(`/api/cd3/${ok ? "approve" : "reject"}/${id}`);
+      const q = r.state.queue.find((x) => x.id === id);
+      if (ok && q) complete("cd3", q.level === "R5" ? "pause" : "approve");
       absorb(r.state);
       const tx = r.txs?.[0];
       if (ok && tx) toast({ kind: tx.status === 1 ? "success" : "error", title: t("cd3.toast.executed"), body: `${tx.fn} · chain-B #${tx.block}` });
     });
 
-  const runTune = (ww = w) => run("tune", async () => setTune(await api.post<TuneRes>("/api/cd3/tune", ww)));
+  const runTune = (ww = w) => run("tune", async () => (setTune(await api.post<TuneRes>("/api/cd3/tune", ww)), complete("cd3", "tune")));
 
   // ------------------------------------------------------------ trình chiếu
   const ref = useRef({ tick, startScenario, decide, setTab, setPlaying, runTune, setW, setFile, reset });
@@ -218,6 +225,11 @@ export default function Cd3Page() {
             </div>
           </div>
         </div>
+        {currentSc && (
+          <motion.p key={currentSc} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-amber-100/80">
+            ▸ {t(`cd3.scHint.${currentSc}`)}
+          </motion.p>
+        )}
         {MODE === "replay" && <p className="text-[11px] text-sky-300/70">{t("cd3.replayNote")}</p>}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
           {[

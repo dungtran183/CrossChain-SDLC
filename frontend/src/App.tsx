@@ -1,15 +1,18 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { FlaskConical, GitBranch, House, Menu, Radio, X } from "lucide-react";
+import { Flame, FlaskConical, GitBranch, House, Menu, Radio, X } from "lucide-react";
 import { useT, type Lang } from "./i18n/useT";
 import { MODULES } from "./modules/registry";
 import { MODE, checkHealth } from "./lib/api";
 import Home from "./pages/Home";
 import ParticleField from "./components/fx/ParticleField";
 import { Loading } from "./components/States";
+import { useToast } from "./components/Toast";
+import { onQuest, XP_PER_QUEST } from "./lib/progress";
 
 const Playground = lazy(() => import("./pages/Playground"));
+const Incidents = lazy(() => import("./pages/Incidents"));
 const REPO = "https://github.com/dungtran183/CrossChain-SDLC";
 
 function LangToggle() {
@@ -89,6 +92,12 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
         </NavLink>
       ))}
       <div className="label mt-4 mb-1 px-3">{t("app.tools")}</div>
+      <NavLink to="/incidents" onClick={onNavigate} className={({ isActive }) => item(isActive)}>
+        <span className="grid h-8 w-8 place-items-center rounded-lg bg-rose-500/15">
+          <Flame className="h-4 w-4 text-rose-300" />
+        </span>
+        {t("inc.nav")}
+      </NavLink>
       <NavLink to="/playground" onClick={onNavigate} className={({ isActive }) => item(isActive)}>
         <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/10">
           <FlaskConical className="h-4 w-4" />
@@ -103,6 +112,16 @@ export default function App() {
   const { t } = useT();
   const location = useLocation();
   const [menu, setMenu] = useState(false);
+  const toast = useToast();
+
+  // Thông báo "hoàn thành nhiệm vụ" kiểu game
+  useEffect(
+    () =>
+      onQuest((id) => {
+        if (id) toast({ kind: "success", title: `🏅 ${t("world.questDone")} +${XP_PER_QUEST} XP`, body: t(`quest.${id}`) });
+      }),
+    [toast, t],
+  );
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -156,6 +175,7 @@ export default function App() {
                       <Route key={m.id} path={m.path} element={<m.Page />} />
                     ))}
                     <Route path="/playground" element={<Playground />} />
+                    <Route path="/incidents" element={<Incidents />} />
                     <Route path="*" element={<Home />} />
                   </Routes>
                 </Suspense>

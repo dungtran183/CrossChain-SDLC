@@ -1,5 +1,6 @@
 // CĐ2 · CrossGuard — kiểm toán hợp đồng cầu nối trước triển khai: M1 → M2 → M3 → M4 + Exploit lab.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Boxes, Bug, Brain, FileCode2, FileText, Network, RotateCcw, Shield, ShieldCheck, Users } from "lucide-react";
 import { createClient } from "../../lib/api";
@@ -7,6 +8,7 @@ import { useAction } from "../../lib/useAsync";
 import { useTour, type TourStep } from "../../lib/tour";
 import { ACCENTS } from "../../lib/theme";
 import { useT } from "../../i18n/useT";
+import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
 import GlassCard from "../../components/GlassCard";
 import Button from "../../components/Button";
@@ -43,7 +45,8 @@ export default function Cd2Page() {
   const [alpha, setAlpha] = useState(1);
   const [m4, setM4] = useState<M4Res | null>(null);
   const [ex, setEx] = useState<ExploitRes | null>(null);
-  const [tab, setTab] = useState<TabId>("m1");
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<TabId>(() => (["m1", "m2", "m3", "m4", "ex"].includes(params.get("tab") ?? "") ? (params.get("tab") as TabId) : "m1"));
 
   const catLabel = useCallback((c: string) => list?.categories[c]?.[lang] ?? c, [list, lang]);
 
@@ -75,12 +78,20 @@ export default function Cd2Page() {
     analyze(sel, k);
   }, [sel, k, analyze]);
 
-  const runFl = (e = eps, a = alpha) => run("m3", async () => setM3(await api.post<M3Res>("/api/cd2/m3/run", { rounds: 10, epsilon: e, alpha: a })));
+  useEffect(() => {
+    if (tab === "m1" && m1) complete("cd2", "m1");
+    if (tab === "m2" && m2) complete("cd2", "m2");
+    if (tab === "m4" && m4) complete("cd2", "m4");
+  }, [tab, m1, m2, m4]);
+
+  const runFl = (e = eps, a = alpha) => run("m3", async () => (setM3(await api.post<M3Res>("/api/cd2/m3/run", { rounds: 10, epsilon: e, alpha: a })), complete("cd2", "m3")));
 
   const runExploit = (target: "vuln" | "safe", sid = sel) =>
     run(`ex-${target}`, async () => {
       const r = await api.post<ExploitRes>(`/api/cd2/exploit/run?target=${target}&sample=${sid}`);
       setEx(r);
+      if (r.target === "vuln" && r.exploited) complete("cd2", "exploit");
+      if (r.target === "safe" && !r.exploited) complete("cd2", "fixed");
       if (target === "safe") setM4(await api.post<M4Res>("/api/cd2/m4/report?k=5", { sample_id: sid, after_exploit: true }));
     });
 

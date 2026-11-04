@@ -15,6 +15,12 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 
 ---
 
+## Bản đồ thế giới / World map (≈ 1 phút)
+**VI.** “Trang chủ là bản đồ: hai lục địa là hai chuỗi khối, cây cầu ở giữa là cầu nối liên chuỗi. Con đường Secure SDLC đi qua 5 cửa ải; mỗi cửa ải thuộc một chuyên đề. Bấm cửa ải 1 → câu chuyện, mối đe dọa, đóng góp, nhiệm vụ → Vào màn chơi.” Kéo xuống *Bức tranh tổng thể*: rê chuột lên CĐ1/CĐ2/CĐ3 để thấy mỗi chuyên đề phòng vệ chặng nào của vòng đời thông điệp. Trang *Sự cố thực tế* nối 9 vụ tấn công lớn với màn demo tương ứng.
+**EN.** “The home page is a map: two continents are the two chains, the bridge sits between them. The Secure SDLC road crosses five checkpoints, each owned by one study.” Hover a study in *Big picture* to see which lifecycle stage it defends; *Real incidents* links nine major hacks to the matching demo.
+
+---
+
 ## CĐ1 · Π_univ (≈ 3 phút / minutes)
 | # | Thao tác / Action | Thuyết minh (VI) | Narration (EN) |
 |---|---|---|---|
@@ -26,6 +32,7 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 | 6 | **Phòng thí nghiệm giả mạo**: Thiếu ngưỡng · Chữ ký giả · Phát lại | Hợp đồng tự từ chối: 2/3 chữ ký → `AttestationRejected`; khóa ngoài ủy ban → 0 chữ ký hợp lệ; gửi lại thông điệp cũ → revert “replay”. Khối đỏ xuất hiện trên explorer chain-B. | The contract itself rejects: below threshold, forged keys, replayed message (red block on chain-B). |
 | 7 | Shamir: bấm {R1,R2,R3} rồi {R1,R2} | Đủ 3 mảnh → khôi phục đúng 1234; 2 mảnh → sai. Không relay nào giữ toàn bộ khóa. | 3 shares recover the secret, 2 do not — nobody holds the whole key. |
 | 8 | **5 · Thu hồi S3** → Sinh ZKP → Xác minh | Relay đọc trạng thái thu hồi trên chain-A và từ chối ký → chain-B từ chối. | Relays see the revocation on chain-A and refuse to sign → rejected. |
+| 8b | Chọn kịch bản **S4 · Bằng cấp = Master** → Sinh → Xác minh; rồi **S1 (khai gian)** | Tiết lộ chọn lọc: chỉ mở cam kết “bằng cấp”, các thuộc tính khác vẫn ẩn → chấp nhận; S1 khai “Master” nhưng thực là Bachelor → cam kết mở ra không khớp → từ chối. | Selective disclosure accepted; a false claim fails the commitment opening. |
 | 9 | Cuộn xuống biểu đồ + thẻ kết quả luận án | Thời gian từng giai đoạn, kích thước proof/chữ ký/bản mã; kết quả thực nghiệm: 2,41 s; 175 B; 64 B; 846 B; 140 TPS. | Per-phase timings and sizes; thesis results: 2.41 s, 175 B, 64 B, 846 B, 140 TPS. |
 
 **Thông điệp chính:** chuỗi đích quyết định dựa trên *bằng chứng mật mã*, không dựa vào uy tín relay. / *The destination chain decides on cryptographic evidence, not relay reputation.*
@@ -42,7 +49,7 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 | 5 | Tab **M4** | Hồ sơ kiểm toán: rủi ro cao, bằng chứng (dòng BUG), bất biến `INV-NONCE` trạng thái *đề xuất*, gợi ý sửa; **Tải JSON**. | Audit report with typed invariants and fixes; downloadable JSON. |
 | 6 | Tab **Exploit lab** → **Tấn công VulnBridgeNoNonce** | Attacker khóa 100 trên chain-A, rồi phát lại `release` 3 lần → số dư 400 wDEMO (300 không bảo chứng). | Lock 100, replay release 3× → 400 wDEMO, 300 unbacked. |
 | 7 | **Tấn công SafeBridge** | Cùng tấn công: các lần phát lại revert “replay: processed”. Quay lại M4: `INV-NONCE` → *đã kiểm (exploit)*. | Same attack reverts on SafeBridge; the invariant becomes verified. |
-| 8 | (Tùy chọn) Chọn hợp đồng lỗi khác → Exploit lab | WeakThreshold: chữ ký trùng; NoSourceCheck: vault giả; Access: chiếm quyền relayer; Oracle: đẩy giá ×100. | Other attacks: duplicate signature, fake source, relayer hijack, oracle pump. |
+| 8 | (Tùy chọn) Chọn hợp đồng lỗi khác → Exploit lab | WeakThreshold: chữ ký trùng; NoSourceCheck: vault giả; Access: chiếm quyền relayer; Oracle: đẩy giá ×100; **Reentrancy**: hợp đồng tấn công gọi lại unlock() rút 6 lần; **NoDomain**: chữ ký cho chain-B bị phát lại trên cầu song sinh ở chain-A. | Other attacks incl. reentrancy (6× drain) and cross-chain signature replay. |
 
 ---
 
@@ -57,4 +64,6 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 | 6 | Hộp thoại **R5 · Dừng cầu nối** → **Phê duyệt** | `pause()` on-chain; mọi mint sau đó revert “bridge paused”. | pause() on-chain; every later mint reverts. |
 | 7 | Tab **M3**: Gini + Lorenz; w_g = 0 rồi 1 → **Tối ưu Θ** | G-surv đo mức dồn biện pháp giám sát vào ít tác nhân; bật tiêu chí tập trung (w_g) làm Θ tối ưu dịch sang ngưỡng cao hơn, giảm Gini — cân bằng phát hiện với công bằng. | G-surv (Gini) and F(Θ): the concentration criterion shifts the optimal thresholds. |
 
-*Replay (GitHub Pages)*: mỗi kịch bản là một bản ghi riêng (Bình thường / Slow-burn / Thông đồng), khởi động bằng lưu lượng bình thường rồi chuyển sang tấn công. Chạy local để thử đủ 6 kịch bản (thêm Phát lại, Trì hoãn, Nâng điểm).
+| 8 | (Tùy chọn) **Oracle lệch giá** / **Rút cạn đột biến** / **Mất validator** | O1 báo giá lệch → trách nhiệm quy cho oracle, không cho validator; U3 chuyển khối lượng cực lớn — không luật nào bắt, chỉ kênh học thấy → R4; V1–V2 ngoại tuyến → trễ lan trên mọi relayer được nhận diện là sự cố hệ thống, không ai bị cô lập. | Oracle blamed, not validators; a rule-less flash drain caught by the learning channel; a systemic outage blames nobody. |
+
+*Replay (GitHub Pages)*: mỗi kịch bản là một bản ghi riêng (9 kịch bản), khởi động bằng lưu lượng bình thường rồi chuyển sang kịch bản.

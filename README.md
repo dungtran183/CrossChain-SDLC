@@ -10,13 +10,18 @@ Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài �
 
 ---
 
+## Trải nghiệm / Experience
+- **Trang chủ = bản đồ thế giới kiểu game**: hai lục địa chain-A / chain-B nối bằng cây cầu; con đường Secure SDLC đi qua 5 cửa ải (Thiết kế → Lập trình → Kiểm thử & kiểm toán → Vận hành → Tối ưu). Bấm cửa ải để xem câu chuyện, mối đe dọa, đóng góp và nhiệm vụ; bấm "Vào màn chơi" để vào chuyên đề. Mỗi thao tác quan trọng là một nhiệm vụ (+100 XP), có cấp độ, sao và cúp cho từng chuyên đề.
+- **Bức tranh tổng thể**: luận điểm, 3 câu hỏi nghiên cứu, vòng đời một thông điệp liên chuỗi với mối đe dọa ở từng chặng và chuyên đề phòng vệ, thẻ đóng góp + kết quả của từng chuyên đề.
+- **Sự cố thực tế**: 9 vụ tấn công cầu nối tiêu biểu (Ronin, Wormhole, Nomad, Poly Network, BNB Bridge…) ánh xạ sang chuyên đề và màn demo tương ứng.
+
 ## Ba module độc lập / Three independent modules
 
 | Module | Chuyên đề | Giai đoạn Secure SDLC | Demo làm được gì |
 |---|---|---|---|
-| **CĐ1 · Π_univ** | Tăng cường tính riêng tư trong giao tiếp liên chuỗi | 1. Secure Design | Văn bằng số liên chuỗi: cam kết Merkle neo trên chain-A · chứng minh “GPA ≥ ngưỡng” bằng sigma-protocol mà không lộ GPA · ủy ban 5 relay ký ngưỡng 3-of-5 bằng ECDSA thật, chain-B kiểm `ecrecover` · 5 kiểu giả mạo bị từ chối on-chain · thu hồi · Shamir (t,n) · CP-ABE |
-| **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | 5 hợp đồng cầu nối lỗi + SafeBridge · M1 đồ thị cấu trúc/token/thao tác liên chuỗi · M2 few-shot prototype (1-shot ↔ 5-shot) · M3 học liên kết DP-SGD 5 bên · M4 hồ sơ kiểm toán + bất biến có kiểu · **Exploit lab** chạy 5 tấn công thật trên EVM (thành công trên bản lỗi, revert trên bản sửa) |
-| **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Cầu nối LockVault/MintGateway chạy theo tick với 18 tác nhân và 6 kịch bản · ghép sự kiện 2 chuỗi + IsolationForest + ECA · hợp nhất Dempster–Shafer · CRS theo tác nhân–tuyến (so với điểm tích lũy truyền thống) · R0–R5 có **phê duyệt của con người** thi hành `blockActor`/`pause` on-chain · G-surv (Gini/Lorenz) và tối ưu F(Θ) |
+| **CĐ1 · Π_univ** | Tăng cường tính riêng tư trong giao tiếp liên chuỗi | 1. Secure Design | Văn bằng số liên chuỗi: cam kết Merkle neo trên chain-A · 5 kịch bản chứng minh (ZKP “GPA ≥ ngưỡng”, tiết lộ chọn lọc bằng cấp, vị từ kết hợp, khai gian, không thỏa) · ủy ban 5 relay ký ngưỡng 3-of-5 bằng ECDSA thật, chain-B kiểm `ecrecover` · 7 kiểu giả mạo bị từ chối on-chain (thiếu ngưỡng, chữ ký giả, signer trùng, proof sai, dùng sai ngữ cảnh, tráo cam kết, phát lại) · thu hồi · Shamir (t,n) · CP-ABE |
+| **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | 7 hợp đồng cầu nối lỗi (thêm reentrancy, thiếu domain separation) + 2 bản sửa · M1 đồ thị cấu trúc/token/thao tác liên chuỗi · M2 few-shot prototype (1-shot ↔ 5-shot) · M3 học liên kết DP-SGD 5 bên · M4 hồ sơ kiểm toán + bất biến có kiểu · **Exploit lab** chạy 7 tấn công thật trên EVM (phát lại, chữ ký trùng, nguồn giả, chiếm quyền, thao túng oracle, reentrancy, phát lại chéo chuỗi) (thành công trên bản lỗi, revert trên bản sửa) |
+| **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Cầu nối LockVault/MintGateway chạy theo tick với 18 tác nhân và 9 kịch bản (bình thường, slow-burn, thông đồng, phát lại, trì hoãn, nâng điểm, oracle lệch giá, rút cạn đột biến, mất validator) · ghép sự kiện 2 chuỗi + IsolationForest + ECA · hợp nhất Dempster–Shafer · CRS theo tác nhân–tuyến (so với điểm tích lũy truyền thống) · R0–R5 có **phê duyệt của con người** thi hành `blockActor`/`pause` on-chain · G-surv (Gini/Lorenz) và tối ưu F(Θ) |
 
 Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module. Mỗi trang có nút **Trình chiếu** tự chạy kịch bản demo kèm phụ đề song ngữ (phím Space tạm dừng, → bước tiếp, Esc thoát) — xem [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 

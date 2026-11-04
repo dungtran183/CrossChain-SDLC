@@ -20,7 +20,7 @@ from web3 import Web3
 from .m2_fusion import bel_pl, dempster_combine, mass, round_mass
 
 LAT_MAX = 3
-SEVERITY = {"mint_without_lock": 0.95, "double_process": 0.9, "value_out_gt_in": 0.85, "latency": 0.6, "circular_small": 0.7}
+SEVERITY = {"mint_without_lock": 0.95, "double_process": 0.9, "value_out_gt_in": 0.85, "latency": 0.6, "latency_systemic": 0.3, "circular_small": 0.7}
 
 
 def _train_forest(seed: int = 3):
@@ -39,6 +39,14 @@ def _train_forest(seed: int = 3):
     return forest, X.mean(0), X.std(0) + 1e-6
 
 
+def systemic_now(proc: "EventProcessor", tick: int) -> bool:
+    """Trễ lan trên ≥ 2 relayer khác nhau → sự cố hệ thống (vd validator ngoại tuyến), không phải một relayer xấu."""
+    late = [m_ for m_, lk in proc.locks.items() if m_ not in proc.minted_ids and LAT_MAX < tick - lk["tick"] <= 12]
+    late += [m_ for m_ in proc.recent_late if m_ in proc.locks and tick - proc.locks[m_]["tick"] <= 12]
+    relayers = {proc.traffic.relayer_for(bytes.fromhex(m_[2:])) for m_ in late}
+    return len(set(late)) >= 3 and len(relayers) >= 2
+
+
 class EventProcessor:
     def __init__(self, traffic) -> None:
         self.traffic = traffic
@@ -51,6 +59,7 @@ class EventProcessor:
         self.partners: dict[str, deque] = defaultdict(lambda: deque(maxlen=12))
         self.edges: dict[tuple[str, str], int] = defaultdict(int)
         self.seq = 0
+        self.recent_late: deque = deque(maxlen=20)
         self.signed: dict[str, int] = defaultdict(int)  # số lần ký của validator
         self.violated: dict[str, int] = defaultdict(int)  # số lần ký vào thông điệp vi phạm
 
@@ -81,14 +90,14 @@ class EventProcessor:
         df = float(self.forest.decision_function(x[None, :])[0])
         p_hat = 1 / (1 + math.exp(14 * df))
         z = float(np.abs((x - self.mu) / self.sd).mean())
-        k_l = round(math.exp(-max(0.0, z - 1.5) / 2.5), 4)
+        k_l = round(math.exp(-max(0.0, z - 1.5) / 6.0), 4)  # càng xa dữ liệu huấn luyện (OOD) càng ít tin kênh học
         m_learn = mass(k_l * (1 - p_hat), k_l * p_hat)
         if rules:
             sev = max(SEVERITY[r] for r in rules)
             rel = 0.5 + 0.5 * kp
             m_rule = mass(0.0, rel * sev)
         else:
-            m_rule = mass(kp * 0.85, 0.0)
+            m_rule = mass(kp * 0.6, 0.0)  # "không vi phạm luật" chỉ ủng hộ N vừa phải: luật không bao phủ mọi hành vi
         fused, k = dempster_combine(m_learn, m_rule)
         bel, pl = bel_pl(fused)
         self.seq += 1
@@ -147,7 +156,7 @@ class EventProcessor:
                     for s in signers:
                         self.edges[(s, "MintGateway")] += 1
                     if cor == 2:
-                        self.edges[(f"O{int(mid[-1], 16) % 2 + 1}", "MintGateway")] += 1
+                        self.edges[(self.traffic.oracle_for(bytes.fromhex(mid[2:])), "MintGateway")] += 1
                     self.edges[(relayer, "MintGateway")] += 1
                     self.activity[relayer].append(tick)
                     n_events += 1
@@ -168,14 +177,15 @@ class EventProcessor:
                         if ratio > 1.05:
                             rules.append("value_out_gt_in")
                         if latency > LAT_MAX:
-                            rules.append("latency")
+                            self.recent_late.append(mid)
+                            rules.append("latency_systemic" if systemic_now(self, tick) else "latency")
                         if lock["amount"] <= 5 and lock["recipient"] in self.partners[lock["sender"]] and len(self.partners[lock["sender"]]) >= 6 and len(set(self.partners[lock["sender"]])) <= 2:
                             rules.append("circular_small")
                     self.minted_ids.add(mid)
                     rate = len([t for t in self.activity[user or relayer] if t >= tick - 1]) if (user or relayer) else 1
                     cps = len(set(self.partners[user])) if user else 1
                     feats = [latency, math.log10(amt + 1), ratio, rate, cps]
-                    oracle = f"O{int(mid[-1], 16) % 2 + 1}" if cor == 2 else None
+                    oracle = self.traffic.oracle_for(bytes.fromhex(mid[2:])) if cor == 2 else None
                     actors = {"user": user, "relayer": relayer, "signers": signers, "oracle": oracle}
                     for v in signers:
                         self.signed[v] += 1
@@ -187,26 +197,32 @@ class EventProcessor:
                         ratio_v = {v: self.violated[v] / self.signed[v] for v in signers}
                         top = max(ratio_v.values()) or 1.0
                         attributed = [[v, round((ratio_v[v] / top) ** 2, 3)] for v in signers] + ([[relayer, 1.0]] if "mint_without_lock" in rules else [])
-                    elif "double_process" in rules or "latency" in rules:
+                        if oracle and "value_out_gt_in" in rules:
+                            # trên tuyến qua oracle, lượng mint do giá oracle quyết định → trách nhiệm chính thuộc oracle
+                            attributed = [[oracle, 1.0]] + [[v, round(w * 0.3, 3)] for v, w in attributed]
+                    elif "double_process" in rules or "latency" in rules or "latency_systemic" in rules:
                         attributed = [[relayer, 1.0]]
                     elif "circular_small" in rules:
                         attributed = [[user, 1.0]] if user else []
                     else:
-                        attributed = [[x, 1.0] for x in [user, relayer, *signers, oracle] if x]
+                        # không vi phạm luật: bất thường (nếu có) nằm ở hành vi người gửi → quy chính cho user
+                        attributed = [[x, w] for x, w in [(user, 1.0), (relayer, 0.5), *[(v, 0.3) for v in signers], (oracle, 0.5)] if x]
                     evidence.append(self._evidence(tick, kind, cor, actors, feats, rules, attributed, mid, kp))
                     if lock:
                         for r in self.recent:
                             if r["msgId"] == mid and r["type"] == "Locked":
                                 r["status"] = "matched"
                     self.recent.append({"tick": tick, "chain": "B", "type": "Minted", "msgId": mid, "amount": amt, "corridor": cor, "actor": relayer, "status": "flagged" if rules else "matched", "rules": rules})
-        # khóa chờ quá lâu → bằng chứng độ trễ cho relayer được phân công
+        # khóa chờ quá lâu → bằng chứng độ trễ cho relayer được phân công. Nếu trễ lan rộng (≥ 30 % khóa đang chờ
+        # đều trễ) thì đó là sự cố hệ thống (vd validator ngoại tuyến) → luật nhẹ hơn, tránh quy oan cho relayer.
+        systemic = systemic_now(self, tick)
         for mid, lock in self.locks.items():
             age = tick - lock["tick"]
             if mid not in self.minted_ids and age > LAT_MAX and not lock["flagged_latency"]:
                 lock["flagged_latency"] = True
                 relayer = self.traffic.relayer_for(bytes.fromhex(mid[2:]))
                 feats = [age, math.log10(lock["amount"] + 1), 0.0, 1, 1]
-                evidence.append(self._evidence(tick, "pending_lock", lock["corridor"], {"user": lock["sender"], "relayer": relayer, "signers": []}, feats, ["latency"], [[relayer, 1.0]], mid, kp))
+                evidence.append(self._evidence(tick, "pending_lock", lock["corridor"], {"user": lock["sender"], "relayer": relayer, "signers": []}, feats, ["latency_systemic" if systemic else "latency"], [[relayer, 1.0]], mid, kp))
                 for r in self.recent:
                     if r["msgId"] == mid and r["type"] == "Locked":
                         r["status"] = "late"

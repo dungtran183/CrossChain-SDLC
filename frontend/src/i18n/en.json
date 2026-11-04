@@ -17,7 +17,7 @@
   },
   "home": {
     "heroTitle": "Cross-chain security across the software lifecycle",
-    "heroBody": "Three independent modules map the three thesis studies: privacy-preserving design, pre-deployment contract auditing and post-deployment monitoring on two EVM chains.",
+    "heroBody": "A journey through the five Secure SDLC phases on a two-chain map: every checkpoint is one thesis study — privacy-preserving design, pre-deployment contract auditing, post-deployment monitoring and optimization.",
     "open": "Open module",
     "sdlc": "Secure SDLC phase",
     "badge": "PhD thesis · Cross-chain security",
@@ -42,7 +42,7 @@
         "body": "Two in-memory EVM chains (py-evm): chain-A (id 31337) and chain-B (id 97). Every transaction is mined into its own block for easy observation."
       },
       "ml": {
-        "title": "Symbolic, fast algorithms",
+        "title": "Compact algorithms, instant feedback",
         "body": "ZKP, threshold signatures, CP-ABE and numpy/scikit-learn ML with fixed seeds — every action responds in under 3 seconds."
       },
       "modes": {
@@ -313,14 +313,17 @@
     "pause": "Pause",
     "step": "Step",
     "replayEnd": "End of the recorded scenario — press Reset or pick another scenario.",
-    "replayNote": "Replay: each scenario is a separate recording (warms up with normal traffic, then switches to the attack). Run locally to try all 6 scenarios.",
+    "replayNote": "Replay: each scenario is a separate recording (warms up with normal traffic, then switches). Run locally to combine scenarios freely.",
     "sc": {
       "normal": "Normal",
       "replay": "Replay",
       "delayed": "Delayed",
       "collusion": "Collusion",
       "slow_burn": "Slow-burn",
-      "boosting": "Boosting"
+      "boosting": "Boosting",
+      "oracle_skew": "Oracle skew",
+      "flash_drain": "Flash drain",
+      "liveness": "Validator outage"
     },
     "kpi": {
       "locked": "Locked (A)",
@@ -408,6 +411,17 @@
       "s5": "Collusion scenario: V4–V6 co-sign mints with no matching lock; total minted exceeds total locked.",
       "s6": "Several actors at R4 on one corridor → R5 pause bridge is proposed; approve → pause(), every later mint reverts.",
       "s7": "G-surv: compare the optimal Θ with the concentration criterion off (w_g = 0) and on (w_g = 1) — balancing detection and fairness."
+    },
+    "scHint": {
+      "normal": "Valid traffic, every event matched.",
+      "slow_burn": "V7, with a good history, starts co-signing inflated mints on A→B.",
+      "collusion": "V4–V6 + R3 mint without locks — the supply invariant breaks.",
+      "replay": "R3 resubmits an already minted msgId (gateway in loose mode).",
+      "delayed": "R2 holds messages abnormally long.",
+      "boosting": "U5–U6 circulate tiny values to inflate reputation.",
+      "oracle_skew": "Oracle O1 reports prices skewed +20–40 % on the oracle corridor.",
+      "flash_drain": "U3 suddenly moves very large volumes — no rule fires, only the learning channel sees it.",
+      "liveness": "V1, V2 offline — delays spread across all relayers: a systemic incident, nobody is blamed."
     }
   },
   "common": {
@@ -454,5 +468,282 @@
     "kit": "Shared UI kit",
     "pulse": "Send packet",
     "jsonHint": "Send a transaction to see its details"
+  },
+  "world": {
+    "title": "Cross-chain Secure SDLC map",
+    "play": "Start the journey",
+    "player": "Player",
+    "quests": "quests",
+    "levels": [
+      "Cross-chain rookie",
+      "Secure designer",
+      "Bridge auditor",
+      "Bridge guardian",
+      "Cross-chain security architect"
+    ],
+    "chainA": "CHAIN-A CONTINENT · Ethereum-like",
+    "chainB": "CHAIN-B CONTINENT · BSC-like",
+    "bridge": "CROSS-CHAIN BRIDGE",
+    "start": "Requirements",
+    "goal": "Secure bridge",
+    "hint": "Click a checkpoint to inspect · double-click to enter",
+    "phase": "Phase",
+    "threats": "Threats",
+    "contrib": "Thesis contributions",
+    "missions": "Missions in this level",
+    "enter": "Enter level",
+    "questDone": "Quest completed",
+    "p1": {
+      "story": "Before any code is written, the protocol must be designed so the destination chain trusts cryptographic evidence — not relays — without leaking user data.",
+      "threats": [
+        "Private data leakage",
+        "Relays forging attestations",
+        "Message replay",
+        "One party holding the whole key"
+      ],
+      "contrib": [
+        "Π_univ framework: public statement separated from secret witness",
+        "Predicate ZKP + t-of-n threshold signatures checked on-chain",
+        "Selective disclosure, revocation and CP-ABE access control"
+      ]
+    },
+    "p2": {
+      "story": "Bridge contracts get a multi-source representation (structure, text, cross-chain operations) so a few-shot core recognises vulnerabilities from very few examples, and parties learn jointly without sharing code.",
+      "threats": [
+        "Bridge logic bugs",
+        "Reentrancy",
+        "Missing source checks",
+        "Scarce vulnerability data"
+      ],
+      "contrib": [
+        "Multi-source representation: CPG + tokens + cross-chain operation types",
+        "Few-shot detection core (prototypes, attention fusion)",
+        "Privacy-preserving DP-SGD federated learning (FedVuln)"
+      ]
+    },
+    "p3": {
+      "story": "Detections become an audit report: risk tier, evidence, typed invariants and fixes — then the impact is proven with real attacks on an EVM.",
+      "threats": [
+        "Replay",
+        "Duplicate signatures / weak threshold",
+        "Admin hijack",
+        "Oracle manipulation",
+        "Cross-chain replay"
+      ],
+      "contrib": [
+        "Audit report with invariants (declared / candidate / verified)",
+        "Exploit lab verifies invariants on buggy and fixed versions"
+      ]
+    },
+    "p4": {
+      "story": "After deployment CrossSentry matches events across both chains, rates evidence competence (ECA), fuses it with Dempster–Shafer and tracks risk per actor–corridor pair.",
+      "threats": [
+        "Colluding validators",
+        "Slow-burn",
+        "Oracle skew",
+        "Flash drain"
+      ],
+      "contrib": [
+        "Evidence with competence factors κ_L, κ_P (ECA)",
+        "Dempster–Shafer fusion with conflict K",
+        "Actor–corridor CRS with decay and jumps",
+        "R0–R5 responses with human approval"
+      ]
+    },
+    "p5": {
+      "story": "Monitoring parameters are tuned periodically to balance detection, operating cost and how concentrated surveillance is (G-surv), so a small group is not over-policed.",
+      "threats": [
+        "Biased surveillance",
+        "False alarms",
+        "Systemic incidents blamed on individuals"
+      ],
+      "contrib": [
+        "G-surv: Gini index of monitoring intensity",
+        "Objective F(Θ) = w_d·U_det − w_g·G_surv − w_c·C_op"
+      ]
+    }
+  },
+  "quest": {
+    "cd1": {
+      "setup": "Set up the 5-relay committee",
+      "issue": "Anchor a credential batch root",
+      "prove": "Prove a predicate",
+      "accepted": "Get accepted on chain-B",
+      "tamper": "Block a forgery",
+      "revoke": "Revoke a credential",
+      "shamir": "Try Shamir secret sharing",
+      "abe": "Decrypt with CP-ABE attributes"
+    },
+    "cd2": {
+      "m1": "Inspect the multi-source view (M1)",
+      "m2": "Few-shot classification (M2)",
+      "m3": "Run DP-SGD federated learning (M3)",
+      "m4": "Read the audit report (M4)",
+      "exploit": "Exploit a buggy bridge",
+      "fixed": "Get stopped by the fix"
+    },
+    "cd3": {
+      "run": "Run the bridge",
+      "attack": "Trigger an attack scenario",
+      "approve": "Approve isolating an actor (R4)",
+      "pause": "Approve pausing the bridge (R5)",
+      "tune": "Optimise Θ"
+    }
+  },
+  "big": {
+    "label": "Big picture",
+    "title": "The thesis in one frame",
+    "thesisLabel": "Thesis statement",
+    "thesis": "Cross-chain communication must be secured across the whole lifecycle: design on cryptographic evidence, audit contracts before deployment, and monitor adaptively after deployment.",
+    "problem": "Cross-chain bridges hold very large amounts of assets and have suffered several attacks worth hundreds of millions of USD. Each lifecycle phase has its own kind of weakness, so no single technique is enough.",
+    "rq": [
+      "How can a destination chain accept messages on cryptographic evidence while keeping data private?",
+      "How can bridge-contract vulnerabilities be detected when labelled data is scarce and code cannot be shared?",
+      "How can anomalies be detected and answered in a controlled, fair way while the bridge is running?"
+    ],
+    "lifecycle": "Life of a cross-chain message — threats & defending studies (hover a study to filter)",
+    "stage": {
+      "design": "Design",
+      "code": "Coding",
+      "lock": "Lock on A",
+      "relay": "Relay / Validators",
+      "mint": "Mint on B",
+      "operate": "Operations"
+    },
+    "stageSub": {
+      "design": "protocol & crypto",
+      "code": "bridge contracts",
+      "lock": "Locked event",
+      "relay": "sign & forward",
+      "mint": "token issuance",
+      "operate": "monitor & tune"
+    },
+    "threat": {
+      "privacy": "Data leakage",
+      "trust": "Blind trust in relays",
+      "logic": "Logic bugs",
+      "reentrancy": "Reentrancy",
+      "access": "Missing access control",
+      "fakeSource": "Fake source",
+      "forgery": "Forged attestation",
+      "collusion": "Colluding validators",
+      "replay": "Replay",
+      "oracle": "Oracle manipulation",
+      "drain": "Flash drain",
+      "slowburn": "Slow-burn",
+      "outage": "Systemic outage"
+    },
+    "problemLabel": "Problem",
+    "contribLabel": "Key contributions",
+    "cd1": {
+      "problem": "Cross-chain verification often relies on relay reputation and leaks data when proving business predicates.",
+      "contrib": [
+        "Three-layer Π_univ: arithmetic foundation → privacy logic → federated verification",
+        "ZKP (Groth16) predicates with statement/witness separation",
+        "t-of-n TSS committee verified on the destination chain, nonce against replay",
+        "CP-ABE attribute-based access control"
+      ],
+      "results": [
+        "2.41 s|end-to-end latency",
+        "175 B|ZKP proof",
+        "64 B|TSS signature",
+        "140 TPS|30 workers"
+      ]
+    },
+    "cd2": {
+      "problem": "Bridge-contract vulnerabilities are diverse, labelled data is scarce and parties will not share source code.",
+      "contrib": [
+        "CrossGuard M1–M4 pipeline for pre-deployment auditing",
+        "Multi-source representation + few-shot core (unitary encoder, Neural ODE, attention)",
+        "FedVuln: DP-SGD federated learning + RDP + DAA aggregation",
+        "Audit report with typed protocol invariants"
+      ],
+      "results": [
+        "86.17%|overall F1",
+        "0.88|PR-AUC",
+        "0.71→0.88|1-shot → 10-shot",
+        "86.7%|FL at ε = 1.0"
+      ]
+    },
+    "cd3": {
+      "problem": "Operational attacks are gradual or coordinated; cumulative reputation reacts slowly and monitoring easily becomes biased.",
+      "contrib": [
+        "CrossSentry: competence-aware evidence (ECA) from both chains",
+        "Dempster–Shafer fusion + actor–corridor CRS",
+        "R0–R5 responses, R4/R5 require human approval",
+        "G-surv: optimisation aware of surveillance concentration"
+      ],
+      "results": [
+        "0.812|macro-F1",
+        "0.013|FPR",
+        "−92.7%|time to detect",
+        "0.32|Gini @ F1 0.91"
+      ]
+    }
+  },
+  "inc": {
+    "nav": "Real incidents",
+    "badge": "Lessons from the field",
+    "title": "Notable cross-chain bridge incidents",
+    "body": "The largest bridge attacks of recent years, their root causes and which thesis study targets that exact weakness. Click \"Try in the demo\" to see the matching defence.",
+    "chart": "Estimated loss per incident",
+    "all": "All",
+    "total": "Total loss",
+    "cases": "incidents",
+    "lessons": "Lessons per study",
+    "lesson": {
+      "cd1": "Several of the largest losses came from compromised validator/MPC keys or forged proofs: accepting on cryptographic evidence with a distributed threshold removes single points of failure.",
+      "cd2": "Message-verification bugs, faulty initialisation and missing access control can be caught before deployment by invariant-driven auditing.",
+      "cd3": "Abnormal outflows often ran for hours before anyone noticed: two-chain monitoring with approved responses shortens the damage window."
+    },
+    "cause": "Root cause",
+    "defense": "Defence in the thesis",
+    "try": "Try in the demo",
+    "source": "Estimated losses, compiled from public post-mortems by the projects and security analysis firms.",
+    "cat": {
+      "validator_oracle": "Validator / oracle",
+      "bridge_logic": "Bridge logic",
+      "message_verification": "Message verification",
+      "access_control": "Access control",
+      "protocol_rule": "Protocol rule"
+    },
+    "items": {
+      "poly": {
+        "cause": "A crafted cross-chain call replaced the \"keeper\" of the manager contract — the attacker granted itself withdrawal rights.",
+        "defense": "CĐ2: access-control invariant (INV-ACL) on admin functions; CĐ3: abnormal withdrawals flagged and paused with approval."
+      },
+      "qubit": {
+        "cause": "Deposit logic bug: a zero token address was still credited, allowing unbacked mints.",
+        "defense": "CĐ2: bridge-logic bug classified by M2, supply invariant (INV-SUPPLY) from M4."
+      },
+      "wormhole": {
+        "cause": "Guardian signature verification was bypassed, allowing a forged mint message.",
+        "defense": "CĐ1: the destination chain itself checks t-of-n signatures with ecrecover; CĐ2: missing message verification detected."
+      },
+      "ronin": {
+        "cause": "5 of 9 validator keys were compromised (4 held by one entity), enough to sign withdrawals.",
+        "defense": "CĐ1: distributed threshold committee, nobody holds the whole key; CĐ3: CRS + R5 pause when the supply invariant breaks."
+      },
+      "harmony": {
+        "cause": "A 2-of-5 multisig; two leaked keys were enough to move assets.",
+        "defense": "CĐ1: sound threshold + duplicate-signer rejection; CĐ3: colluding validators detected (Collusion scenario)."
+      },
+      "nomad": {
+        "cause": "A faulty initialisation made every message count as valid; hundreds of addresses copied the attack transaction.",
+        "defense": "CĐ2: message-verification invariants (INV-NONCE/INV-DOMAIN); CĐ3: waves of mints without locks are flagged."
+      },
+      "bnb": {
+        "cause": "A forged Merkle (IAVL) proof minted a large amount of new tokens.",
+        "defense": "CĐ1: Merkle proof verification + binding commitments to the leaf; CĐ3: mints without matching locks detected."
+      },
+      "multichain": {
+        "cause": "MPC keys were centralised with one party; assets were moved out abnormally.",
+        "defense": "CĐ1: genuinely distributed TSS; CĐ3: sudden outflows trigger R4/R5."
+      },
+      "orbit": {
+        "cause": "7 of 10 multisig keys were compromised and the vault was drained.",
+        "defense": "CĐ1: threshold and key distribution; CĐ3: abnormal withdrawal monitoring with approved pause."
+      }
+    }
   }
 }

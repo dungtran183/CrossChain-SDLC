@@ -13,7 +13,7 @@ REQUIRED = {
     "core": ["playground"],
     "cd1": ["credential-flow"],
     "cd2": ["audit-flow"],
-    "cd3": ["normal", "slow_burn", "collusion"],
+    "cd3": ["normal", "slow_burn", "collusion", "replay", "delayed", "boosting", "oracle_skew", "flash_drain", "liveness"],
 }
 
 ok = True
