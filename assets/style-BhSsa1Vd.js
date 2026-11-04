@@ -1,0 +1,6 @@
+import{c as d}from"./index-v0OCzsSk.js";import{j as t,m as c}from"./motion-BKZRgHTS.js";import{r as l}from"./react-B699V9yx.js";/**
+ * @license lucide-react v1.68.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const i={name:"workflow",size:24,node:[["rect",{width:"8",height:"8",x:"3",y:"3",rx:"2",key:"by2w9f"}],["path",{d:"M7 11v4a2 2 0 0 0 2 2h4",key:"xkn7yn"}],["rect",{width:"8",height:"8",x:"13",y:"13",rx:"2",key:"1cgmvn"}]]};i.node;const f=d(i);function h({tabs:r,value:s,onChange:a,accent:o="from-sky-400 to-fuchsia-500"}){const n=l.useId();return t.jsx("div",{className:"tabs-brut flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.03] p-1",role:"tablist",children:r.map(e=>t.jsxs("button",{role:"tab","aria-selected":s===e.id,onClick:()=>a(e.id),className:`relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition ${s===e.id?"text-ink-950":"text-slate-300 hover:text-white"}`,children:[s===e.id&&t.jsx(c.span,{layoutId:`tab-${n}`,className:`absolute inset-0 rounded-xl bg-gradient-to-r ${o}`,transition:{type:"spring",stiffness:380,damping:32}}),t.jsxs("span",{className:"relative flex items-center gap-2",children:[e.icon,e.label]})]},e.id))})}export{h as T,f as W};

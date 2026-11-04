@@ -1,0 +1,1 @@
+const r={cd1:{grad:"from-cyan-400 to-teal-500",hex:"#22d3ee"},cd2:{grad:"from-violet-500 to-indigo-500"},cd3:{grad:"from-amber-400 to-rose-500"},core:{grad:"from-sky-400 to-fuchsia-500"}},o={grid:"rgb(var(--c-white) / 0.08)",axis:"rgb(var(--c-slate-400))"};export{r as A,o as C};
