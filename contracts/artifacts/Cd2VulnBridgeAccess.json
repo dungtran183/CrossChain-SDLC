@@ -1,0 +1,156 @@
+{
+  "contractName": "Cd2VulnBridgeAccess",
+  "sourceName": "cd2/Cd2VulnBridgeAccess.sol",
+  "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_relayer",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "relayer",
+          "type": "address"
+        }
+      ],
+      "name": "RelayerChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "msgId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Released",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "processed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "relayer",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "msgId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "release",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "r",
+          "type": "address"
+        }
+      ],
+      "name": "setRelayer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "internalType": "contract ICd2TokenA",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161044c38038061044c83398101604081905261002f91610086565b600080546001600160a01b039384166001600160a01b03199182161790915560018054821633179055600280549290931691161790556100b9565b80516001600160a01b038116811461008157600080fd5b919050565b6000806040838503121561009957600080fd5b6100a28361006a565b91506100b06020840161006a565b90509250929050565b610384806100c86000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c80636548e9bc146100675780638406c0791461007c5780638da5cb5b146100ac578063c1f0808a146100bf578063f5b16b84146100f2578063fc0c546a14610105575b600080fd5b61007a6100753660046102de565b610118565b005b60025461008f906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b60015461008f906001600160a01b031681565b6100e26100cd366004610300565b60036020526000908152604090205460ff1681565b60405190151581526020016100a3565b61007a610100366004610319565b610162565b60005461008f906001600160a01b031681565b600280546001600160a01b0319166001600160a01b0383169081179091556040517f88cb58f8479aba47ccd2dcbc41bf94bc01e3f58a877cbe5e7f3bd978d89773ba90600090a250565b6002546001600160a01b031633146101b05760405162461bcd60e51b815260206004820152600c60248201526b37b7363c903932b630bcb2b960a11b60448201526064015b60405180910390fd5b60008381526003602052604090205460ff16156101fb5760405162461bcd60e51b81526020600482015260096024820152681c1c9bd8d95cdcd95960ba1b60448201526064016101a7565b600083815260036020526040808220805460ff19166001179055905490516340c10f1960e01b81526001600160a01b03848116600483015260248201849052909116906340c10f1990604401600060405180830381600087803b15801561026157600080fd5b505af1158015610275573d6000803e3d6000fd5b50505050816001600160a01b0316837fc8fa66dff4b9073528c3f1bf21a8dc9a18fdf09847e88e96188bc953aef519f0836040516102b591815260200190565b60405180910390a3505050565b80356001600160a01b03811681146102d957600080fd5b919050565b6000602082840312156102f057600080fd5b6102f9826102c2565b9392505050565b60006020828403121561031257600080fd5b5035919050565b60008060006060848603121561032e57600080fd5b8335925061033e602085016102c2565b915060408401359050925092509256fea2646970667358221220ccc609541a52ec59d831727f039040ed30054b819b9806c545ea6bac065c004d64736f6c63430008180033"
+}

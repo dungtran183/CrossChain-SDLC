@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+interface ICd2Token { function mint(address to, uint256 amount) external; }
+
+/// @title Cd2VulnBridgeNoNonce — LỖI: release() không đánh dấu message đã xử lý → phát lại (replay).
+contract Cd2VulnBridgeNoNonce {
+    ICd2Token public token;
+    address public relayer;
+    uint256 public constant SRC_CHAIN_ID = 31337;
+
+    event Released(bytes32 indexed msgId, address indexed to, uint256 amount);
+
+    constructor(address _token, address _relayer) {
+        token = ICd2Token(_token);
+        relayer = _relayer;
+    }
+
+    function release(bytes32 msgId, address to, uint256 amount, uint256 srcChainId, bytes calldata sig) external {
+        require(srcChainId == SRC_CHAIN_ID, "bad source");
+        bytes32 h = keccak256(abi.encodePacked(msgId, to, amount, srcChainId, address(this)));
+        require(_recover(h, sig) == relayer, "bad signature");
+        // BUG: thiếu require(!processed[msgId]) và processed[msgId] = true
+        token.mint(to, amount);
+        emit Released(msgId, to, amount);
+    }
+
+    function _recover(bytes32 h, bytes calldata sig) internal pure returns (address) {
+        bytes32 d = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", h));
+        (bytes32 r, bytes32 s, uint8 v) = (bytes32(sig[0:32]), bytes32(sig[32:64]), uint8(sig[64]));
+        return ecrecover(d, v < 27 ? v + 27 : v, r, s);
+    }
+}

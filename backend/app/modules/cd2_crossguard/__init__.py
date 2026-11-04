@@ -9,7 +9,7 @@ MODULE = {
     "package": "cd2_crossguard",
     "name": "CrossGuard",
     "sdlc_phase": "Secure Coding · Testing & Audit",
-    "status": "planned",
+    "status": "ready",
     "phase": "P3",
 }
 

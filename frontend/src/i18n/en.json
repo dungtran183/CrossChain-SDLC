@@ -174,7 +174,108 @@
       "Exploit lab"
     ],
     "short": "Bridge contract auditing",
-    "pubs": "CrossGuard · FedVuln"
+    "pubs": "CrossGuard · FedVuln",
+    "samples": "Sample bridge contracts",
+    "tabs": {
+      "ex": "Exploit lab",
+      "desc": {
+        "m1": "Multi-source representation: structure · text · interaction",
+        "m2": "Few-shot prototype classification",
+        "m3": "DP-SGD federated training across 5 parties",
+        "m4": "Audit report & invariants",
+        "ex": "Demonstrate impact on a real EVM"
+      }
+    },
+    "m1": {
+      "structure": "Structure graph (≈ CPG)",
+      "interaction": "Cross-chain operations & guards",
+      "text": "Text source (tokens ≈ CodeBERT)"
+    },
+    "m2": {
+      "space": "Embedding space (2D PCA)",
+      "query": "contract under audit",
+      "predicted": "Prediction",
+      "episode": "Episode accuracy",
+      "attention": "Per-source contribution (attention)",
+      "probs": "Class probabilities (temperature-calibrated)"
+    },
+    "view": {
+      "text": "Text",
+      "structure": "Structure",
+      "interaction": "Interaction"
+    },
+    "m3": {
+      "eps": "Target privacy budget ε",
+      "alpha": "Non-IID Dirichlet α",
+      "run": "Run 10 federated rounds",
+      "accDp": "Accuracy (DP)",
+      "accBase": "Accuracy (no DP)",
+      "epsSpent": "ε spent",
+      "epsCurve": "Cumulative ε per round",
+      "clip": "Gradient norm before / after clipping",
+      "note": "5 clients · numpy softmax regression · DP-SGD (clip C, Gaussian noise) · toy moments-accountant ε · averaged over 4 seeds."
+    },
+    "m4": {
+      "reportFor": "Audit report",
+      "invariants": "Typed invariants",
+      "evidence": "Evidence",
+      "missing": "missing",
+      "fixes": "Suggested fixes",
+      "noFix": "No violated invariant detected.",
+      "tier": {
+        "high": "high",
+        "medium": "medium",
+        "low": "low"
+      },
+      "status": {
+        "declared": "enforced",
+        "candidate": "candidate",
+        "verified": "verified (exploit)"
+      }
+    },
+    "ex": {
+      "attackVuln": "Attack",
+      "attackSafe": "Attack SafeBridge",
+      "pickVuln": "Pick a vulnerable contract to run an attack.",
+      "locked": "Locked on A",
+      "attacker": "Attacker balance on B",
+      "exploited": "Exploited — minted without backing",
+      "blocked": "The fix blocks the attack — transaction reverted",
+      "attack": {
+        "replay": "Message replay",
+        "duplicate_sig": "Duplicate signature / weak threshold",
+        "fake_source": "Fake source bridge",
+        "hijack_relayer": "Relayer hijack",
+        "oracle_manipulation": "Oracle price manipulation"
+      },
+      "step": {
+        "deploy": "Deploy",
+        "lock": "Lock assets",
+        "release": "Release",
+        "replay": "Replay",
+        "forge": "Forged release",
+        "deploy_fake": "Deploy fake vault",
+        "hijack": "Hijack",
+        "manipulate": "Pump oracle price"
+      }
+    },
+    "thesis": {
+      "source": "CĐ2 report",
+      "f1": "Overall F1",
+      "fewshot": "F1 1-shot → 10-shot",
+      "fl": "Federated (FedVuln)",
+      "scale": "With 500 participants"
+    },
+    "tour": {
+      "s0": "Pick VulnBridgeNoNonce — a bridge that mints tokens on chain-B when it receives a relayer-signed message.",
+      "s1": "M1 builds the structure graph: release() mints but there is no processed[...] node — no replay protection.",
+      "s2": "M2 matches against class prototypes; 1-shot is confusable, 5-shot is clearer → “message verification error”.",
+      "s3": "M3: 5 parties train together without sharing code; DP-SGD clips gradients and adds noise, ε grows to 1.",
+      "s4": "M4 emits the audit report: high risk, invariant INV-NONCE as a candidate, plus a suggested fix.",
+      "s5": "Exploit lab: the attacker locks 100 on chain-A then replays release 3 times → receives 400 wDEMO.",
+      "s6": "The same attack on SafeBridge: replays revert with “replay: processed”.",
+      "s7": "The M4 report updates: INV-NONCE is now verified by the Exploit lab."
+    }
   },
   "cd3": {
     "name": "CrossSentry",

@@ -174,7 +174,108 @@
       "Exploit lab"
     ],
     "short": "Kiểm toán hợp đồng cầu nối",
-    "pubs": "CrossGuard · FedVuln"
+    "pubs": "CrossGuard · FedVuln",
+    "samples": "Hợp đồng cầu nối mẫu",
+    "tabs": {
+      "ex": "Exploit lab",
+      "desc": {
+        "m1": "Biểu diễn đa nguồn: cấu trúc · văn bản · tương tác",
+        "m2": "Phân loại few-shot bằng prototype",
+        "m3": "Học liên kết DP-SGD giữa 5 bên",
+        "m4": "Hồ sơ kiểm toán & bất biến",
+        "ex": "Chứng minh hậu quả trên EVM thật"
+      }
+    },
+    "m1": {
+      "structure": "Đồ thị cấu trúc (≈ CPG)",
+      "interaction": "Thao tác liên chuỗi & guard",
+      "text": "Nguồn văn bản (token ≈ CodeBERT)"
+    },
+    "m2": {
+      "space": "Không gian nhúng (PCA 2D)",
+      "query": "hợp đồng đang xét",
+      "predicted": "Dự đoán",
+      "episode": "Độ chính xác episode",
+      "attention": "Đóng góp từng nguồn (attention)",
+      "probs": "Xác suất theo lớp (hiệu chỉnh nhiệt độ)"
+    },
+    "view": {
+      "text": "Văn bản",
+      "structure": "Cấu trúc",
+      "interaction": "Tương tác"
+    },
+    "m3": {
+      "eps": "Ngân sách riêng tư ε mục tiêu",
+      "alpha": "Độ non-IID Dirichlet α",
+      "run": "Chạy 10 vòng học liên kết",
+      "accDp": "Accuracy (DP)",
+      "accBase": "Accuracy (không DP)",
+      "epsSpent": "ε đã tiêu",
+      "epsCurve": "ε tích lũy theo vòng",
+      "clip": "Chuẩn gradient trước / sau cắt",
+      "note": "5 client · hồi quy softmax numpy · DP-SGD (cắt C, nhiễu Gaussian) · ε ước lượng toy kiểu moments accountant · trung bình 4 seed."
+    },
+    "m4": {
+      "reportFor": "Hồ sơ kiểm toán",
+      "invariants": "Bất biến có kiểu",
+      "evidence": "Bằng chứng",
+      "missing": "thiếu",
+      "fixes": "Gợi ý sửa",
+      "noFix": "Không phát hiện bất biến bị vi phạm.",
+      "tier": {
+        "high": "cao",
+        "medium": "trung bình",
+        "low": "thấp"
+      },
+      "status": {
+        "declared": "đã cưỡng chế",
+        "candidate": "đề xuất",
+        "verified": "đã kiểm (exploit)"
+      }
+    },
+    "ex": {
+      "attackVuln": "Tấn công",
+      "attackSafe": "Tấn công SafeBridge",
+      "pickVuln": "Chọn một hợp đồng lỗi để chạy tấn công.",
+      "locked": "Đã khóa trên A",
+      "attacker": "Số dư attacker trên B",
+      "exploited": "Khai thác thành công — mint không có tài sản bảo chứng",
+      "blocked": "Bản sửa chặn tấn công — giao dịch revert",
+      "attack": {
+        "replay": "Phát lại thông điệp",
+        "duplicate_sig": "Chữ ký trùng / ngưỡng yếu",
+        "fake_source": "Cầu nguồn giả",
+        "hijack_relayer": "Chiếm quyền relayer",
+        "oracle_manipulation": "Thao túng giá oracle"
+      },
+      "step": {
+        "deploy": "Triển khai",
+        "lock": "Khóa tài sản",
+        "release": "Release",
+        "replay": "Phát lại",
+        "forge": "Giả mạo release",
+        "deploy_fake": "Triển khai vault giả",
+        "hijack": "Chiếm quyền",
+        "manipulate": "Đẩy giá oracle"
+      }
+    },
+    "thesis": {
+      "source": "Báo cáo CĐ2",
+      "f1": "F1 gộp",
+      "fewshot": "F1 1-shot → 10-shot",
+      "fl": "Học liên kết (FedVuln)",
+      "scale": "Với 500 bên tham gia"
+    },
+    "tour": {
+      "s0": "Chọn hợp đồng VulnBridgeNoNonce — cầu nối mint token trên chain-B khi nhận thông điệp đã ký từ relayer.",
+      "s1": "M1 dựng đồ thị cấu trúc: release() ghi mint nhưng không có nút processed[...] — thiếu chống phát lại.",
+      "s2": "M2 so khớp với prototype các nhóm lỗi; 1-shot dễ nhầm, 5-shot rõ hơn → “lỗi kiểm chứng thông điệp”.",
+      "s3": "M3: 5 bên cùng huấn luyện mà không chia sẻ mã nguồn; DP-SGD cắt gradient + thêm nhiễu, ε tăng dần tới 1.",
+      "s4": "M4 xuất hồ sơ kiểm toán: rủi ro cao, bất biến INV-NONCE ở trạng thái đề xuất, kèm gợi ý sửa.",
+      "s5": "Exploit lab: attacker khóa 100 trên chain-A rồi phát lại release 3 lần → nhận 400 wDEMO.",
+      "s6": "Cùng tấn công trên SafeBridge: lần phát lại revert “replay: processed”.",
+      "s7": "Hồ sơ M4 cập nhật: INV-NONCE được Exploit lab xác minh."
+    }
   },
   "cd3": {
     "name": "CrossSentry",

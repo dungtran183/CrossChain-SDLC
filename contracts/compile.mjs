@@ -62,6 +62,7 @@ fs.mkdirSync(outDir, { recursive: true });
 let n = 0;
 for (const [source, contracts] of Object.entries(output.contracts || {})) {
   for (const [name, c] of Object.entries(contracts)) {
+    if (!c.evm.bytecode.object) continue; // interface / abstract: không cần artifact
     const artifact = {
       contractName: name,
       sourceName: source,

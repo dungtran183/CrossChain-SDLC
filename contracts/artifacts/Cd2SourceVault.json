@@ -1,0 +1,101 @@
+{
+  "contractName": "Cd2SourceVault",
+  "sourceName": "cd2/Cd2SourceVault.sol",
+  "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "msgId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        }
+      ],
+      "name": "Locked",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "lock",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "msgId",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "locked",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nonce",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5061024f806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063282d3fdf14610046578063affed0e01461006b578063cbf9fe5f14610074575b600080fd5b6100596100543660046101a6565b610094565b60405190815260200160405180910390f35b61005960005481565b6100596100823660046101d0565b60016020526000908152604090205481565b600060016000808282546100a891906101f2565b909155505033600090815260016020526040812080548492906100cc9084906101f2565b90915550506000546040516bffffffffffffffffffffffff1930606090811b82166020840152466034840152605483019390935233831b811660748301529185901b9091166088820152609c810183905260bc0160408051601f1981840301815282825280516020918201206000546001600160a01b0388168552918401869052918301529150339082907f9c46dd03d783850e02b90c047546a4c280a6685e86ab93bbfac7221c53b51d629060600160405180910390a392915050565b80356001600160a01b03811681146101a157600080fd5b919050565b600080604083850312156101b957600080fd5b6101c28361018a565b946020939093013593505050565b6000602082840312156101e257600080fd5b6101eb8261018a565b9392505050565b8082018082111561021357634e487b7160e01b600052601160045260246000fd5b9291505056fea26469706673582212209dfffd830921601500c9c32a9fb3de1ee1ad99a6a4cfe980531b0fb13037ad0464736f6c63430008180033"
+}

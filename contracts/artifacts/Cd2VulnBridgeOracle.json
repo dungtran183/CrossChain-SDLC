@@ -1,0 +1,175 @@
+{
+  "contractName": "Cd2VulnBridgeOracle",
+  "sourceName": "cd2/Cd2VulnBridgeOracle.sol",
+  "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_oracle",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "at",
+          "type": "uint256"
+        }
+      ],
+      "name": "PriceUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "msgId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Released",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "oracle",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "price",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "processed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "msgId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "srcAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "release",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "internalType": "contract ICd2TokenO",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "p",
+          "type": "uint256"
+        }
+      ],
+      "name": "updatePrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "updatedAt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506040516104ac3803806104ac83398101604081905261002f91610085565b600080546001600160a01b039384166001600160a01b031991821617909155600180549290931691161790556064600255436003556100b8565b80516001600160a01b038116811461008057600080fd5b919050565b6000806040838503121561009857600080fd5b6100a183610069565b91506100af60208401610069565b90509250929050565b6103e5806100c76000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c8063a035b1fe1161005b578063a035b1fe146100de578063c1f0808a146100e7578063f5b16b841461011a578063fc0c546a1461012d57600080fd5b80637519ab50146100825780637dc0d1d01461009e5780638d6cc56d146100c9575b600080fd5b61008b60035481565b6040519081526020015b60405180910390f35b6001546100b1906001600160a01b031681565b6040516001600160a01b039091168152602001610095565b6100dc6100d7366004610305565b610140565b005b61008b60025481565b61010a6100f5366004610305565b60046020526000908152604090205460ff1681565b6040519015158152602001610095565b6100dc61012836600461031e565b6101d5565b6000546100b1906001600160a01b031681565b6001546001600160a01b0316331461018d5760405162461bcd60e51b815260206004820152600b60248201526a6f6e6c79206f7261636c6560a81b60448201526064015b60405180910390fd5b60028190554360038190556040805183815260208101929092527f945c1c4e99aa89f648fbfe3df471b916f719e16d960fcec0737d4d56bd696838910160405180910390a150565b60008381526004602052604090205460ff16156102205760405162461bcd60e51b81526020600482015260096024820152681c1c9bd8d95cdcd95960ba1b6044820152606401610184565b6000838152600460205260408120805460ff191660011790556002546064906102499084610362565b610253919061038d565b6000546040516340c10f1960e01b81526001600160a01b038681166004830152602482018490529293509116906340c10f1990604401600060405180830381600087803b1580156102a357600080fd5b505af11580156102b7573d6000803e3d6000fd5b50505050826001600160a01b0316847fc8fa66dff4b9073528c3f1bf21a8dc9a18fdf09847e88e96188bc953aef519f0836040516102f791815260200190565b60405180910390a350505050565b60006020828403121561031757600080fd5b5035919050565b60008060006060848603121561033357600080fd5b8335925060208401356001600160a01b038116811461035157600080fd5b929592945050506040919091013590565b808202811582820484141761038757634e487b7160e01b600052601160045260246000fd5b92915050565b6000826103aa57634e487b7160e01b600052601260045260246000fd5b50049056fea264697066735822122014cece98d87a4296de78a3696a58cafe4d766dd2d50fb82dabbdc56332b0e79d64736f6c63430008180033"
+}
