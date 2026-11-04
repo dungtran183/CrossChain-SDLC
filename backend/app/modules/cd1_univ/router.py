@@ -63,21 +63,22 @@ def issue() -> dict:
 
 
 class Predicate(BaseModel):
-    attr: Literal["gpa"] = "gpa"
-    op: Literal[">="] = ">="
-    value: float = Field(3.2, ge=0, le=4)
+    attr: Literal["gpa", "degree", "major", "year"] = "gpa"
+    op: Literal[">=", "=="] = ">="
+    value: float | str = 3.2
 
 
 class ProveBody(BaseModel):
     student_id: str = "S3"
-    predicate: Predicate = Predicate()
+    predicate: Predicate | None = None
+    predicates: list[Predicate] | None = None
 
 
 @router.post("/prove")
 def prove(body: ProveBody) -> dict:
     s = session()
-    p = body.predicate
-    return {**_guard(s.prove, body.student_id, p.attr, p.op, p.value), "state": s.state()}
+    preds = body.predicates or [body.predicate or Predicate()]
+    return {**_guard(s.prove, body.student_id, [p.model_dump() for p in preds]), "state": s.state()}
 
 
 @router.post("/verify")
@@ -87,7 +88,7 @@ def verify() -> dict:
 
 
 class TamperBody(BaseModel):
-    kind: Literal["proof", "signature", "below_threshold", "duplicate", "replay"]
+    kind: Literal["proof", "context", "swap", "signature", "below_threshold", "duplicate", "replay"]
 
 
 @router.post("/tamper")

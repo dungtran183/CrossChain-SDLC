@@ -42,7 +42,19 @@ import type { AbeRes, Cd1State, IssueRes, ProveRes, RevokeRes, SetupRes, Timelin
 
 const A = ACCENTS.cd1;
 const STEP_KEYS = ["setup", "issue", "prove", "verify", "revoke"] as const;
-const TAMPERS = ["below_threshold", "signature", "duplicate", "proof", "replay"] as const;
+const TAMPERS = ["below_threshold", "signature", "duplicate", "proof", "context", "swap", "replay"] as const;
+
+type Pred = { attr: "gpa" | "degree" | "major" | "year"; op: ">=" | "=="; value: number | string };
+const GPA = (v: number): Pred => ({ attr: "gpa", op: ">=", value: v });
+const EQ = (attr: Pred["attr"], v: string): Pred => ({ attr, op: "==", value: v });
+/** Kịch bản chứng minh có sẵn (đều có trong bản ghi replay). */
+const PRESETS: { id: string; sid: string; preds: Pred[] }[] = [
+  { id: "s3", sid: "S3", preds: [GPA(3.2)] },
+  { id: "s2", sid: "S2", preds: [GPA(3.2)] },
+  { id: "s4", sid: "S4", preds: [EQ("degree", "Master")] },
+  { id: "s1", sid: "S1", preds: [EQ("degree", "Master")] },
+  { id: "s5", sid: "S5", preds: [GPA(3.8), EQ("major", "Software Engineering")] },
+];
 const ABE_PRESETS: Record<string, string>[] = [{ role: "HR", org: "ACME" }, { role: "Sales", org: "ACME" }, { role: "Auditor" }];
 
 export default function Cd1Page() {
@@ -59,12 +71,21 @@ export default function Cd1Page() {
   const [attempts, setAttempts] = useState<VerifyRes[]>([]);
   const [abe, setAbe] = useState<AbeRes[]>([]);
   const [timeline, setTimeline] = useState<Timeline["phases"]>([]);
+  const [preset, setPreset] = useState("s3");
   const [student, setStudent] = useState("S3");
   const [thr, setThr] = useState(3.2);
+  const [discAttr, setDiscAttr] = useState<"none" | "degree" | "major" | "year">("none");
+  const [discValue, setDiscValue] = useState("");
+  const request = (): { sid: string; preds: Pred[] } => {
+    const p = PRESETS.find((x) => x.id === preset);
+    if (p) return { sid: p.sid, preds: p.preds };
+    const preds: Pred[] = [GPA(thr)];
+    if (discAttr !== "none") preds.push(EQ(discAttr, discValue));
+    return { sid: student, preds };
+  };
   const [beamAB, setBeamAB] = useState(0);
   const [beamIssue, setBeamIssue] = useState(0);
   const [flash, setFlash] = useState<{ k: number; tone: "danger" | "success" } | null>(null);
-  const [allowed, setAllowed] = useState<Record<string, boolean>>({});
 
   const absorb = useCallback((r: { state?: Cd1State; txs?: TxSummary[] }) => {
     if (r.state) setState(r.state);
@@ -81,14 +102,6 @@ export default function Cd1Page() {
 
   useEffect(() => {
     run("load", async () => setState(await api.get<Cd1State>("/api/cd1/state")));
-    // Replay: chỉ bật các lựa chọn đã ghi trong kịch bản.
-    if (MODE === "replay") {
-      (async () => {
-        const out: Record<string, boolean> = {};
-        for (const s of ["S1", "S2", "S3", "S4", "S5"]) out[s] = await api.available("POST", "/api/cd1/prove", { student_id: s, predicate: { attr: "gpa", op: ">=", value: 3.2 } });
-        setAllowed(out);
-      })();
-    }
   }, [api, run]);
 
   // ------------------------------------------------------------- hành động
@@ -125,9 +138,9 @@ export default function Cd1Page() {
       toast({ kind: "success", title: t("cd1.toast.issue"), body: `root ${short(r.root, 6)}` });
     });
 
-  const doProve = (sid = student, value = thr) =>
+  const doProve = (req = request()) =>
     run("prove", async () => {
-      const r = await api.post<ProveRes>("/api/cd1/prove", { student_id: sid, predicate: { attr: "gpa", op: ">=", value } });
+      const r = await api.post<ProveRes>("/api/cd1/prove", { student_id: req.sid, predicates: req.preds });
       absorb(r);
       setProve(r);
       setVerify(null);
@@ -150,7 +163,7 @@ export default function Cd1Page() {
 
   const doTamper = (kind: (typeof TAMPERS)[number]) => run(`t-${kind}`, async () => showVerify(await api.post<VerifyRes>("/api/cd1/tamper", { kind })));
 
-  const doRevoke = (sid = student) =>
+  const doRevoke = (sid = request().sid) =>
     run("revoke", async () => {
       const r = await api.post<RevokeRes>("/api/cd1/revoke", { student_id: sid });
       absorb(r);
@@ -165,21 +178,21 @@ export default function Cd1Page() {
     });
 
   // ------------------------------------------------------------ trình chiếu
-  const ref = useRef({ doReset, doSetup, doIssue, doProve, doVerify, doTamper, doRevoke, doAbe, setStudent });
-  ref.current = { doReset, doSetup, doIssue, doProve, doVerify, doTamper, doRevoke, doAbe, setStudent };
+  const ref = useRef({ doReset, doSetup, doIssue, doProve, doVerify, doTamper, doRevoke, doAbe, setPreset });
+  ref.current = { doReset, doSetup, doIssue, doProve, doVerify, doTamper, doRevoke, doAbe, setPreset };
   const steps = useMemo<TourStep[]>(
     () => [
       { caption: "cd1.tour.s0", run: () => ref.current.doReset(), hold: 2200 },
       { caption: "cd1.tour.s1", run: () => ref.current.doSetup() },
       { caption: "cd1.tour.s2", run: () => ref.current.doIssue(), hold: 3200 },
-      { caption: "cd1.tour.s3", run: () => (ref.current.setStudent("S3"), ref.current.doProve("S3", 3.2)), hold: 3600 },
+      { caption: "cd1.tour.s3", run: () => (ref.current.setPreset("s3"), ref.current.doProve(PRESETS[0])), hold: 3600 },
       { caption: "cd1.tour.s4", run: () => ref.current.doVerify(), hold: 3600 },
       { caption: "cd1.tour.s5", run: () => ref.current.doAbe({ role: "HR", org: "ACME" }), hold: 2800 },
       { caption: "cd1.tour.s6", run: () => ref.current.doTamper("below_threshold"), hold: 3200 },
       { caption: "cd1.tour.s7", run: () => ref.current.doTamper("signature"), hold: 2800 },
       { caption: "cd1.tour.s8", run: () => ref.current.doTamper("replay"), hold: 2800 },
       { caption: "cd1.tour.s9", run: () => ref.current.doRevoke("S3"), hold: 2400 },
-      { caption: "cd1.tour.s10", run: async () => (await ref.current.doProve("S3", 3.2), await ref.current.doVerify()), hold: 3800 },
+      { caption: "cd1.tour.s10", run: async () => (await ref.current.doProve(PRESETS[0]), await ref.current.doVerify()), hold: 3800 },
       { caption: "cd1.tour.s11", hold: 3000 },
     ],
     [],
@@ -230,31 +243,43 @@ export default function Cd1Page() {
           <Button accent={A.grad} icon={<GraduationCap className="h-4 w-4" />} onClick={doIssue} loading={busy === "issue"} disabled={!ready}>
             2 · {t("cd1.btn.issue")}
           </Button>
-          <div className="flex items-end gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-1.5 pl-3">
+          <div className="flex flex-wrap items-end gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-1.5 pl-3">
             <label className="text-xs text-slate-400">
-              {t("cd1.btn.student")}
-              <select value={student} onChange={(e) => setStudent(e.target.value)} className="ml-2 rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
-                {(state?.students ?? []).map((s) => (
-                  <option key={s.id} value={s.id} disabled={MODE === "replay" && allowed[s.id] === false}>
-                    {s.id} · {s.name}
-                    {s.revoked ? " (revoked)" : ""}
+              {t("cd1.btn.scenario")}
+              <select value={preset} onChange={(e) => setPreset(e.target.value)} className="ml-2 max-w-[340px] rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
+                {PRESETS.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {t(`cd1.preset.${p.id}`)}
                   </option>
                 ))}
+                {MODE === "live" && <option value="custom">{t("cd1.preset.custom")}</option>}
               </select>
             </label>
-            <label className="text-xs text-slate-400">
-              GPA ≥
-              <input
-                type="number"
-                step={0.1}
-                min={0}
-                max={4}
-                value={thr}
-                disabled={MODE === "replay"}
-                onChange={(e) => setThr(Number(e.target.value))}
-                className="ml-2 w-16 rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100 disabled:opacity-60"
-              />
-            </label>
+            {preset === "custom" && (
+              <>
+                <select value={student} onChange={(e) => setStudent(e.target.value)} className="rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
+                  {(state?.students ?? []).map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.id} · {s.name}
+                      {s.revoked ? " (revoked)" : ""}
+                    </option>
+                  ))}
+                </select>
+                <label className="text-xs text-slate-400">
+                  GPA ≥
+                  <input type="number" step={0.1} min={0} max={4} value={thr} onChange={(e) => setThr(Number(e.target.value))} className="ml-1 w-16 rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100" />
+                </label>
+                <select value={discAttr} onChange={(e) => setDiscAttr(e.target.value as typeof discAttr)} className="rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100">
+                  <option value="none">{t("cd1.preset.noDisclose")}</option>
+                  <option value="degree">degree =</option>
+                  <option value="major">major =</option>
+                  <option value="year">year =</option>
+                </select>
+                {discAttr !== "none" && (
+                  <input value={discValue} onChange={(e) => setDiscValue(e.target.value)} placeholder="Master" className="w-36 rounded-lg border border-white/10 bg-ink-900 px-2 py-1 text-sm text-slate-100" />
+                )}
+              </>
+            )}
             <Button accent={A.grad} icon={<FileKey2 className="h-4 w-4" />} onClick={() => doProve()} loading={busy === "prove"} disabled={!issued}>
               3 · {t("cd1.btn.prove")}
             </Button>
@@ -263,7 +288,7 @@ export default function Cd1Page() {
             4 · {t("cd1.btn.verify")}
           </Button>
           <Button variant="outline" icon={<ShieldX className="h-4 w-4" />} onClick={() => doRevoke()} loading={busy === "revoke"} disabled={!issued}>
-            5 · {t("cd1.btn.revoke")} {student}
+            5 · {t("cd1.btn.revoke")} {request().sid}
           </Button>
         </div>
       </GlassCard>

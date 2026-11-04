@@ -75,7 +75,8 @@
       "student": "Người học",
       "prove": "Sinh ZKP",
       "verify": "Xác minh liên chuỗi",
-      "revoke": "Thu hồi"
+      "revoke": "Thu hồi",
+      "scenario": "Kịch bản"
     },
     "toast": {
       "setup": "Đã triển khai Registry (chain-A) và ThresholdVerifier (chain-B)",
@@ -109,7 +110,9 @@
       "proof": "Bằng chứng",
       "neverLeaves": "không rời máy Holder",
       "holderPeek": "Chỉ Holder thấy",
-      "unsat": "không thỏa vị từ → bằng chứng sẽ sai"
+      "unsat": "không thỏa vị từ → bằng chứng sẽ sai",
+      "disclosed": "tiết lộ",
+      "openingOnly": "chỉ mở cam kết (không cần ZKP)"
     },
     "kind": {
       "honest": "Trung thực",
@@ -117,7 +120,9 @@
       "signature": "Chữ ký giả",
       "duplicate": "Signer trùng",
       "proof": "Proof sai",
-      "replay": "Phát lại"
+      "replay": "Phát lại",
+      "context": "Dùng lại sai ngữ cảnh",
+      "swap": "Tráo cam kết GPA"
     },
     "tamper": {
       "title": "Phòng thí nghiệm giả mạo",
@@ -158,6 +163,15 @@
       "s9": "Trường thu hồi văn bằng S3 trên chain-A.",
       "s10": "S3 chứng minh lại: relay đọc trạng thái thu hồi trên chain-A và từ chối ký → chain-B từ chối.",
       "s11": "Tóm tắt: chuỗi đích quyết định dựa trên bằng chứng mật mã, không dựa vào uy tín relay."
+    },
+    "preset": {
+      "s3": "S3 · GPA ≥ 3.2 (ZKP, không lộ GPA)",
+      "s2": "S2 · GPA ≥ 3.2 (không thỏa điều kiện)",
+      "s4": "S4 · Bằng cấp = Master (tiết lộ chọn lọc)",
+      "s1": "S1 · Bằng cấp = Master (khai gian)",
+      "s5": "S5 · GPA ≥ 3.8 ∧ Ngành = Software Engineering",
+      "custom": "Tự chọn…",
+      "noDisclose": "không tiết lộ thêm"
     }
   },
   "cd2": {

@@ -32,6 +32,9 @@ export type Statement = {
   context: string;
   nonce: number | string;
   src_chain_id: number;
+  holder?: string;
+  commits?: Record<string, string>;
+  disclosures?: { attr: string; value: string; salt: string }[];
 };
 
 export type ProveRes = WithState & {
@@ -41,7 +44,7 @@ export type ProveRes = WithState & {
   proof_bytes: number;
   satisfiable: boolean;
   witness_hidden: Record<string, string | number>;
-  holder_view: { gpa: number; d: number };
+  holder_view: Record<string, number | string>;
   ms: number;
 };
 

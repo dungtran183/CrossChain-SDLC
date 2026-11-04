@@ -58,7 +58,7 @@ def _flow():
     assert client.post("/api/cd1/reset").json()["reset"]
     client.post("/api/cd1/setup")
     client.post("/api/cd1/issue")
-    r = client.post("/api/cd1/prove", json={"student_id": "S3", "predicate": {"attr": "gpa", "op": ">=", "value": 3.2}})
+    r = client.post("/api/cd1/prove", json={"student_id": "S3", "predicates": [{"attr": "gpa", "op": ">=", "value": 3.2}]})
     assert r.status_code == 200 and r.json()["satisfiable"]
     assert "gpa" not in r.json()["statement"]  # witness không nằm trong statement
 
@@ -67,14 +67,14 @@ def test_threshold_onchain_accept_reject_replay_revoke():
     _flow()
     ok = client.post("/api/cd1/verify").json()
     assert ok["accepted"] and ok["valid_sigs"] == 3 and ok["txs"][0]["chain"] == "chain-B"
-    for kind in ("below_threshold", "signature", "duplicate", "proof"):
+    for kind in ("below_threshold", "signature", "duplicate", "proof", "context", "swap"):
         r = client.post("/api/cd1/tamper", json={"kind": kind}).json()
         assert not r["accepted"], kind
         assert r["valid_sigs"] < 3
     rep = client.post("/api/cd1/tamper", json={"kind": "replay"}).json()
     assert not rep["accepted"] and "replay" in rep["reason"] and rep["txs"][0]["status"] == 0
     client.post("/api/cd1/revoke", json={"student_id": "S3"})
-    client.post("/api/cd1/prove", json={"student_id": "S3", "predicate": {"attr": "gpa", "op": ">=", "value": 3.2}})
+    client.post("/api/cd1/prove", json={"student_id": "S3", "predicates": [{"attr": "gpa", "op": ">=", "value": 3.2}]})
     after = client.post("/api/cd1/verify").json()
     assert not after["accepted"]
     assert any("revoked" in reason for c in after["relay_checks"] for reason in c["reasons"])
@@ -94,3 +94,15 @@ def test_unsatisfied_predicate_rejected_and_abe():
 def test_order_enforced():
     client.post("/api/cd1/reset")
     assert client.post("/api/cd1/issue").status_code == 400
+
+
+def test_selective_disclosure_and_combined_predicates():
+    _flow()
+    ok = client.post("/api/cd1/prove", json={"student_id": "S4", "predicates": [{"attr": "degree", "op": "==", "value": "Master"}]}).json()
+    assert ok["satisfiable"] and ok["statement"]["disclosures"][0]["attr"] == "degree"
+    assert client.post("/api/cd1/verify").json()["accepted"]
+    client.post("/api/cd1/prove", json={"student_id": "S1", "predicates": [{"attr": "degree", "op": "==", "value": "Master"}]})
+    bad = client.post("/api/cd1/verify").json()
+    assert not bad["accepted"] and any("disclosure mismatch" in x for c in bad["relay_checks"] for x in c["reasons"])
+    client.post("/api/cd1/prove", json={"student_id": "S5", "predicates": [{"attr": "gpa", "op": ">=", "value": 3.8}, {"attr": "major", "op": "==", "value": "Software Engineering"}]})
+    assert client.post("/api/cd1/verify").json()["accepted"]

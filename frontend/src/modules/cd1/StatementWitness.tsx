@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Eye, Lock, Unlock } from "lucide-react";
 import type { ProveRes } from "./types";
@@ -21,11 +22,12 @@ export default function StatementWitness({ data }: { data: ProveRes }) {
           rows={[
             [t("cd1.sw.predicate"), <span className="text-cyan-200">{st.predicate}</span>],
             ["C_gpa (Pedersen)", short(String(st.c_gpa), 6)],
+            ...(st.disclosures ?? []).map((d) => [<span className="text-teal-200">{t("cd1.sw.disclosed")}: {d.attr}</span>, <span className="text-teal-200">{d.value}</span>] as [ReactNode, ReactNode]),
             ["leaf", <ScrambleText text={short(st.leaf, 8)} />],
             ["Merkle path", `${st.merkle_proof.length} ${t("cd1.sw.hashes")}`],
             ["root", short(st.root, 6)],
             ["nonce", String(st.nonce)],
-            [t("cd1.sw.proof"), `${data.proof_bytes} B · ${data.proof.k_bits} bit-OR-proofs`],
+            [t("cd1.sw.proof"), data.proof_bytes ? `${data.proof_bytes} B · ${data.proof.k_bits} bit-OR-proofs` : t("cd1.sw.openingOnly")],
           ]}
         />
       </motion.div>
@@ -46,7 +48,12 @@ export default function StatementWitness({ data }: { data: ProveRes }) {
         </div>
         <div className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-white/10 px-3 py-2 text-[11px] text-slate-400">
           <Eye className="h-3.5 w-3.5" />
-          {t("cd1.sw.holderPeek")}: GPA = <b className="text-slate-200">{data.holder_view.gpa.toFixed(2)}</b> · d = {data.holder_view.d.toFixed(2)}
+          {t("cd1.sw.holderPeek")}:{" "}
+          {Object.entries(data.holder_view).map(([k, v]) => (
+            <span key={k}>
+              {k} = <b className="text-slate-200">{typeof v === "number" ? v.toFixed(2) : String(v)}</b>{" "}
+            </span>
+          ))}
           {!data.satisfiable && <span className="ml-auto text-rose-300">{t("cd1.sw.unsat")}</span>}
         </div>
       </motion.div>

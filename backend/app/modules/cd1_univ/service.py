@@ -154,20 +154,25 @@ class Cd1Session:
         return {"batch_id": self.batch_id, "root": h(self.root), "leaves": leaves_view, "tree": tree, "ms": ms, "txs": [tx]}
 
     # ---------------------------------------------------------------- bước 3
-    def prove(self, student_id: str, attr: str, op: str, value: float) -> dict:
+    def prove(self, student_id: str, predicates: list[dict]) -> dict:
+        """Sinh bằng chứng cho một hoặc nhiều vị từ:
+        - {attr: "gpa", op: ">=", value: 3.2}         → ZKP khoảng (không lộ GPA)
+        - {attr: "degree"|"major"|"year", op: "==", value}  → tiết lộ chọn lọc (mở đúng một cam kết)
+        """
         self._require("issue")
-        if attr != "gpa" or op != ">=":
-            raise ValueError("demo supports predicate gpa >= value")
         if student_id not in self.creds:
             raise ValueError(f"unknown student {student_id}")
+        if not predicates:
+            raise ValueError("at least one predicate")
         t0 = time.perf_counter()
         cred = self.creds[student_id]
-        threshold_v = zkp_toy.scale(value)
+        s = next(x for x in STUDENTS if x["id"] == student_id)
         nonce = secrets.randbelow(2**62)
         ctx = f"{VERIFIER_NAME}|nonce={nonce}|src={SRC_CHAIN_ID}"
-        statement = {
-            "predicate": f"gpa >= {value:.2f}",
-            "threshold": threshold_v,
+        statement: dict = {
+            "predicate": " AND ".join(f"{p['attr']} {p['op']} {p['value'] if p['attr'] != 'gpa' else format(float(p['value']), '.2f')}" for p in predicates),
+            "holder": student_id,
+            "commits": {a: h(cred["commits"][a]) for a in TEXT_ATTRS},
             "c_gpa": cred["c_gpa"],
             "leaf": h(cred["leaf"]),
             "merkle_proof": zkp_toy.merkle_proof(self.leaves, cred["index"]),
@@ -176,34 +181,47 @@ class Cd1Session:
             "context": ctx,
             "nonce": nonce,
             "src_chain_id": SRC_CHAIN_ID,
+            "disclosures": [],
         }
         honest = True
-        try:
-            proof = zkp_toy.prove_predicate(cred["witness"], threshold_v, cred["c_gpa"], ctx)
-        except ValueError:
-            # Prover trung thực không thể chứng minh điều sai → demo tạo "bằng chứng gian lận" để relay từ chối.
-            honest = False
-            fake = Witness(gpa=threshold_v, r=cred["witness"].r)
-            proof = zkp_toy.prove_predicate(fake, threshold_v, cred["c_gpa"], ctx)
-        ms = self._time("prove", t0, proof_bytes=zkp_toy.proof_size(proof))
+        proof = None
+        hidden: dict = {"salts (hidden attrs)": len(TEXT_ATTRS)}
+        holder_view: dict = {}
+        for p in predicates:
+            attr, op, value = p["attr"], p["op"], p["value"]
+            if attr == "gpa":
+                if op != ">=":
+                    raise ValueError("gpa supports >= only")
+                thr = zkp_toy.scale(float(value))
+                statement["threshold"] = thr
+                try:
+                    proof = zkp_toy.prove_predicate(cred["witness"], thr, cred["c_gpa"], ctx)
+                except ValueError:
+                    honest = False  # prover trung thực không chứng minh được điều sai → bằng chứng gian lận
+                    proof = zkp_toy.prove_predicate(Witness(gpa=thr, r=cred["witness"].r), thr, cred["c_gpa"], ctx)
+                hidden.update({"gpa": "•••", "randomness r": "•••", "bits of d": zkp_toy.K_BITS})
+                holder_view.update({"gpa": s["gpa"], "d": (cred["witness"].gpa - thr) / 100})
+            elif attr in TEXT_ATTRS:
+                if op != "==":
+                    raise ValueError(f"{attr} supports == only")
+                if str(s[attr]) != str(value):
+                    honest = False  # người học khai gian giá trị → cam kết mở ra sẽ không khớp
+                statement["disclosures"].append({"attr": attr, "value": str(value), "salt": h(cred["salts"][attr])})
+                holder_view[attr] = s[attr]
+            else:
+                raise ValueError(f"unknown attribute {attr}")
+        ms = self._time("prove", t0, proof_bytes=zkp_toy.proof_size(proof) if proof else 0)
         self.last = {"student_id": student_id, "statement": statement, "proof": proof, "honest": honest}
         self.steps["prove"] = "done"
-        s = next(x for x in STUDENTS if x["id"] == student_id)
         return jsonable(
             {
                 "student_id": student_id,
                 "statement": statement,
-                "proof": proof,
-                "proof_bytes": zkp_toy.proof_size(proof),
+                "proof": proof or {"scheme": "selective-disclosure", "k_bits": 0, "bit_commitments": [], "or_proofs": [], "context": ctx},
+                "proof_bytes": zkp_toy.proof_size(proof) if proof else 0,
                 "satisfiable": honest,
-                "witness_hidden": {
-                    "gpa": "•••",
-                    "randomness r": "•••",
-                    "salts": len(TEXT_ATTRS),
-                    "bits of d": zkp_toy.K_BITS,
-                },
-                # Hiển thị riêng phía Holder (không gửi qua cầu) để khán giả đối chiếu:
-                "holder_view": {"gpa": s["gpa"], "d": (cred["witness"].gpa - threshold_v) / 100},
+                "witness_hidden": hidden,
+                "holder_view": holder_view,
                 "ms": ms,
             }
         )
@@ -211,7 +229,7 @@ class Cd1Session:
     # ---------------------------------------------------------------- bước 4
     def _msg_hash(self, st: dict, proof: dict, attempt: int) -> bytes:
         """msgHash = keccak(root, statementHash, proofDigest, nonce, srcChainId); nonce = (challenge của verifier ‖ lượt relay)."""
-        st_hash = keccak(f"{st['predicate']}|{st['leaf']}|{st['c_gpa']}".encode())
+        st_hash = keccak(f"{st['predicate']}|{st['leaf']}|{st['c_gpa']}|{st.get('disclosures')}".encode())
         nonce = (st["nonce"] << 32) | attempt
         return keccak(
             encode(
@@ -226,7 +244,19 @@ class Cd1Session:
         leaf = bytes.fromhex(st["leaf"][2:])
         merkle_ok = zkp_toy.merkle_verify(leaf, st["merkle_proof"], onchain_root)
         revoked = bool(self.a.call(self.registry, "isRevoked", leaf))
-        zk_ok, zk_reason = zkp_toy.verify_predicate(st, proof)
+        # Ràng buộc: lá Merkle phải được dựng lại đúng từ các cam kết trong statement (chống tráo cam kết GPA)
+        commits = b"".join(bytes.fromhex(st["commits"][a][2:]) for a in TEXT_ATTRS)
+        bound = keccak(st["holder"].encode() + commits + zkp_toy.i2b(int(st["c_gpa"]))) == leaf
+        problems = []
+        if not bound:
+            problems.append("commitments not bound to leaf")
+        for d in st.get("disclosures", []):
+            if zkp_toy.commit(d["value"], bytes.fromhex(d["salt"][2:])) != bytes.fromhex(st["commits"][d["attr"]][2:]):
+                problems.append(f"disclosure mismatch: {d['attr']}")
+        if "threshold" in st:
+            zk_ok, zk_reason = zkp_toy.verify_predicate(st, proof)
+            if not zk_ok:
+                problems.append(f"zkp: {zk_reason}")
         out = []
         for r in self.committee:
             reasons = []
@@ -234,8 +264,7 @@ class Cd1Session:
                 reasons.append("merkle proof invalid")
             if revoked:
                 reasons.append("credential revoked")
-            if not zk_ok:
-                reasons.append(f"zkp: {zk_reason}")
+            reasons += problems
             out.append({"relay": r.name, "address": r.address, "ok": not reasons, "reasons": reasons})
         return out
 
@@ -253,11 +282,20 @@ class Cd1Session:
         return False, "no event", 0
 
     def verify(self, kind: str | None = None) -> dict:
-        """Xác minh liên chuỗi. `kind` = None (trung thực) hoặc kiểu giả mạo: proof|signature|below_threshold|duplicate|replay."""
+        """Xác minh liên chuỗi. `kind` = None (trung thực) hoặc giả mạo: proof|context|swap|signature|below_threshold|duplicate|replay."""
         self._require("prove")
         assert self.last is not None
         t0 = time.perf_counter()
-        st, proof = dict(self.last["statement"]), dict(self.last["proof"])
+        st, proof = dict(self.last["statement"]), dict(self.last["proof"] or {})
+        if kind in ("proof", "context") and "threshold" not in st:
+            raise ValueError("this tamper needs a GPA (ZKP) predicate")
+        if kind == "context":
+            # bằng chứng hợp lệ nhưng sinh cho verifier/nonce khác → bị dùng lại sai ngữ cảnh
+            st["context"] = f"OtherCorp|nonce={st['nonce'] + 1}|src={SRC_CHAIN_ID}"
+        if kind == "swap":
+            # tráo cam kết GPA của người học khác (GPA cao hơn) vào statement của mình
+            other = max((x for x in STUDENTS if x["id"] != self.last["student_id"]), key=lambda x: x["gpa"])
+            st["c_gpa"] = self.creds[other["id"]]["c_gpa"]
         if kind == "proof":
             ors = [dict(x) for x in proof["or_proofs"]]
             ors[0]["z0"] = (ors[0]["z0"] + 1) % zkp_toy.Q

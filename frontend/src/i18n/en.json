@@ -75,7 +75,8 @@
       "student": "Student",
       "prove": "Generate ZKP",
       "verify": "Cross-chain verify",
-      "revoke": "Revoke"
+      "revoke": "Revoke",
+      "scenario": "Scenario"
     },
     "toast": {
       "setup": "Deployed Registry (chain-A) and ThresholdVerifier (chain-B)",
@@ -109,7 +110,9 @@
       "proof": "Proof",
       "neverLeaves": "never leaves the holder",
       "holderPeek": "Holder-only view",
-      "unsat": "predicate not satisfied → proof will fail"
+      "unsat": "predicate not satisfied → proof will fail",
+      "disclosed": "disclosed",
+      "openingOnly": "commitment opening only (no ZKP)"
     },
     "kind": {
       "honest": "Honest",
@@ -117,7 +120,9 @@
       "signature": "Forged signature",
       "duplicate": "Duplicate signer",
       "proof": "Bad proof",
-      "replay": "Replay"
+      "replay": "Replay",
+      "context": "Proof reused out of context",
+      "swap": "Swapped GPA commitment"
     },
     "tamper": {
       "title": "Tampering lab",
@@ -158,6 +163,15 @@
       "s9": "The university revokes S3's credential on chain-A.",
       "s10": "S3 proves again: relays read the revocation on chain-A and refuse to sign → chain-B rejects.",
       "s11": "Summary: the destination chain decides on cryptographic evidence, not on relay reputation."
+    },
+    "preset": {
+      "s3": "S3 · GPA ≥ 3.2 (ZKP, GPA hidden)",
+      "s2": "S2 · GPA ≥ 3.2 (predicate not met)",
+      "s4": "S4 · Degree = Master (selective disclosure)",
+      "s1": "S1 · Degree = Master (false claim)",
+      "s5": "S5 · GPA ≥ 3.8 ∧ Major = Software Engineering",
+      "custom": "Custom…",
+      "noDisclose": "no extra disclosure"
     }
   },
   "cd2": {
