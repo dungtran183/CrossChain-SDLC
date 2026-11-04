@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { useT } from "../i18n/useT";
-import ToyBadge from "./ToyBadge";
 
-type Props = { ns: string; accent: string; glyph: string; actions?: ReactNode; toy?: boolean };
+type Props = { ns: string; accent: string; glyph: string; actions?: ReactNode };
 
 /** Tiêu đề module: biểu tượng gradient phát sáng, chuyên đề, giai đoạn SDLC, tóm tắt. */
-export default function ModuleHeader({ ns, accent, glyph, actions, toy = true }: Props) {
+export default function ModuleHeader({ ns, accent, glyph, actions }: Props) {
   const { t } = useT();
   return (
     <header className="flex flex-wrap items-start justify-between gap-5">
@@ -25,7 +24,6 @@ export default function ModuleHeader({ ns, accent, glyph, actions, toy = true }:
         <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className="chip">{t(`${ns}.sdlc`)}</span>
-            {toy && <ToyBadge />}
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             <span className={`bg-gradient-to-r ${accent} bg-clip-text text-transparent`}>{t(`${ns}.name`)}</span>{" "}

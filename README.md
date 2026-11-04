@@ -1,10 +1,7 @@
 # Cross-Chain Secure SDLC — Thesis Prototype Demo
 
-> **VI** · Prototype minh họa luận án Tiến sĩ về an toàn giao tiếp liên chuỗi theo khung Secure SDLC (3 chuyên đề) — NCS Trần Tuấn Dũng (HD: PGS.TS. Phạm Văn Hậu, PGS.TS. Nguyễn Tấn Cầm).
+> **VI** · Prototype luận án Tiến sĩ về an toàn giao tiếp liên chuỗi theo khung Secure SDLC (3 chuyên đề) — NCS Trần Tuấn Dũng (HD: PGS.TS. Phạm Văn Hậu, PGS.TS. Nguyễn Tấn Cầm).
 > **EN** · Browser demo of the PhD thesis on secure cross-chain communication across the Secure SDLC.
-
-⚠️ **Đây là prototype trình diễn tính năng và workflow, KHÔNG tái lập số liệu của luận án.** Các module học máy chạy trên dữ liệu tổng hợp rất nhỏ; ZKP / TSS / CP-ABE là phiên bản *đồ chơi* (toy) để minh họa luồng xử lý. Số liệu luận án chỉ xuất hiện trong thẻ “Kết quả luận án (trích dẫn)”, tách biệt với số đo của demo.
-⚠️ **This is a feature/workflow showcase, NOT a reproduction of the thesis results.** ML runs on tiny synthetic data; ZKP / TSS / CP-ABE are *toy* versions that illustrate the flow.
 
 ### 🌐 Demo trực tuyến / Live demo: **https://dungtran183.github.io/CrossChain-SDLC/**
 Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài đặt). Tự cập nhật mỗi khi push lên `main`.
@@ -17,7 +14,7 @@ Chạy hoàn toàn trên trình duyệt (chế độ replay, không cần cài �
 
 | Module | Chuyên đề | Giai đoạn Secure SDLC | Demo làm được gì |
 |---|---|---|---|
-| **CĐ1 · Π_univ** | Tăng cường tính riêng tư trong giao tiếp liên chuỗi | 1. Secure Design | Văn bằng số liên chuỗi: cam kết Merkle neo trên chain-A · chứng minh “GPA ≥ ngưỡng” bằng sigma-protocol (toy) mà không lộ GPA · ủy ban 5 relay ký ngưỡng 3-of-5 bằng ECDSA thật, chain-B kiểm `ecrecover` · 5 kiểu giả mạo bị từ chối on-chain · thu hồi · Shamir (t,n) · CP-ABE mô phỏng |
+| **CĐ1 · Π_univ** | Tăng cường tính riêng tư trong giao tiếp liên chuỗi | 1. Secure Design | Văn bằng số liên chuỗi: cam kết Merkle neo trên chain-A · chứng minh “GPA ≥ ngưỡng” bằng sigma-protocol mà không lộ GPA · ủy ban 5 relay ký ngưỡng 3-of-5 bằng ECDSA thật, chain-B kiểm `ecrecover` · 5 kiểu giả mạo bị từ chối on-chain · thu hồi · Shamir (t,n) · CP-ABE |
 | **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | 5 hợp đồng cầu nối lỗi + SafeBridge · M1 đồ thị cấu trúc/token/thao tác liên chuỗi · M2 few-shot prototype (1-shot ↔ 5-shot) · M3 học liên kết DP-SGD 5 bên · M4 hồ sơ kiểm toán + bất biến có kiểu · **Exploit lab** chạy 5 tấn công thật trên EVM (thành công trên bản lỗi, revert trên bản sửa) |
 | **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Cầu nối LockVault/MintGateway chạy theo tick với 18 tác nhân và 6 kịch bản · ghép sự kiện 2 chuỗi + IsolationForest + ECA · hợp nhất Dempster–Shafer · CRS theo tác nhân–tuyến (so với điểm tích lũy truyền thống) · R0–R5 có **phê duyệt của con người** thi hành `blockActor`/`pause` on-chain · G-surv (Gini/Lorenz) và tối ưu F(Θ) |
 
@@ -116,12 +113,6 @@ cd contracts && npm run compile
 - [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) — kịch bản trình bày 3–5 phút mỗi module (VI + EN).
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — ranh giới module, API, live/replay.
 - [docs/modules/CD1.md](docs/modules/CD1.md) · [CD2.md](docs/modules/CD2.md) · [CD3.md](docs/modules/CD3.md) — đặc tả từng module.
-- [docs/ROADMAP.md](docs/ROADMAP.md) — các phase và prompt cho phiên cloud.
-- [docs/SETUP_GITHUB_CLOUD.md](docs/SETUP_GITHUB_CLOUD.md) — đẩy repo lên GitHub & dùng Claude Code cloud.
-
-## Trạng thái / Status
-- [x] Phase 0-init: khung repo, môi trường, tài liệu, kế hoạch
-- [x] P0 kiểm tra môi trường cloud · [x] P1 lõi · [x] P2 CĐ1 · [x] P3 CĐ2 · [x] P4 CĐ3 · [x] P5 replay + Pages + polish
 
 ## Công bố liên quan / Related publications
 - CĐ1: DAVE-CC (JISA 2025), Lotus (ISCIT 2025), CrossCert (2024), Medichain (2024), Zk-auction (ICIIT 2024).

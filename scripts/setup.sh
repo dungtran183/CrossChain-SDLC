@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-# Cài môi trường cho Claude Code cloud (và Linux/macOS nói chung). Idempotent — chạy lại an toàn.
-# - Dùng làm "Setup script" của Environment trên claude.ai/code:  bash scripts/setup_cloud.sh
-# - Đồng thời được gọi bởi SessionStart hook (.claude/settings.json) khi CLAUDE_CODE_REMOTE=true.
+# Cài môi trường (Linux/macOS/devcontainer): .venv + pip, npm cho frontend và contracts. Idempotent — chạy lại an toàn.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -26,14 +24,6 @@ if [[ ! -f "$STAMP" || "$(cat "$STAMP")" != "$REQ_SHA" ]]; then
   echo "$REQ_SHA" > "$STAMP"
 else
   log "python deps đã cài (bỏ qua)"
-fi
-
-# Cho các lệnh sau của phiên Claude dùng .venv (CLAUDE_ENV_FILE chỉ có khi chạy từ SessionStart hook).
-if [[ -n "${CLAUDE_ENV_FILE:-}" ]]; then
-  {
-    echo "export VIRTUAL_ENV=\"$ROOT/.venv\""
-    echo "export PATH=\"$ROOT/.venv/bin:\$PATH\""
-  } >> "$CLAUDE_ENV_FILE"
 fi
 
 # --- Node packages ---

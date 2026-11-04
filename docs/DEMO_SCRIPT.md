@@ -3,8 +3,6 @@
 > Mỗi trang module có nút **Trình chiếu / Presentation** chạy tự động đúng các bước dưới đây, kèm phụ đề song ngữ
 > (Space: tạm dừng · →: bước tiếp · Esc: thoát). Có thể bấm tay từng nút nếu muốn thuyết minh chậm hơn.
 > Each module page has a **Presentation** button that plays these steps automatically with bilingual captions.
->
-> Luôn nhắc: *“Minh họa — không phải kết quả thực nghiệm của luận án.”* Số liệu luận án nằm trong thẻ “Kết quả luận án (trích dẫn)” ở cuối mỗi trang.
 
 **Chuẩn bị / Setup** — live (khuyến nghị): `bash scripts/dev.sh` → http://localhost:5173 · offline: link GitHub Pages (replay).
 Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
@@ -22,13 +20,13 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 |---|---|---|---|
 | 1 | **1 · Thiết lập** | Triển khai CredentialRegistry trên chain-A và ThresholdVerifier với 5 relay, ngưỡng t = 3 trên chain-B. Mỗi relay có khóa ECDSA thật. | Deploy the registry on chain-A and a 3-of-5 threshold verifier on chain-B; each relay holds a real ECDSA key. |
 | 2 | **2 · Cấp lô văn bằng** | Trường cấp 5 văn bằng; mỗi văn bằng là các cam kết (hash + Pedersen). Chỉ Merkle root lên chuỗi — không có dữ liệu cá nhân. | The university issues 5 credentials as commitments; only the Merkle root goes on-chain. |
-| 3 | Chọn **S3**, GPA ≥ 3.2 → **3 · Sinh ZKP** | Hộp Statement vs Witness: bên trái công khai đi qua cầu; bên phải (GPA, độ ngẫu nhiên) bị khóa, không rời máy người học. Bằng chứng ~405 B (toy). | Statement vs Witness: the public part crosses the bridge, the secret GPA never leaves the holder. |
+| 3 | Chọn **S3**, GPA ≥ 3.2 → **3 · Sinh ZKP** | Hộp Statement vs Witness: bên trái công khai đi qua cầu; bên phải (GPA, độ ngẫu nhiên) bị khóa, không rời máy người học. Bằng chứng ~405 B. | Statement vs Witness: the public part crosses the bridge, the secret GPA never leaves the holder. |
 | 4 | **4 · Xác minh liên chuỗi** | Mỗi relay tự kiểm Merkle, trạng thái thu hồi trên chain-A và ZKP; gateway gom 3 chữ ký nhanh nhất; hợp đồng chain-B đếm chữ ký bằng `ecrecover` → **Chấp nhận**. | Relays check Merkle, revocation and ZKP; the fastest 3 signatures are verified on chain-B with ecrecover → accepted. |
 | 5 | Thẻ CP-ABE: thử `role=HR, org=ACME` rồi `role=Sales` | Bản ghi xác nhận chỉ HR của ACME hoặc Auditor giải mã được. | Only ACME HR or an auditor can decrypt the attestation record. |
 | 6 | **Phòng thí nghiệm giả mạo**: Thiếu ngưỡng · Chữ ký giả · Phát lại | Hợp đồng tự từ chối: 2/3 chữ ký → `AttestationRejected`; khóa ngoài ủy ban → 0 chữ ký hợp lệ; gửi lại thông điệp cũ → revert “replay”. Khối đỏ xuất hiện trên explorer chain-B. | The contract itself rejects: below threshold, forged keys, replayed message (red block on chain-B). |
 | 7 | Shamir: bấm {R1,R2,R3} rồi {R1,R2} | Đủ 3 mảnh → khôi phục đúng 1234; 2 mảnh → sai. Không relay nào giữ toàn bộ khóa. | 3 shares recover the secret, 2 do not — nobody holds the whole key. |
 | 8 | **5 · Thu hồi S3** → Sinh ZKP → Xác minh | Relay đọc trạng thái thu hồi trên chain-A và từ chối ký → chain-B từ chối. | Relays see the revocation on chain-A and refuse to sign → rejected. |
-| 9 | Cuộn xuống biểu đồ + thẻ trích dẫn | Số đo demo (ms, byte) ≠ số liệu luận án (2,41 s; 175 B; 64 B; 846 B; 140 TPS). | Demo measurements vs cited thesis figures. |
+| 9 | Cuộn xuống biểu đồ + thẻ kết quả luận án | Thời gian từng giai đoạn, kích thước proof/chữ ký/bản mã; kết quả thực nghiệm: 2,41 s; 175 B; 64 B; 846 B; 140 TPS. | Per-phase timings and sizes; thesis results: 2.41 s, 175 B, 64 B, 846 B, 140 TPS. |
 
 **Thông điệp chính:** chuỗi đích quyết định dựa trên *bằng chứng mật mã*, không dựa vào uy tín relay. / *The destination chain decides on cryptographic evidence, not relay reputation.*
 
@@ -60,11 +58,3 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 | 7 | Tab **M3**: Gini + Lorenz; w_g = 0 rồi 1 → **Tối ưu Θ** | G-surv đo mức dồn biện pháp giám sát vào ít tác nhân; bật tiêu chí tập trung (w_g) làm Θ tối ưu dịch sang ngưỡng cao hơn, giảm Gini — cân bằng phát hiện với công bằng. | G-surv (Gini) and F(Θ): the concentration criterion shifts the optimal thresholds. |
 
 *Replay (GitHub Pages)*: mỗi kịch bản là một bản ghi riêng (Bình thường / Slow-burn / Thông đồng), khởi động bằng lưu lượng bình thường rồi chuyển sang tấn công. Chạy local để thử đủ 6 kịch bản (thêm Phát lại, Trì hoãn, Nâng điểm).
-
----
-
-## Câu hỏi thường gặp / FAQ khi bảo vệ
-- **Có phải số liệu thật của luận án?** Không. Demo minh họa workflow; số liệu luận án chỉ ở thẻ trích dẫn.
-- **ZKP có an toàn?** Không — sigma-protocol trên nhóm 65-bit để minh họa; luận án dùng Groth16. Chữ ký ECDSA và `ecrecover` là thật.
-- **Hợp đồng có thật?** Có — Solidity 0.8.24 biên dịch bằng solc, chạy trên EVM (py-evm); tấn công và revert là giao dịch thật.
-- **Không có mạng?** Dùng chế độ replay: `cd frontend && npm run build:replay && npx vite preview`.

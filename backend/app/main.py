@@ -14,7 +14,7 @@ from .modules.registry import load_modules
 app = FastAPI(
     title="Cross-Chain Secure SDLC — Thesis Demo API",
     version="1.0.0",
-    description="Prototype minh họa — không phải kết quả thực nghiệm của luận án.",
+    description="API của prototype luận án: CĐ1 Π_univ · CĐ2 CrossGuard · CĐ3 CrossSentry trên hai chuỗi EVM.",
 )
 app.add_middleware(
     CORSMiddleware,

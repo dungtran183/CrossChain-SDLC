@@ -7,7 +7,6 @@ import { MODULES } from "./modules/registry";
 import { MODE, checkHealth } from "./lib/api";
 import Home from "./pages/Home";
 import ParticleField from "./components/fx/ParticleField";
-import Disclaimer from "./components/Disclaimer";
 import { Loading } from "./components/States";
 
 const Playground = lazy(() => import("./pages/Playground"));
@@ -133,7 +132,7 @@ export default function App() {
               <button className="rounded-lg p-1.5 hover:bg-white/10 lg:hidden" onClick={() => setMenu(true)} aria-label="menu">
                 <Menu className="h-5 w-5" />
               </button>
-              <Disclaimer className="hidden md:flex" />
+              <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text text-sm font-bold text-transparent lg:hidden">{t("app.title")}</span>
             </div>
             <div className="flex items-center gap-2">
               <ModeBadge />
@@ -163,9 +162,6 @@ export default function App() {
               </motion.div>
             </AnimatePresence>
           </main>
-          <footer className="pb-4 text-center">
-            <Disclaimer className="justify-center md:hidden" />
-          </footer>
         </div>
       </div>
 

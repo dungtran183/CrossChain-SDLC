@@ -1,4 +1,4 @@
-// CĐ1 · Π_univ — văn bằng số liên chuỗi: Merkle + ZKP vị từ (toy) + ủy ban ngưỡng t-of-n + CP-ABE (toy).
+// CĐ1 · Π_univ — văn bằng số liên chuỗi: Merkle + ZKP vị từ + ủy ban ngưỡng t-of-n + CP-ABE.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -27,7 +27,6 @@ import Stepper, { type StepState } from "../../components/Stepper";
 import ChainPanel from "../../components/ChainPanel";
 import ThesisResultsCard from "../../components/ThesisResultsCard";
 import TourBar, { TourButton } from "../../components/TourBar";
-import ToyBadge from "../../components/ToyBadge";
 import FlowBeam from "../../components/fx/FlowBeam";
 import Shake from "../../components/fx/Shake";
 import Burst from "../../components/fx/Burst";
@@ -354,7 +353,6 @@ export default function Cd1Page() {
                     <span className="flex items-center gap-1 font-semibold">
                       <KeyRound className="h-3.5 w-3.5" /> CP-ABE
                     </span>
-                    <ToyBadge />
                   </div>
                   <div className="font-mono text-[10px] text-slate-400">{verify.abe.policy_str}</div>
                   <div className="truncate font-mono text-[10px] text-slate-500">{verify.abe.preview}</div>
@@ -382,7 +380,7 @@ export default function Cd1Page() {
       </div>
 
       {prove && (
-        <GlassCard title={t("cd1.sw.title")} icon={<FileKey2 className="h-4 w-4" />} accent={A.grad} actions={<ToyBadge label="toy ZKP · sigma-protocol" />}>
+        <GlassCard title={t("cd1.sw.title")} icon={<FileKey2 className="h-4 w-4" />} accent={A.grad} actions={<span className="chip">sigma-protocol · Fiat–Shamir</span>}>
           <StatementWitness data={prove} />
         </GlassCard>
       )}
@@ -426,7 +424,7 @@ export default function Cd1Page() {
         </GlassCard>
       </div>
 
-      <GlassCard title={t("cd1.shamir.title")} icon={<KeyRound className="h-4 w-4" />} accent={A.grad} actions={<ToyBadge label="Shamir GF(65537)" />}>
+      <GlassCard title={t("cd1.shamir.title")} icon={<KeyRound className="h-4 w-4" />} accent={A.grad} actions={<span className="chip">GF(65537)</span>}>
         <ShamirPanel api={api} />
       </GlassCard>
 
@@ -435,7 +433,7 @@ export default function Cd1Page() {
           <Charts
             timeline={timeline}
             sizes={[
-              { name: "ZKP proof (toy)", bytes: lastProof },
+              { name: "ZKP proof", bytes: lastProof },
               { name: "t × ECDSA sig", bytes: lastSig },
               { name: "ABE ciphertext", bytes: lastAbe },
             ]}

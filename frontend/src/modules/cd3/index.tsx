@@ -14,7 +14,6 @@ import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
 import ThesisResultsCard from "../../components/ThesisResultsCard";
 import TourBar, { TourButton } from "../../components/TourBar";
-import ToyBadge from "../../components/ToyBadge";
 import AnimatedNumber from "../../components/fx/AnimatedNumber";
 import Shake from "../../components/fx/Shake";
 import { ErrorBanner, Empty, Skeleton } from "../../components/States";
@@ -255,7 +254,6 @@ export default function Cd3Page() {
               onChange={(v) => setTab(v as TabId)}
               accent={A.grad}
             />
-            <ToyBadge />
           </div>
           {!st ? (
             <Skeleton className="h-96" />

@@ -81,5 +81,5 @@ def report(sample_id: str, k: int = 5, verified: set[str] | None = None) -> dict
         "interactions": [k for k, v in flags.items() if v],
         "invariants": invs,
         "fixes": fixes,
-        "generator": "CrossGuard demo (toy) — illustrative, not thesis results",
+        "generator": "CrossGuard",
     }

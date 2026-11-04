@@ -1,4 +1,4 @@
-# CĐ3 · CrossSentry — đặc tả module demo (Phase P4)
+# CĐ3 · CrossSentry — đặc tả module demo
 
 **Chuyên đề:** Phát hiện bất thường và đánh giá tin cậy thích ứng trong giao tiếp liên chuỗi · **Secure SDLC:** 4. Secure Operations, 5. Optimization
 **Ý tưởng gốc:** giám sát sau triển khai gồm 3 module: **M1** thu nhận sự kiện & tạo bằng chứng (ghép sự kiện nguồn–đích, đồ thị cầu nối, mã hóa thời gian, luật + tín hiệu bất thường, **ECA** với hệ số κ_L, κ_P → bằng chứng `E_v(t) = ⟨p̂_v, κ_L, Π_v, κ_P⟩`) → **M2** hợp nhất bằng chứng **Dempster–Shafer** (trọng số theo tin cậy, xung đột K_t, Bel/Pl) và **CRS** – trạng thái rủi ro theo cặp tác nhân–tuyến r_{v,c}(t) có suy giảm + bước nhảy → **M3** chọn phản ứng **R0–R5** (Observe, Alert, Throttle/Cap, Confirmation threshold, Isolate actor, Pause bridge; R4/R5 cần con người phê duyệt) và điều chỉnh tham số định kỳ với **G-surv** (Gini mức tập trung của biện pháp giám sát): F(Θ) = w_d·U_det − w_g·G_surv − w_c·C_op.
@@ -25,7 +25,7 @@
 2. `replay` — gửi lại msgId cũ lên chain-B.
 3. `delayed` — thông điệp bị giữ lâu bất thường.
 4. `collusion` — t validator ký mint không có lock.
-5. `slow_burn` — tác nhân có lịch sử tốt rồi bắt đầu gây hại (minh họa CRS phản ứng nhanh hơn điểm tích lũy truyền thống).
+5. `slow_burn` — tác nhân có lịch sử tốt rồi bắt đầu gây hại (CRS phản ứng nhanh hơn điểm tích lũy truyền thống).
 6. `boosting` — nhóm tác nhân phối hợp nâng điểm uy tín cho nhau.
 
 ## Backend (`backend/app/modules/cd3_crosssentry/`)
@@ -41,7 +41,7 @@
 - **Tab M1**: đồ thị cầu nối live; bảng bằng chứng (p̂, κ_L, κ_P, luật vi phạm).
 - **Tab M2**: thanh khối DS (N / A / Θ) trước–sau hợp nhất, Bel–Pl dạng khoảng, chỉ số K; **heatmap CRS** tác nhân × tuyến; biểu đồ r(t) của tác nhân được chọn (thấy bước nhảy khi slow-burn).
 - **Tab M3**: thang R0–R5 với mức hiện tại; **hộp thoại phê duyệt** cho R4/R5 (Approve/Reject → gọi `blockActor`/`pause` on-chain); Gini + đường Lorenz; thanh trượt w_d, w_g, w_c và biểu đồ F(Θ).
-- Thẻ **"Kết quả luận án (trích dẫn)"**: macro-F1 0,812 ± 0,011; FPR 0,013; CRS giảm thời gian phát hiện 293 → 21,3 bước (−92,7%); F1 0,91 với Gini 0,32 trong môi trường 500 nút — nguồn "Báo cáo CĐ3".
+- Thẻ **"Kết quả thực nghiệm của luận án"**: macro-F1 0,812 ± 0,011; FPR 0,013; CRS giảm thời gian phát hiện 293 → 21,3 bước (−92,7%); F1 0,91 với Gini 0,32 trong môi trường 500 nút — nguồn "Báo cáo CĐ3".
 
 ## Kịch bản demo (≈ 4 phút)
 Chạy `normal` 20 tick (mọi thứ xanh) → chuyển `slow_burn` (CRS tác nhân V7 tăng vọt trên tuyến A→B, các tuyến khác vẫn thấp) → M3 đề xuất R4 Isolate actor → bấm Approve → giao dịch của V7 bị chặn on-chain → chạy `collusion` → R5 Pause bridge cần phê duyệt → tab G-surv cho thấy Gini khi bật/tắt tiêu chí tập trung.
@@ -50,9 +50,9 @@ Chạy `normal` 20 tick (mọi thứ xanh) → chuyển `slow_burn` (CRS tác nh
 - Dempster: ví dụ tay (m1, m2) cho đúng K, Bel, Pl; CRS suy giảm khi bằng chứng bình thường, nhảy khi bất thường; Gini phân bố đều = 0, dồn hết = (n−1)/n; mỗi kịch bản tấn công tạo cảnh báo đúng nhóm; R4/R5 không tự thi hành khi chưa phê duyệt.
 - `demo --export` ghi `frontend/public/replays/cd3/<scenario>.json` cho ít nhất `normal`, `slow_burn`, `collusion`.
 
-## Ghi chú hiện thực (P4)
+## Ghi chú hiện thực
 - 18 tác nhân: U1–U6, R1–R3, V1–V7 (t = 3), O1–O2. Relayer được phân công tất định theo msgId nên monitor quy được trách nhiệm trễ.
-- Người ký được khôi phục từ calldata của tx mint; vi phạm “giá trị ra > vào”/“mint không lock” quy cho validator theo **tỉ lệ vi phạm lịch sử** (người tình cờ cùng ký bị quy ít) — có thể vẫn đề xuất R4 cho người cùng ký, minh họa vai trò từ chối của con người.
+- Người ký được khôi phục từ calldata của tx mint; vi phạm “giá trị ra > vào”/“mint không lock” quy cho validator theo **tỉ lệ vi phạm lịch sử** (người tình cờ cùng ký bị quy ít) — có thể vẫn đề xuất R4 cho người cùng ký; khi đó con người từ chối.
 - Thông đồng: V4–V6 + R3. R5 được đề xuất khi ≥ 3 tác nhân ở R4 trên một tuyến hoặc bất biến cung bị phá cùng ≥ 1 tác nhân R4.
 - `blockActor` chặn cả msg.sender/người nhận và **không tính chữ ký** của validator bị cô lập.
 - G-surv = Gini của cường độ giám sát (nền 1 + mức phản ứng + biện pháp đã thi hành) — bình thường ≈ 0.

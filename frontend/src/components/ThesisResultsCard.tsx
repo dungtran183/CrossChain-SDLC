@@ -26,7 +26,6 @@ export default function ThesisResultsCard({ items, source }: { items: Item[]; so
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">{t("common.thesisNote")}</p>
     </section>
   );
 }

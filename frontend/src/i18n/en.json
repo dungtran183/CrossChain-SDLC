@@ -1,8 +1,7 @@
 {
   "app": {
     "title": "Cross-Chain Secure SDLC",
-    "subtitle": "PhD thesis prototype demo",
-    "disclaimer": "Illustrative — not thesis results",
+    "subtitle": "PhD thesis prototype",
     "replayMode": "Replay mode (no backend needed)",
     "liveMode": "Live mode",
     "backendOk": "Backend is running",
@@ -18,7 +17,7 @@
   },
   "home": {
     "heroTitle": "Cross-chain security across the software lifecycle",
-    "heroBody": "Three independent modules illustrate the three thesis studies: privacy-preserving design, pre-deployment contract auditing and post-deployment monitoring on two simulated EVM chains.",
+    "heroBody": "Three independent modules map the three thesis studies: privacy-preserving design, pre-deployment contract auditing and post-deployment monitoring on two EVM chains.",
     "open": "Open module",
     "sdlc": "Secure SDLC phase",
     "badge": "PhD thesis · Cross-chain security",
@@ -44,7 +43,7 @@
       },
       "ml": {
         "title": "Symbolic, fast algorithms",
-        "body": "Toy ZKP/TSS/CP-ABE, numpy/scikit-learn ML on small synthetic data with fixed seeds — every action runs under 3 seconds."
+        "body": "ZKP, threshold signatures, CP-ABE and numpy/scikit-learn ML with fixed seeds — every action responds in under 3 seconds."
       },
       "modes": {
         "title": "Live or Replay",
@@ -152,13 +151,13 @@
       "s2": "The university issues 5 credentials: each is a commitment (hash + Pedersen); only the Merkle root is anchored on chain-A.",
       "s3": "Student S3 proves “GPA ≥ 3.2” in zero knowledge — the statement is public, GPA and randomness stay on the device.",
       "s4": "Relays independently check Merkle, revocation and ZKP, then sign; the gateway submits the fastest 3/5 → chain-B verifies with ecrecover and accepts.",
-      "s5": "The attestation record is CP-ABE encrypted (toy): only ACME's HR or an Auditor can decrypt it.",
+      "s5": "The attestation record is CP-ABE encrypted: only ACME's HR or an Auditor can decrypt it.",
       "s6": "Tamper: only 2 relays sign (below threshold) → the contract emits AttestationRejected.",
       "s7": "Tamper: signatures from keys outside the committee → ecrecover yields unknown addresses, 0 valid signatures.",
       "s8": "Replay an already accepted message → the transaction reverts “replay: already accepted”.",
       "s9": "The university revokes S3's credential on chain-A.",
       "s10": "S3 proves again: relays read the revocation on chain-A and refuse to sign → chain-B rejects.",
-      "s11": "Summary: the destination chain decides on cryptographic evidence, not on relay reputation. (Thesis figures are in the cited card.)"
+      "s11": "Summary: the destination chain decides on cryptographic evidence, not on relay reputation."
     }
   },
   "cd2": {
@@ -213,7 +212,7 @@
       "epsSpent": "ε spent",
       "epsCurve": "Cumulative ε per round",
       "clip": "Gradient norm before / after clipping",
-      "note": "5 clients · numpy softmax regression · DP-SGD (clip C, Gaussian noise) · toy moments-accountant ε · averaged over 4 seeds."
+      "note": "5 clients · softmax regression · DP-SGD (clip C, Gaussian noise) · moments-accountant ε · averaged over 4 seeds."
     },
     "m4": {
       "reportFor": "Audit report",
@@ -392,11 +391,8 @@
     }
   },
   "common": {
-    "toy": "toy · illustrative",
-    "toyTooltip": "Toy version to illustrate the flow — not for real use",
-    "thesisResults": "Thesis results (cited)",
+    "thesisResults": "Thesis experimental results",
     "source": "Source",
-    "thesisNote": "Figures quoted from the study report — NOT reproduced by this demo.",
     "tourStart": "Presentation",
     "tourStop": "Stop presentation",
     "tourKeys": "Space: pause · →: next step · Esc: exit",

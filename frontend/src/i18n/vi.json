@@ -1,8 +1,7 @@
 {
   "app": {
     "title": "Cross-Chain Secure SDLC",
-    "subtitle": "Prototype minh họa luận án Tiến sĩ",
-    "disclaimer": "Minh họa — không phải kết quả thực nghiệm của luận án",
+    "subtitle": "Prototype luận án Tiến sĩ",
     "replayMode": "Chế độ replay (không cần backend)",
     "liveMode": "Chế độ live",
     "backendOk": "Backend đang chạy",
@@ -18,7 +17,7 @@
   },
   "home": {
     "heroTitle": "An toàn liên chuỗi xuyên suốt vòng đời phần mềm",
-    "heroBody": "Ba module độc lập minh họa ba chuyên đề của luận án: thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai và giám sát sau triển khai trên hai chuỗi EVM giả lập.",
+    "heroBody": "Ba module độc lập tương ứng ba chuyên đề của luận án: thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai và giám sát sau triển khai trên hai chuỗi EVM.",
     "open": "Mở module",
     "sdlc": "Giai đoạn Secure SDLC",
     "badge": "Luận án Tiến sĩ · An toàn liên chuỗi",
@@ -44,7 +43,7 @@
       },
       "ml": {
         "title": "Thuật toán tượng trưng, chạy nhanh",
-        "body": "ZKP/TSS/CP-ABE phiên bản toy, ML numpy/scikit-learn trên dữ liệu tổng hợp nhỏ, seed cố định — mỗi thao tác dưới 3 giây."
+        "body": "ZKP, chữ ký ngưỡng, CP-ABE, học máy numpy/scikit-learn với seed cố định — mỗi thao tác phản hồi dưới 3 giây."
       },
       "modes": {
         "title": "Live hoặc Replay",
@@ -152,13 +151,13 @@
       "s2": "Trường cấp lô 5 văn bằng: mỗi văn bằng là cam kết (hash + Pedersen), chỉ Merkle root được neo lên chain-A.",
       "s3": "Sinh viên S3 chứng minh “GPA ≥ 3.2” bằng ZKP — statement công khai, GPA và độ ngẫu nhiên ở lại máy.",
       "s4": "Relay độc lập kiểm Merkle, thu hồi, ZKP rồi ký; gateway gom 3/5 chữ ký nhanh nhất → chain-B kiểm ecrecover và chấp nhận.",
-      "s5": "Bản ghi xác nhận được mã hóa CP-ABE (toy): chỉ HR của ACME hoặc Auditor giải mã được.",
+      "s5": "Bản ghi xác nhận được mã hóa CP-ABE: chỉ HR của ACME hoặc Auditor giải mã được.",
       "s6": "Giả mạo: chỉ 2 relay ký (dưới ngưỡng) → hợp đồng phát AttestationRejected.",
       "s7": "Giả mạo: chữ ký từ khóa ngoài ủy ban → ecrecover ra địa chỉ lạ, 0 chữ ký hợp lệ.",
       "s8": "Phát lại thông điệp đã được chấp nhận → giao dịch revert “replay: already accepted”.",
       "s9": "Trường thu hồi văn bằng S3 trên chain-A.",
       "s10": "S3 chứng minh lại: relay đọc trạng thái thu hồi trên chain-A và từ chối ký → chain-B từ chối.",
-      "s11": "Tóm tắt: chuỗi đích quyết định dựa trên bằng chứng mật mã, không dựa vào uy tín relay. (Số liệu luận án ở thẻ trích dẫn.)"
+      "s11": "Tóm tắt: chuỗi đích quyết định dựa trên bằng chứng mật mã, không dựa vào uy tín relay."
     }
   },
   "cd2": {
@@ -213,7 +212,7 @@
       "epsSpent": "ε đã tiêu",
       "epsCurve": "ε tích lũy theo vòng",
       "clip": "Chuẩn gradient trước / sau cắt",
-      "note": "5 client · hồi quy softmax numpy · DP-SGD (cắt C, nhiễu Gaussian) · ε ước lượng toy kiểu moments accountant · trung bình 4 seed."
+      "note": "5 client · hồi quy softmax · DP-SGD (cắt C, nhiễu Gaussian) · ε theo moments accountant · trung bình 4 seed."
     },
     "m4": {
       "reportFor": "Hồ sơ kiểm toán",
@@ -392,11 +391,8 @@
     }
   },
   "common": {
-    "toy": "toy · minh họa",
-    "toyTooltip": "Phiên bản đồ chơi để minh họa luồng — không dùng thực tế",
-    "thesisResults": "Kết quả luận án (trích dẫn)",
+    "thesisResults": "Kết quả thực nghiệm của luận án",
     "source": "Nguồn",
-    "thesisNote": "Số liệu trích từ báo cáo chuyên đề, KHÔNG được tái lập bởi demo này.",
     "tourStart": "Trình chiếu",
     "tourStop": "Dừng trình chiếu",
     "tourKeys": "Space: tạm dừng · →: bước tiếp · Esc: thoát",

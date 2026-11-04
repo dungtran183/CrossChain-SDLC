@@ -13,7 +13,6 @@ import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
 import ThesisResultsCard from "../../components/ThesisResultsCard";
 import TourBar, { TourButton } from "../../components/TourBar";
-import ToyBadge from "../../components/ToyBadge";
 import { ErrorBanner, Skeleton } from "../../components/States";
 import CodeViewer from "./CodeViewer";
 import M1Panel from "./M1Panel";
@@ -191,7 +190,6 @@ export default function Cd2Page() {
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <Tabs tabs={tabs} value={tab} onChange={(v) => setTab(v as TabId)} accent={A.grad} />
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <ToyBadge />
             <span>{t(`cd2.tabs.desc.${tab}`)}</span>
           </div>
         </div>
