@@ -210,3 +210,28 @@ html[data-theme="light"] .mod-title {
     transition-duration: 0.01ms !important;
   }
 }
+
+@keyframes tour-hold {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* tiêu đề hero hiện dần theo từng từ: mỗi từ tự mang gradient của tiêu đề (theme tối) */
+.hero-title .hero-word {
+  display: inline-block;
+  background: inherit;
+  background-size: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-theme="light"] .hero-title .hero-word {
+  background: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -51,6 +51,12 @@
         "title": "Live or Replay",
         "body": "Run locally with the FastAPI backend (live), or view on GitHub Pages from recorded scenarios (replay) — the UI is identical."
       }
+    },
+    "stat": {
+      "modules": "thesis modules",
+      "phases": "Secure SDLC phases",
+      "incidents": "attacks analysed",
+      "loss": "losses (USD billions)"
     }
   },
   "status": {
@@ -164,7 +170,19 @@
       "s8": "Replay an already accepted message → the transaction reverts “replay: already accepted”.",
       "s9": "The university revokes S3's credential on chain-A.",
       "s10": "S3 proves again: relays read the revocation on chain-A and refuse to sign → chain-B rejects.",
-      "s11": "Summary: the destination chain decides on cryptographic evidence, not on relay reputation."
+      "s11": "Summary: the destination chain decides on cryptographic evidence, not on relay reputation.",
+      "d0": "Two simulated chains run inside the demo: chain-A is the university's system, chain-B is the employer that wants to check credentials.",
+      "d1": "Two real smart contracts are deployed. Threshold t = 3 means at least 3 of the 5 relays must agree before chain-B accepts anything.",
+      "d2": "Instead of publishing credentials, the university publishes a single \"fingerprint\" for the batch (the Merkle root). No personal data goes on-chain.",
+      "d3": "The employer only needs to know whether \"GPA ≥ 3.2\" is true. The ZKP lets it check that without seeing the real grades.",
+      "d4": "Each relay checks independently before signing. Chain-B does not take the relays' word: it recovers every signature itself (ecrecover) and counts 3 valid ones.",
+      "d5": "The confirmation is protected too: only people with the right role can read it; everyone else sees ciphertext.",
+      "d6": "The attacker controls only 2 relays — below the threshold of 3 — so the message is rejected on-chain. This is exactly the weakness behind Ronin and Harmony.",
+      "d7": "A signature from a key outside the committee is caught because the recovered address is not on the list — the kind of gap that cost Wormhole $326M.",
+      "d8": "Re-sending an already accepted message to get it accepted twice fails too: the contract remembers processed messages.",
+      "d9": "A credential can be revoked (e.g. after fraud is found). The revocation status lives on chain-A.",
+      "d10": "Relays read the revocation status before signing, so a revoked credential can no longer be confirmed.",
+      "d11": "The core idea: acceptance is decided by mathematics (proofs + enough signatures), not by trusting an intermediary."
     },
     "preset": {
       "s3": "S3 · GPA ≥ 3.2 (ZKP, GPA hidden)",
@@ -174,6 +192,23 @@
       "s5": "S5 · GPA ≥ 3.8 ∧ Major = Software Engineering",
       "custom": "Custom…",
       "noDisclose": "no extra disclosure"
+    },
+    "primer": {
+      "analogy": "Like verifying a diploma through notaries: the university publishes only a \"fingerprint\" of the whole batch; the student proves they meet a condition (e.g. GPA ≥ 3.2) without handing over the transcript; a board of 5 independent notaries checks it, and the employer accepts only if at least 3 of them sign.",
+      "watchList": [
+        "Issuing a batch of credentials and anchoring its Merkle root on chain-A",
+        "A zero-knowledge proof (ZKP) for a business condition",
+        "A 3-of-5 relay committee signs; chain-B checks the signatures itself",
+        "Seven kinds of forgery all rejected by the contract"
+      ],
+      "termList": [
+        "Merkle root|One hash that stands for a whole batch; changing any credential changes it.",
+        "ZKP (zero-knowledge proof)|Proves a statement is true (\"GPA ≥ 3.2\") without revealing the underlying data (the actual grades).",
+        "t-of-n threshold|At least t of n members must sign; losing fewer than t keys is not enough to forge.",
+        "Relay / committee|Independent parties that carry and confirm messages between the two chains.",
+        "ecrecover|On-chain function that recovers the signer's address from a signature — so the destination chain checks for itself instead of trusting anyone.",
+        "CP-ABE|Attribute-based encryption: only someone with the right role (e.g. ACME HR) can decrypt."
+      ]
     }
   },
   "cd2": {
@@ -295,7 +330,32 @@
       "s4": "M4 emits the audit report: high risk, invariant INV-NONCE as a candidate, plus a suggested fix.",
       "s5": "Exploit lab: the attacker locks 100 on chain-A then replays release 3 times → receives 400 wDEMO.",
       "s6": "The same attack on SafeBridge: replays revert with “replay: processed”.",
-      "s7": "The M4 report updates: INV-NONCE is now verified by the Exploit lab."
+      "s7": "The M4 report updates: INV-NONCE is now verified by the Exploit lab.",
+      "d0": "This contract accepts signed messages and mints tokens, but forgets to remember which messages were already processed — a very common bridge bug.",
+      "d1": "M1 turns the source into a graph of functions, variables and calls. The missing \"mark as processed\" step shows up as a missing node.",
+      "d2": "Real bridge bugs are rare, so the model must learn from a few examples. With more examples (5-shot) the distance to the right bug class becomes clearer.",
+      "d3": "Audit firms do not want to share client code. Federated learning lets them improve the model together while the data never leaves each party.",
+      "d4": "The result is more than a \"buggy\" label: the report gives the risk level, the violated safety condition and how to fix it.",
+      "d5": "Proof the bug is real: the attacker deposits once but withdraws four times by replaying the same message.",
+      "d6": "The fixed version remembers processed messages, so the second replay is rejected by the chain.",
+      "d7": "The invariant proposed by M4 is now confirmed by a real attack — a feedback loop between analysis and experiment."
+    },
+    "primer": {
+      "analogy": "Like inspecting a building before handover: an engineer (M1) turns the blueprints into a structural diagram, an expert (M2) compares it with known defect patterns from only a few examples, several firms (M3) learn together without revealing their blueprints, and finally (M4) an inspection report lists the safety conditions that must always hold.",
+      "watchList": [
+        "Bridge contract source code with bugs, and the fixed versions",
+        "Structural graph and risk signals (M1)",
+        "Bug classification from very few examples (M2), private federated learning (M3)",
+        "Audit report + Exploit lab running real attacks on the EVM (M4)"
+      ],
+      "termList": [
+        "Smart contract|A program running on a blockchain; one small bug can lose all the assets it holds.",
+        "Few-shot|Learning to recognise a bug type from just 1–5 examples, because real bridge bugs are rare.",
+        "Federated learning|Several parties train one model without sending each other their source code.",
+        "Differential privacy (ε)|Controlled noise so nobody can reverse-engineer a party's data; smaller ε = more private.",
+        "Invariant|A condition that must always hold, e.g. \"each message is processed once\", \"minted ≤ locked\".",
+        "Replay|Re-sending an old valid message to get paid again."
+      ]
     }
   },
   "cd3": {
@@ -394,10 +454,14 @@
       "corridor": "Corridor",
       "onchain": "On-chain action",
       "body": "CrossSentry proposes a strong measure. Approving sends a real transaction to MintGateway on chain-B; reject if the evidence is weak (e.g. a validator that only co-signed by chance).",
-      "later": "Later"
+      "later": "Later",
+      "whatR4": "If approved, {target} is blocked on chain-B: every mint involving {target} will be rejected. Other actors and routes ({corridor} is the affected route) keep running normally.",
+      "whatR5": "If approved, the whole bridge pauses: no mint will be accepted anymore. This is the strongest measure, used when several actors misbehave together.",
+      "keys": "Enter: approve (focused button) · Esc: later"
     },
     "toast": {
-      "executed": "Executed on-chain"
+      "executed": "Executed on-chain",
+      "pending": "Approval needed: {level} · {target}"
     },
     "thesis": {
       "source": "CĐ3 report",
@@ -412,7 +476,15 @@
       "s4": "From now on mints proposed by V7 are blocked (not enough valid signatures) — the traditional cumulative score has not even caught up.",
       "s5": "Collusion scenario: V4–V6 co-sign mints with no matching lock; total minted exceeds total locked.",
       "s6": "Several actors at R4 on one corridor → R5 pause bridge is proposed; approve → pause(), every later mint reverts.",
-      "s7": "G-surv: compare the optimal Θ with the concentration criterion off (w_g = 0) and on (w_g = 1) — balancing detection and fairness."
+      "s7": "G-surv: compare the optimal Θ with the concentration criterion off (w_g = 0) and on (w_g = 1) — balancing detection and fairness.",
+      "d0": "Picture a real bridge in operation: users lock funds on chain-A and receive them on chain-B. 7 validators co-sign, and each mint needs at least 3 signatures.",
+      "d1": "Every lock (top lane) is matched with its mint (bottom lane). When everything matches, the Explanation panel just says \"matched\" and everyone's risk stays low.",
+      "d2": "A subtle attack: a validator with a good history starts signing mints slightly larger than what was locked — small enough for a traditional score to ignore.",
+      "d3": "Risk is computed per (validator, route) pair, so only V7's cell on A→B turns red. The system proposes isolating V7 but does not act alone — the dialog asks a human to approve.",
+      "d4": "Once V7 is blocked on-chain, mints involving V7 no longer have enough valid signatures. The traditional score (grey line) still has not noticed.",
+      "d5": "Collusion: three validators and a relayer sign mints with no matching lock. Total minted exceeds total locked — counterfeit tokens are being created.",
+      "d6": "When several actors misbehave on one route, isolating them one by one is no longer safe. The system proposes pausing the bridge (R5); after approval every new mint is blocked.",
+      "d7": "Monitoring has a cost too: concentrating measures on a few people is unfair. G-surv (Gini) measures that concentration, and the response thresholds are tuned to balance detection, fairness and cost."
     },
     "scHint": {
       "normal": "Valid traffic, every event matched.",
@@ -424,6 +496,51 @@
       "oracle_skew": "Oracle O1 reports prices skewed +20–40 % on the oracle corridor.",
       "flash_drain": "U3 suddenly moves very large volumes — no rule fires, only the learning channel sees it.",
       "liveness": "V1, V2 offline — delays spread across all relayers: a systemic incident, nobody is blamed."
+    },
+    "primer": {
+      "analogy": "Like a bank's security room: cameras at both doors (chain-A and chain-B) match every deposit with every withdrawal; two experts (hard rules and a machine-learning model) give their opinion, merged into one risk score per person per route; guards can warn immediately, but freezing an account or closing the doors (R4/R5) needs a supervisor's approval.",
+      "watchList": [
+        "Two event lanes: locks on chain-A, mints on chain-B, matched pair by pair",
+        "The Explanation panel narrates every tick in plain words",
+        "CRS risk per actor–route versus the traditional score (M2)",
+        "R0–R5 responses and the human approval dialog (M3)"
+      ],
+      "termList": [
+        "Tick|One simulation beat; each tick brings a few new transactions on both chains.",
+        "Lock / Mint|Locking assets on the source chain / issuing the same amount on the destination; a mint without a lock signals an attack.",
+        "Validator / Relayer / Oracle|Party that signs / party that carries messages / party that supplies prices.",
+        "Dempster–Shafer|A way to merge two sources of evidence (rules + ML) and measure how much they conflict (K).",
+        "CRS|Risk score per actor per route; rises quickly on bad evidence and decays as behaviour returns to normal.",
+        "R0–R5|Response ladder: observe → alert → limit → extra confirmations → isolate actor → pause bridge."
+      ]
+    },
+    "nar": {
+      "title": "Tick-by-tick explanation",
+      "empty": "Press Run or Step — on every tick this panel explains in plain words what just happened on the two chains.",
+      "tone": {
+        "ok": "normal",
+        "info": "info",
+        "warn": "suspicious",
+        "bad": "violation",
+        "act": "response"
+      },
+      "pairs": "{n} lock → mint transfers **matched correctly** (right amount, on time) — evidence points to normal.",
+      "orphan": "Chain-B minted {amount} tokens with **no matching lock** on chain-A. Signed by **{signers}**, relayer {relayer}. This breaks the supply invariant (minted ≤ locked).",
+      "inflated": "The minted amount is **{ratio}× the locked amount** (sender {user}, signed by **{signers}**) — the \"value out > value in\" rule fires.",
+      "inflatedOracle": "The minted amount is **{ratio}× the locked amount** on the oracle-priced route. Since the mint is driven by **{oracle}**'s price, the oracle takes the main blame, not the validators.",
+      "duplicate": "A message that **was already processed** is submitted again by relayer **{relayer}** — a replay attack to get paid twice.",
+      "latency": "Relayer **{relayer}** held a message for **{lat} ticks** before delivering it (over the limit) — a sign of deliberate delay.",
+      "latencySys": "{n} messages are late across **several different relayers** → recognised as a **system-wide outage** (e.g. validators offline); nobody is blamed individually.",
+      "circular": "**{user}** keeps sending small amounts back and forth with very few partners — suspected **reputation boosting** to be trusted later.",
+      "learnOnly": "No hard rule is broken, but the **machine-learning model** finds **{who}**'s transfer abnormal (p̂ = {p}) — e.g. unusual volume or frequency. Rules alone would miss this kind of attack.",
+      "reverted": "{n} mint(s) **blocked by the chain** ({reason}) — the approved measure is in effect.",
+      "level": "CRS risk of **{actor}** on route {corridor} = {r} → level **{level} · {levelName}**.",
+      "proposal": "CrossSentry **proposes {level} · {levelName}** for **{target}** (route {corridor}, r = {r}). Strong measures must wait for **human approval**.",
+      "approved": "A human **approved {level}** for {target} → transaction **{fn}** is sent to chain-B and takes effect immediately.",
+      "rejected": "A human **rejected {level}** for {target} — the evidence is not convincing yet; monitoring continues.",
+      "paused": "The bridge is **paused** — every further mint will be rejected until it is resumed.",
+      "supply": "Total minted ({m}) **exceeds** total locked ({l}): tokens on chain-B are no longer fully backed.",
+      "quiet": "No transfer completed in this tick — messages are still in flight."
     }
   },
   "common": {
@@ -554,7 +671,8 @@
     "label": "Thesis overview",
     "coverage": "Demonstration coverage",
     "feedback": "FEEDBACK & CONTINUOUS IMPROVEMENT",
-    "cycle": "closed lifecycle · 5 phases"
+    "cycle": "closed lifecycle · 5 phases",
+    "auto": "Walking through each phase automatically — click to stop"
   },
   "quest": {
     "cd1": {
@@ -886,12 +1004,47 @@
           "with": "Only the first withdrawal gets through (≈ 15%); the bridge is paused and most assets are kept."
         }
       }
-    }
+    },
+    "pace": "Speed"
   },
   "dock": {
     "title": "Event log",
     "empty": "No events yet — transaction results, approvals and scenario steps will appear here.",
     "clear": "Clear log",
-    "top": "Back to top"
+    "top": "Back to top",
+    "justNow": "just now",
+    "secAgo": "{n}s ago",
+    "minAgo": "{n} min ago"
+  },
+  "pace": {
+    "label": "Speed",
+    "title": "Playback speed (0.5× = half speed, easier to follow)"
+  },
+  "hint": {
+    "home": "Pick a phase on the Secure SDLC ring for details, or read \"New here?\" below.",
+    "cd1": "Press \"Run attack scenario\" to watch everything from issuing credentials to forged attempts being rejected — or go step by step.",
+    "cd2": "Press \"Run attack scenario\", or pick a contract, walk through M1→M4 and launch a real attack in the Exploit lab.",
+    "cd3": "Press \"Run attack scenario\", or pick a scenario and Run — the Explanation panel narrates every tick in plain words.",
+    "incidents": "Pick an attack to watch it step by step: reality on the left, the thesis tools on the right.",
+    "playground": "Try the core algorithms directly: hashing, signatures, Merkle trees, secret sharing."
+  },
+  "primer": {
+    "badge": "Quick guide for newcomers",
+    "analogy": "Picture this",
+    "watch": "On this page you will see",
+    "terms": "Key terms",
+    "hide": "Collapse",
+    "show": "Open the explanation"
+  },
+  "newbie": {
+    "badge": "New here?",
+    "title": "Four ideas to understand the thesis in one minute",
+    "cards": [
+      "What is a cross-chain bridge?|Each blockchain is like a country with its own currency. A bridge is the exchange desk: it locks assets on chain A and issues (mints) the same amount on chain B. A group of validators/relayers confirms that the lock really happened.",
+      "Why are bridges attacked so often?|A bridge holds a huge vault, and chain B must trust what it is told about chain A. Steal enough signing keys, forge a proof or exploit one contract bug, and the vault can be emptied: the nine cases on the Real-world incidents page lost over $2.7B in total.",
+      "What is a Secure SDLC?|Building security into every phase of software — design, coding, testing/audit, operations, then feeding lessons back into design — instead of patching after an attack. Because it loops continuously, it is drawn as a closed ring.",
+      "What does the thesis contribute?|Three tools for three stages: CĐ1 designs a protocol verified by cryptographic proofs and threshold signatures (hard to forge); CĐ2 finds bridge contract bugs before deployment; CĐ3 monitors a running bridge and responds with human approval."
+    ],
+    "more": "See the real attacks"
   }
 }

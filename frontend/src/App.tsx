@@ -7,7 +7,8 @@ import { MODULES } from "./modules/registry";
 import { MODE, checkHealth } from "./lib/api";
 import Home from "./pages/Home";
 import ParticleField from "./components/fx/ParticleField";
-import ActivityDock, { ScrollProgress } from "./components/ActivityDock";
+import BackToTop, { ScrollProgress } from "./components/ActivityDock";
+import EventTicker from "./components/EventTicker";
 import { Loading } from "./components/States";
 import { useToast } from "./components/Toast";
 import { onQuest } from "./lib/progress";
@@ -128,7 +129,7 @@ export default function App() {
   useEffect(
     () =>
       onQuest((id) => {
-        if (id) toast({ kind: "info", title: t("world.questDone"), body: t(`quest.${id}`) });
+        if (id) toast({ kind: "success", title: t("world.questDone"), body: t(`quest.${id}`) });
       }),
     [toast, t],
   );
@@ -140,7 +141,9 @@ export default function App() {
   return (
     <>
       <ScrollProgress />
-      <ActivityDock />
+      <BackToTop />
+      {/* dải che phía trên header sticky để nội dung cuộn không lộ qua khe hở */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 h-3 bg-surface-0" />
       <ParticleField key={mode} className="fixed inset-0 -z-10 h-full w-full opacity-70" colors={mode === "light" ? PARTICLES_LIGHT : undefined} density={mode === "light" ? 0.6 : 1} />
       <div className="mx-auto flex min-h-screen max-w-[1680px] gap-6 px-3 py-4 sm:px-5 lg:py-6">
         <aside className="glass sticky top-6 hidden h-[calc(100vh-3rem)] w-64 shrink-0 flex-col p-4 lg:flex">
@@ -158,13 +161,14 @@ export default function App() {
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-5">
-          <header className="glass sticky top-3 z-40 flex flex-wrap items-center justify-between gap-3 bg-surface-1/60 px-4 py-2.5">
-            <div className="flex items-center gap-3">
+          <header className="glass sticky top-3 z-40 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 bg-surface-1/80 px-3 py-2 backdrop-blur-md sm:px-4">
+            <div className="flex min-w-0 flex-1 items-center gap-2 lg:hidden">
               <button className="rounded-lg p-1.5 hover:bg-white/10 lg:hidden" onClick={() => setMenu(true)} aria-label="menu">
                 <Menu className="h-5 w-5" />
               </button>
-              <span className="brand-title bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text font-display text-sm font-bold text-transparent lg:hidden">{t("app.title")}</span>
+              <span className="brand-title truncate bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text font-display text-xs font-bold text-transparent sm:text-sm lg:hidden">{t("app.title")}</span>
             </div>
+            <EventTicker />
             <div className="flex items-center gap-2">
               <ModeBadge />
               <LangToggle />
@@ -176,10 +180,10 @@ export default function App() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
               >
                 <Suspense fallback={<div className="glass p-8"><Loading /></div>}>
                   <Routes location={location}>

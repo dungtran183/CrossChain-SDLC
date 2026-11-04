@@ -11,6 +11,7 @@ import { useT } from "../../i18n/useT";
 import { useToast } from "../../components/Toast";
 import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
+import Primer from "../../components/Primer";
 import GlassCard from "../../components/GlassCard";
 import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
@@ -150,6 +151,7 @@ export default function Cd2Page() {
           </>
         }
       />
+      <Primer ns="cd2" accent={A.grad} />
       <ErrorBanner error={error ?? analysis.error} onClose={() => (setError(null), analysis.setError(null))} />
 
       <div className="grid gap-4 xl:grid-cols-[300px_1fr]">

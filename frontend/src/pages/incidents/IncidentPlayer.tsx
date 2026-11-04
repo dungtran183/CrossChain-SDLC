@@ -5,28 +5,23 @@ import { ChevronLeft, ChevronRight, Flame, Pause, Play, RotateCcw, ShieldCheck, 
 import { useT } from "../../i18n/useT";
 import AttackScene, { sceneState } from "./AttackScene";
 import { STORIES } from "./stories";
+import PaceControl from "../../components/PaceControl";
+import { usePace } from "../../lib/pace";
 
 const MOD_COLOR = { cd1: "#00c9b0", cd2: "#a26bff", cd3: "#ff8f42" } as const;
-const STEP_MS = 3200;
+/** Thời gian mỗi bước (1×): đủ đọc lời kể của cả hai cột (~230 ms/từ). */
+const stepMs = (text: string) => Math.max(4000, 1600 + text.split(/\s+/).length * 230);
 
 export type IncidentInfo = { id: string; name: string; date: string; loss: number };
 
 export default function IncidentPlayer({ incident, fmt }: { incident: IncidentInfo; fmt: (m: number) => string }) {
   const { t, tl } = useT();
+  const [pace] = usePace();
   const story = STORIES[incident.id];
   const [upto, setUpto] = useState(0);
   const [playing, setPlaying] = useState(true);
   const n = story.steps.length;
   const last = upto >= n - 1;
-
-  useEffect(() => {
-    if (!playing || last) {
-      if (last) setPlaying(false);
-      return;
-    }
-    const h = window.setTimeout(() => setUpto((u) => Math.min(n - 1, u + 1)), STEP_MS);
-    return () => window.clearTimeout(h);
-  }, [playing, upto, last, n]);
 
   const steps = tl(`inc.story.${story.id}.steps`);
   const real = sceneState(story, upto, false);
@@ -38,6 +33,17 @@ export default function IncidentPlayer({ incident, fmt }: { incident: IncidentIn
 
   const guardText =
     upto < story.block.step ? steps[upto] : upto === story.block.step ? t(`inc.story.${story.id}.block`) : t("inc.player.prevented").replace("{n}", String(story.block.step + 1));
+
+  const stepDur = stepMs(`${steps[upto] ?? ""} ${upto === story.block.step ? guardText : ""}`) / pace;
+
+  useEffect(() => {
+    if (!playing || last) {
+      if (last) setPlaying(false);
+      return;
+    }
+    const h = window.setTimeout(() => setUpto((u) => Math.min(n - 1, u + 1)), stepDur);
+    return () => window.clearTimeout(h);
+  }, [playing, upto, last, n, stepDur]);
 
   const go = (i: number) => {
     setPlaying(false);
@@ -70,6 +76,7 @@ export default function IncidentPlayer({ incident, fmt }: { incident: IncidentIn
           <button className="chip" onClick={() => go(upto + 1)} disabled={last} aria-label={t("inc.player.next")}>
             <ChevronRight className="h-3.5 w-3.5" />
           </button>
+          <PaceControl compact />
         </div>
         <div className="flex min-w-0 flex-1 basis-full items-center gap-1 sm:basis-0">
           {story.steps.map((_, i) => {
@@ -82,7 +89,7 @@ export default function IncidentPlayer({ incident, fmt }: { incident: IncidentIn
                     style={{ background: isBlock ? color : "#ff4b4b" }}
                     initial={false}
                     animate={{ width: i < upto ? "100%" : i === upto ? "100%" : "0%" }}
-                    transition={{ duration: i === upto && playing ? STEP_MS / 1000 : 0.3, ease: "linear" }}
+                    transition={{ duration: i === upto && playing ? stepDur / 1000 : 0.3, ease: "linear" }}
                   />
                 </div>
                 <div className={`mt-1 flex items-center justify-center gap-0.5 text-[10px] font-semibold ${i === upto ? "text-white" : "text-slate-500"}`}>

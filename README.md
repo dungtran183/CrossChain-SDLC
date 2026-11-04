@@ -24,7 +24,13 @@ Chạy hoàn toàn trên trình duyệt, không cần cài đặt. Tự cập nh
 | **CĐ2 · CrossGuard** | Phát hiện lỗ hổng & kiểm toán hợp đồng thông minh liên chuỗi | 2–3. Secure Coding, Testing & Audit | 7 hợp đồng cầu nối lỗi (thêm reentrancy, thiếu domain separation) + 2 bản sửa · M1 đồ thị cấu trúc/token/thao tác liên chuỗi · M2 few-shot prototype (1-shot ↔ 5-shot) · M3 học liên kết DP-SGD 5 bên · M4 hồ sơ kiểm toán + bất biến có kiểu · **Exploit lab** chạy 7 tấn công thật trên EVM (phát lại, chữ ký trùng, nguồn giả, chiếm quyền, thao túng oracle, reentrancy, phát lại chéo chuỗi) (thành công trên bản lỗi, revert trên bản sửa) |
 | **CĐ3 · CrossSentry** | Phát hiện bất thường & đánh giá tin cậy thích ứng | 4–5. Operations, Optimization | Cầu nối LockVault/MintGateway chạy theo tick với 18 tác nhân và 9 kịch bản (bình thường, slow-burn, thông đồng, phát lại, trì hoãn, nâng điểm, oracle lệch giá, rút cạn đột biến, mất validator) · ghép sự kiện 2 chuỗi + IsolationForest + ECA · hợp nhất Dempster–Shafer · CRS theo tác nhân–tuyến (so với điểm tích lũy truyền thống) · R0–R5 có **phê duyệt của con người** thi hành `blockActor`/`pause` on-chain · G-surv (Gini/Lorenz) và tối ưu F(Θ) |
 
-Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module. Mỗi trang có nút **Chạy kịch bản tấn công** tự chạy kịch bản demo kèm phụ đề song ngữ (phím Space tạm dừng, → bước tiếp, Esc thoát); trang tự cuộn tới vùng đang diễn ra sự kiện và mọi kết quả được ghi vào **Nhật ký sự kiện** nổi ở góc màn hình — xem [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+Mỗi module chạy riêng, có trang riêng trên cùng một giao diện web; không có luồng tổng nối các module. Mỗi trang có:
+
+- nút **Chạy kịch bản tấn công** tự chạy kịch bản demo; thanh phụ đề ở đáy màn hình có lời giải thích chi tiết từng bước, thanh thời gian đọc và **bộ chọn tốc độ 0,5× · 0,75× · 1× · 1,5×** (Space tạm dừng, → bước tiếp, Esc dừng); trang tự cuộn tới vùng đang diễn ra;
+- **dải sự kiện trên header** (luôn đi theo thanh cuộn): hiện sự kiện mới nhất, lóe màu khi có sự kiện, bấm để cuộn tới nơi xảy ra; chuông mở toàn bộ nhật ký;
+- khung **Hiểu nhanh cho người mới**: ví von đời thường, những gì sẽ thấy trên trang và chú giải thuật ngữ.
+
+CĐ3 có thêm khung **Diễn giải từng tick** kể lại bằng lời thường điều vừa xảy ra trên hai chuỗi (giao dịch khớp, mint không có khóa, phát lại, trễ, mức phản ứng, đề xuất và quyết định phê duyệt), và hộp thoại phê duyệt R4/R5 luôn hiện giữa màn hình đang xem (Enter phê duyệt, Esc để sau). Xem [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 
 Trang **Sự cố thực tế** dựng lại từng bước 9 vụ tấn công cầu nối lớn (Ronin, Poly Network, BNB Bridge, Wormhole, Nomad, Multichain, Harmony, Orbit, Qubit) thành hai cảnh chạy song song: *Thực tế* và *Có công cụ của luận án* — thấy rõ công cụ chặn ở bước nào và giữ lại được bao nhiêu tài sản.
 
@@ -92,6 +98,10 @@ Mở http://localhost:8000 (đặt `SERVE_FRONTEND=0` để tắt).
 ### 2. Local — chế độ replay (không cần Python)
 ```bash
 cd frontend && npm run build:replay && npx vite preview
+```
+Kiểm thử giao diện tự động (mọi trang × sáng/tối × máy tính/điện thoại, hộp thoại CĐ3, tốc độ, dải sự kiện — chạy cả trong CI), khi bản preview đang chạy ở cổng 4173:
+```bash
+cd frontend && npm run smoke
 ```
 
 ### 3. GitHub Pages (replay, công khai) — https://dungtran183.github.io/CrossChain-SDLC/

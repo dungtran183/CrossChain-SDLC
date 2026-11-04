@@ -22,6 +22,7 @@ import { short, type TxSummary } from "../../lib/types";
 import { useT } from "../../i18n/useT";
 import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
+import Primer from "../../components/Primer";
 import GlassCard from "../../components/GlassCard";
 import Button from "../../components/Button";
 import Stepper, { type StepState } from "../../components/Stepper";
@@ -240,6 +241,7 @@ export default function Cd1Page() {
           </>
         }
       />
+      <Primer ns="cd1" accent={A.grad} />
       <ErrorBanner error={error} onClose={() => setError(null)} />
 
       <GlassCard id="cd1-steps" accent={A.grad}>

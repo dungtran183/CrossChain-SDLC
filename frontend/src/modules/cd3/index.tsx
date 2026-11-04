@@ -1,9 +1,9 @@
 // CĐ3 · CrossSentry — giám sát cầu nối sau triển khai: M1 sự kiện & ECA → M2 DS + CRS → M3 R0–R5 + G-surv.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { CartesianGrid, Legend, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Activity, Gauge as GaugeIcon, Pause, Play, RotateCcw, ShieldAlert, SkipForward, Siren, Workflow, Scale } from "lucide-react";
+import { Activity, Pause, Play, RotateCcw, SkipForward, Workflow, Scale } from "lucide-react";
 import { createClient, MODE, type Client } from "../../lib/api";
 import { useAction } from "../../lib/useAsync";
 import { useTour, type TourStep } from "../../lib/tour";
@@ -11,6 +11,7 @@ import { ACCENTS, CHART } from "../../lib/theme";
 import { useT } from "../../i18n/useT";
 import { complete } from "../../lib/progress";
 import ModuleHeader from "../../components/ModuleHeader";
+import Primer from "../../components/Primer";
 import GlassCard from "../../components/GlassCard";
 import Button from "../../components/Button";
 import Tabs from "../../components/Tabs";
@@ -25,12 +26,17 @@ import Heatmap from "./Heatmap";
 import MassBars from "./MassBars";
 import ActorGraph from "./ActorGraph";
 import ResponsePanel from "./ResponsePanel";
+import ApprovalModal from "./ApprovalModal";
+import NarratorPanel, { fill } from "./NarratorPanel";
+import { narrate, type Narr } from "./narrator";
+import PaceControl from "../../components/PaceControl";
+import { pacedSleep, usePace } from "../../lib/pace";
 import { CORRIDOR_COLORS, RISK_COLOR, type Approval, type Cd3State, type StepRes, type TuneRes } from "./types";
 
 const A = ACCENTS.cd3;
 const ALL_SCENARIOS = ["normal", "slow_burn", "collusion", "replay", "delayed", "boosting", "oracle_skew", "flash_drain", "liveness"];
 const REPLAY_FILES = ALL_SCENARIOS;
-const SPEEDS = [1500, 900, 450];
+const TICK_MS = 2000; // 1× — chia theo nhịp độ chung (0.5× = 4 s/tick)
 type TabId = "m1" | "m2" | "m3";
 
 export default function Cd3Page() {
@@ -41,7 +47,7 @@ export default function Cd3Page() {
   const { busy, error, run, setError } = useAction();
   const [st, setSt] = useState<Cd3State | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1);
+  const [pace] = usePace();
   const [params] = useSearchParams();
   const [tab, setTab] = useState<TabId>(() => (["m1", "m2", "m3"].includes(params.get("tab") ?? "") ? (params.get("tab") as TabId) : "m2"));
   const [selKey, setSelKey] = useState<string | null>(null);
@@ -52,6 +58,7 @@ export default function Cd3Page() {
   const [tune, setTune] = useState<TuneRes | null>(null);
   const [w, setW] = useState({ w_d: 1, w_g: 0.5, w_c: 0.3 });
   const [alarm, setAlarm] = useState(0);
+  const [narr, setNarr] = useState<Narr[]>([]);
   const stRef = useRef<Cd3State | null>(null);
   stRef.current = st;
 
@@ -65,10 +72,21 @@ export default function Cd3Page() {
         return false;
       }
       setSt(s);
+      // diễn giải điều vừa xảy ra; sự kiện quan trọng cũng lên dải thông báo ở header
+      const said = narrate(prev, s);
+      if (said.length) {
+        setNarr((xs) => [...[...said].reverse(), ...xs].slice(0, 80));
+        const top = said.filter((n) => n.important && n.key !== "cd3.nar.proposal").slice(0, 2);
+        for (const n of top) {
+          const text = fill(t(n.key), { ...n.vars, levelName: n.vars.level ? t(`cd3.level.${n.vars.level}`) : "" }).replace(/\*\*/g, "");
+          toast({ anchor: "cd3-narrator", kind: n.tone === "bad" ? "error" : n.tone === "act" ? "success" : "info", title: `t${n.tick} · ${t(`cd3.nar.tone.${n.tone}`)}`, body: text });
+        }
+      }
       const fresh = s.queue.find((q) => q.status === "pending" && !seen.has(q.id));
       if (fresh) {
         setModal(fresh);
         setPlaying(false); // con người trong vòng lặp: tạm dừng khi cần phê duyệt
+        toast({ anchor: "cd3-tabs", kind: "error", title: t("cd3.toast.pending").replace("{level}", fresh.level).replace("{target}", fresh.target), body: fresh.reason });
         setAlarm((a) => a + 1);
       }
       return true;
@@ -79,6 +97,7 @@ export default function Cd3Page() {
   useEffect(() => {
     run("load", async () => {
       setSt(null);
+      setNarr([]);
       setSeen(new Set());
       setTune(null);
       if (MODE === "replay") await api.post<StepRes>("/api/cd3/reset");
@@ -90,9 +109,9 @@ export default function Cd3Page() {
 
   useEffect(() => {
     if (!playing) return;
-    const id = setInterval(() => tick(), SPEEDS[speed]);
+    const id = setInterval(() => tick(), TICK_MS / pace);
     return () => clearInterval(id);
-  }, [playing, speed, tick]);
+  }, [playing, pace, tick]);
 
   const startScenario = (sc: string) =>
     run("start", async () => {
@@ -111,6 +130,7 @@ export default function Cd3Page() {
       setPlaying(false);
       setSeen(new Set());
       setTune(null);
+      setNarr([]);
       setSt((await api.post<StepRes>("/api/cd3/reset")).state);
     });
 
@@ -126,13 +146,18 @@ export default function Cd3Page() {
       if (ok && tx) toast({ anchor: "cd3-control", kind: tx.status === 1 ? "success" : "error", title: t("cd3.toast.executed"), body: `${tx.fn} · chain-B #${tx.block}` });
     });
 
+  const later = useCallback((id: number) => {
+    setSeen((s) => new Set(s).add(id));
+    setModal(null);
+  }, []);
+
   const runTune = (ww = w) => run("tune", async () => (setTune(await api.post<TuneRes>("/api/cd3/tune", ww)), complete("cd3", "tune")));
 
   // ------------------------------------------------------------ trình chiếu
   const ref = useRef({ tick, startScenario, decide, setTab, setPlaying, runTune, setW, setFile, reset });
   ref.current = { tick, startScenario, decide, setTab, setPlaying, runTune, setW, setFile, reset };
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-  const ticks = async (n: number, gap = 650) => {
+  const sleep = pacedSleep;
+  const ticks = async (n: number, gap = 1100) => {
     for (let i = 0; i < n; i++) {
       await ref.current.tick();
       await sleep(gap);
@@ -142,12 +167,12 @@ export default function Cd3Page() {
     for (let i = 0; i < 12; i++) {
       const q = stRef.current?.queue.find((x) => x.status === "pending" && x.level === level && (!target || x.target === target));
       if (q) {
-        await sleep(1200);
+        await sleep(3200); // để người xem đọc hộp thoại trước khi phê duyệt
         await ref.current.decide(q.id, true);
         return;
       }
       await ref.current.tick();
-      await sleep(600);
+      await sleep(1000);
     }
   };
   const steps = useMemo<TourStep[]>(
@@ -191,6 +216,7 @@ export default function Cd3Page() {
           </>
         }
       />
+      <Primer ns="cd3" accent={A.grad} />
       <ErrorBanner error={error} onClose={() => setError(null)} />
 
       {/* thanh điều khiển */}
@@ -216,13 +242,7 @@ export default function Cd3Page() {
             <Button variant="ghost" icon={<SkipForward className="h-4 w-4" />} onClick={() => tick()} loading={busy === "tick" && !playing}>
               {t("cd3.step")}
             </Button>
-            <div className="flex rounded-lg border border-white/10 p-0.5 text-xs">
-              {["1×", "2×", "4×"].map((l, i) => (
-                <button key={l} onClick={() => setSpeed(i)} className={`rounded-md px-2 py-1 ${speed === i ? "bg-white/15 text-white" : "text-slate-400"}`}>
-                  {l}
-                </button>
-              ))}
-            </div>
+            <PaceControl />
           </div>
         </div>
         {currentSc && (
@@ -239,7 +259,9 @@ export default function Cd3Page() {
             { k: t("cd3.kpi.bridge"), v: st?.paused ? `⏸ ${t("cd3.kpi.paused")}` : `● ${t("cd3.kpi.running")}`, c: st?.paused ? "text-rose-300" : "text-emerald-300" },
           ].map((x) => (
             <div key={x.k} className="rounded-xl border border-white/10 bg-surface-0/40 px-3 py-2">
-              <div className={`text-xl font-bold tabular-nums ${x.c}`}>{x.v}</div>
+              <div className={`text-xl font-bold tabular-nums ${x.c}`} data-testid={x.k === "tick" ? "cd3-tick" : undefined}>
+                {x.v}
+              </div>
               <div className="text-[11px] text-slate-400">{x.k}</div>
             </div>
           ))}
@@ -250,6 +272,9 @@ export default function Cd3Page() {
           </motion.div>
         )}
         {st ? <Lanes lanes={st.lanes} hover={hover} setHover={setHover} /> : <Skeleton className="h-28" />}
+        <div id="cd3-narrator" className="scroll-mt-24">
+          <NarratorPanel items={narr} />
+        </div>
       </GlassCard>
 
       <Shake trigger={alarm || undefined} tone={alarm ? "danger" : null}>
@@ -388,60 +413,8 @@ export default function Cd3Page() {
         ]}
       />
 
-      {/* hộp thoại phê duyệt R4/R5 */}
-      <AnimatePresence>
-        {modal && (
-          <motion.div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <motion.div initial={{ scale: 0.85, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0 }} className="glass w-full max-w-md overflow-hidden border-rose-500/40 bg-surface-1/95">
-              <div className="h-1 w-full animate-gradient-x bg-gradient-to-r from-rose-500 via-amber-400 to-rose-500 bg-[length:200%_auto]" />
-              <div className="space-y-4 p-6">
-                <div className="flex items-center gap-3">
-                  <span className="relative grid h-12 w-12 place-items-center rounded-2xl bg-rose-500/20">
-                    <span className="absolute inset-0 animate-pulse-ring rounded-2xl bg-rose-500/40" />
-                    {modal.level === "R5" ? <Siren className="h-6 w-6 text-rose-300" /> : <ShieldAlert className="h-6 w-6 text-rose-300" />}
-                  </span>
-                  <div>
-                    <div className="text-xs uppercase tracking-wider text-rose-300">{t("cd3.modal.title")}</div>
-                    <div className="text-lg font-bold">
-                      {modal.level} · {t(`cd3.level.${modal.level}`)} — {modal.target}
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-1 rounded-xl bg-surface-0/60 p-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">{t("cd3.modal.corridor")}</span>
-                    <span>{modal.corridor}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">CRS r</span>
-                    <span className="font-mono text-rose-300">{modal.r}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">{t("common.reason")}</span>
-                    <span>{modal.reason}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">{t("cd3.modal.onchain")}</span>
-                    <span className="font-mono text-xs">{modal.level === "R5" ? "MintGateway.pause()" : `MintGateway.blockActor(${modal.target})`}</span>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-400">{t("cd3.modal.body")}</p>
-                <div className="flex gap-2">
-                  <Button variant="danger" className="flex-1" icon={<GaugeIcon className="h-4 w-4" />} onClick={() => decide(modal.id, true)}>
-                    {t("cd3.m3.approve")}
-                  </Button>
-                  <Button variant="ghost" className="flex-1" onClick={() => decide(modal.id, false)}>
-                    {t("cd3.m3.reject")}
-                  </Button>
-                  <Button variant="outline" onClick={() => (setSeen((s) => new Set(s).add(modal.id)), setModal(null))}>
-                    {t("cd3.modal.later")}
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* hộp thoại phê duyệt R4/R5 — portal ra <body> nên luôn ở giữa màn hình đang xem */}
+      <ApprovalModal modal={modal} onDecide={decide} onLater={later} />
       <TourBar tour={tour} accent={A.grad} />
     </div>
   );

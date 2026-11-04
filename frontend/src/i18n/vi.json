@@ -51,6 +51,12 @@
         "title": "Live hoặc Replay",
         "body": "Chạy local với backend FastAPI (live), hoặc xem trên GitHub Pages bằng kịch bản ghi sẵn (replay) — giao diện giống hệt."
       }
+    },
+    "stat": {
+      "modules": "chuyên đề",
+      "phases": "giai đoạn Secure SDLC",
+      "incidents": "vụ tấn công phân tích",
+      "loss": "tổn thất (tỷ USD)"
     }
   },
   "status": {
@@ -164,7 +170,19 @@
       "s8": "Phát lại thông điệp đã được chấp nhận → giao dịch revert “replay: already accepted”.",
       "s9": "Trường thu hồi văn bằng S3 trên chain-A.",
       "s10": "S3 chứng minh lại: relay đọc trạng thái thu hồi trên chain-A và từ chối ký → chain-B từ chối.",
-      "s11": "Tóm tắt: chuỗi đích quyết định dựa trên bằng chứng mật mã, không dựa vào uy tín relay."
+      "s11": "Tóm tắt: chuỗi đích quyết định dựa trên bằng chứng mật mã, không dựa vào uy tín relay.",
+      "d0": "Hai chuỗi mô phỏng chạy ngay trong demo: chain-A là hệ thống của trường, chain-B là hệ thống của doanh nghiệp muốn kiểm tra văn bằng.",
+      "d1": "Hai hợp đồng thông minh được triển khai thật. Ngưỡng t = 3 nghĩa là cần ít nhất 3 trong 5 relay đồng ý thì chain-B mới chấp nhận.",
+      "d2": "Thay vì lưu văn bằng công khai, trường chỉ công bố một \"dấu vân tay\" chung cho cả lô (Merkle root). Dữ liệu cá nhân không lên chuỗi.",
+      "d3": "Doanh nghiệp chỉ cần biết \"GPA ≥ 3,2\" là đúng hay sai. Bằng chứng ZKP cho phép kiểm tra điều đó mà không thấy điểm thật.",
+      "d4": "Mỗi relay tự kiểm tra độc lập rồi mới ký. Chain-B không tin lời relay mà tự khôi phục từng chữ ký (ecrecover) và đếm đủ 3 chữ ký hợp lệ.",
+      "d5": "Kết quả xác nhận cũng được bảo vệ: chỉ người có đúng vai trò mới đọc được, người ngoài nhìn thấy dữ liệu mã hóa.",
+      "d6": "Kẻ tấn công chỉ chiếm được 2 relay — chưa đủ ngưỡng 3, nên thông điệp bị từ chối ngay trên chuỗi. Đây chính là điểm yếu của các vụ Ronin, Harmony.",
+      "d7": "Chữ ký từ một khóa không thuộc ủy ban bị phát hiện vì địa chỉ khôi phục được không nằm trong danh sách — giống lỗi đã khiến Wormhole mất 326 triệu USD.",
+      "d8": "Gửi lại đúng thông điệp cũ để được chấp nhận lần hai cũng không được: hợp đồng ghi nhớ thông điệp đã xử lý.",
+      "d9": "Văn bằng có thể bị thu hồi (vd phát hiện gian lận). Trạng thái thu hồi nằm trên chain-A.",
+      "d10": "Relay đọc trạng thái thu hồi trước khi ký, nên văn bằng đã thu hồi không thể được xác nhận nữa.",
+      "d11": "Điểm cốt lõi: quyết định chấp nhận dựa trên toán học (bằng chứng + chữ ký đủ ngưỡng), không dựa vào việc tin tưởng một bên trung gian."
     },
     "preset": {
       "s3": "S3 · GPA ≥ 3.2 (ZKP, không lộ GPA)",
@@ -174,6 +192,23 @@
       "s5": "S5 · GPA ≥ 3.8 ∧ Ngành = Software Engineering",
       "custom": "Tự chọn…",
       "noDisclose": "không tiết lộ thêm"
+    },
+    "primer": {
+      "analogy": "Giống xác minh bằng tốt nghiệp qua công chứng: trường chỉ công bố \"dấu vân tay\" của cả lô bằng; sinh viên chứng minh mình đạt điều kiện (vd GPA ≥ 3,2) mà không phải đưa bảng điểm; một hội đồng 5 công chứng viên độc lập kiểm tra, cần ít nhất 3 người ký thì doanh nghiệp mới chấp nhận.",
+      "watchList": [
+        "Cấp lô văn bằng và neo Merkle root lên chain-A",
+        "Sinh bằng chứng không tiết lộ (ZKP) cho điều kiện nghiệp vụ",
+        "Ủy ban relay ký ngưỡng 3-of-5, chain-B tự kiểm chữ ký",
+        "Bảy kiểu giả mạo đều bị hợp đồng từ chối"
+      ],
+      "termList": [
+        "Merkle root|Một giá trị băm đại diện cho cả lô dữ liệu; sửa bất kỳ văn bằng nào thì giá trị này thay đổi.",
+        "ZKP (bằng chứng không tiết lộ)|Chứng minh một điều là đúng (\"GPA ≥ 3,2\") mà không lộ dữ liệu gốc (điểm cụ thể).",
+        "Ngưỡng t-of-n|Cần ít nhất t trong n thành viên cùng ký; mất vài khóa (ít hơn t) không đủ để giả mạo.",
+        "Relay / ủy ban|Các bên độc lập chuyển và xác nhận thông điệp giữa hai chuỗi.",
+        "ecrecover|Hàm trên chuỗi khôi phục địa chỉ người ký từ chữ ký — để chuỗi đích tự kiểm, không tin lời ai.",
+        "CP-ABE|Mã hóa theo thuộc tính: chỉ người có đúng vai trò (vd HR của ACME) mới giải mã được."
+      ]
     }
   },
   "cd2": {
@@ -295,7 +330,32 @@
       "s4": "M4 xuất hồ sơ kiểm toán: rủi ro cao, bất biến INV-NONCE ở trạng thái đề xuất, kèm gợi ý sửa.",
       "s5": "Exploit lab: attacker khóa 100 trên chain-A rồi phát lại release 3 lần → nhận 400 wDEMO.",
       "s6": "Cùng tấn công trên SafeBridge: lần phát lại revert “replay: processed”.",
-      "s7": "Hồ sơ M4 cập nhật: INV-NONCE được Exploit lab xác minh."
+      "s7": "Hồ sơ M4 cập nhật: INV-NONCE được Exploit lab xác minh.",
+      "d0": "Hợp đồng này nhận thông điệp đã ký rồi phát hành token, nhưng quên ghi nhớ thông điệp nào đã xử lý — một lỗi rất phổ biến ở cầu nối.",
+      "d1": "M1 đọc mã nguồn thành đồ thị: hàm, biến, lời gọi. Việc thiếu bước \"đánh dấu đã xử lý\" lộ ra như một nút bị thiếu trên đồ thị.",
+      "d2": "Lỗi cầu nối thật rất hiếm nên mô hình phải học từ vài ví dụ. Càng nhiều ví dụ (5-shot), khoảng cách tới nhóm lỗi đúng càng rõ.",
+      "d3": "Các công ty kiểm toán không muốn chia sẻ mã nguồn khách hàng. Học liên kết cho phép cùng cải thiện mô hình mà dữ liệu không rời khỏi từng bên.",
+      "d4": "Kết quả không chỉ là nhãn \"có lỗi\": hồ sơ nêu mức rủi ro, điều kiện an toàn bị vi phạm và cách sửa.",
+      "d5": "Chứng minh lỗi là thật: kẻ tấn công gửi tiền một lần nhưng rút được bốn lần nhờ phát lại cùng một thông điệp.",
+      "d6": "Bản đã sửa ghi nhớ thông điệp đã xử lý, nên lần phát lại thứ hai bị chuỗi từ chối.",
+      "d7": "Bất biến đề xuất ở M4 nay đã được kiểm chứng bằng tấn công thật — vòng phản hồi giữa phân tích và thực nghiệm."
+    },
+    "primer": {
+      "analogy": "Giống kiểm định công trình trước khi bàn giao: kỹ sư (M1) đọc bản vẽ để dựng sơ đồ kết cấu, chuyên gia (M2) so với các mẫu lỗi đã biết dù chỉ có vài ví dụ, nhiều công ty (M3) cùng học kinh nghiệm mà không phải lộ bản vẽ của mình, và cuối cùng (M4) lập biên bản kiểm định kèm các điều kiện an toàn phải luôn đúng.",
+      "watchList": [
+        "Mã nguồn hợp đồng cầu nối có lỗi và bản đã sửa",
+        "Đồ thị cấu trúc và các dấu hiệu rủi ro (M1)",
+        "Phân loại lỗi với rất ít ví dụ (M2), học liên kết riêng tư (M3)",
+        "Hồ sơ kiểm toán + Exploit lab tấn công thật trên EVM (M4)"
+      ],
+      "termList": [
+        "Hợp đồng thông minh|Chương trình chạy trên blockchain; một lỗi nhỏ có thể làm mất toàn bộ tài sản nó giữ.",
+        "Few-shot|Học nhận dạng một loại lỗi chỉ từ 1–5 ví dụ, vì lỗi cầu nối thật rất hiếm.",
+        "Học liên kết (federated)|Nhiều bên cùng huấn luyện mô hình mà không gửi mã nguồn cho nhau.",
+        "Riêng tư vi phân (ε)|Thêm nhiễu có kiểm soát để không ai suy ngược được dữ liệu của từng bên; ε nhỏ = riêng tư hơn.",
+        "Bất biến (invariant)|Điều kiện phải luôn đúng, vd \"mỗi thông điệp chỉ xử lý một lần\", \"mint ≤ khóa\".",
+        "Phát lại (replay)|Gửi lại một thông điệp hợp lệ cũ để được trả tiền thêm lần nữa."
+      ]
     }
   },
   "cd3": {
@@ -394,10 +454,14 @@
       "corridor": "Tuyến",
       "onchain": "Hành động on-chain",
       "body": "CrossSentry đề xuất biện pháp mạnh. Phê duyệt sẽ gửi giao dịch thật tới MintGateway trên chain-B; từ chối nếu bằng chứng chưa đủ (vd validator chỉ tình cờ cùng ký).",
-      "later": "Để sau"
+      "later": "Để sau",
+      "whatR4": "Nếu phê duyệt, {target} sẽ bị chặn trên chain-B: mọi lệnh phát hành có {target} tham gia sẽ bị từ chối. Tác nhân khác và tuyến khác ({corridor} là tuyến bị ảnh hưởng) vẫn chạy bình thường.",
+      "whatR5": "Nếu phê duyệt, toàn bộ cầu nối sẽ tạm dừng: không lệnh phát hành nào được chấp nhận nữa. Đây là biện pháp mạnh nhất, dùng khi nhiều tác nhân cùng vi phạm.",
+      "keys": "Enter: phê duyệt (nút đang chọn) · Esc: để sau"
     },
     "toast": {
-      "executed": "Đã thi hành on-chain"
+      "executed": "Đã thi hành on-chain",
+      "pending": "Cần phê duyệt: {level} · {target}"
     },
     "thesis": {
       "source": "Báo cáo CĐ3",
@@ -412,7 +476,15 @@
       "s4": "Từ đây mint do V7 đề xuất bị chặn (thiếu chữ ký hợp lệ) — điểm tích lũy truyền thống vẫn chưa kịp phát hiện.",
       "s5": "Kịch bản thông đồng: V4–V6 cùng ký mint không có lock tương ứng; tổng mint vượt tổng khóa.",
       "s6": "Nhiều tác nhân cùng ở R4 trên một tuyến → đề xuất R5 dừng cầu nối; phê duyệt → pause(), mọi mint sau đó revert.",
-      "s7": "G-surv: so sánh Θ tối ưu khi tắt (w_g = 0) và bật (w_g = 1) tiêu chí tập trung giám sát — cân bằng phát hiện với công bằng."
+      "s7": "G-surv: so sánh Θ tối ưu khi tắt (w_g = 0) và bật (w_g = 1) tiêu chí tập trung giám sát — cân bằng phát hiện với công bằng.",
+      "d0": "Hãy hình dung một cầu nối thật đang hoạt động: người dùng khóa tiền ở chain-A và nhận lại ở chain-B. 7 validator cùng ký, cần ít nhất 3 chữ ký cho mỗi lần phát hành.",
+      "d1": "Mỗi lần khóa (làn trên) được ghép với lần phát hành tương ứng (làn dưới). Khi mọi thứ khớp, khung Diễn giải chỉ ghi \"khớp đúng\" và điểm rủi ro của mọi người đều thấp.",
+      "d2": "Đây là kiểu tấn công tinh vi: một validator có lịch sử tốt bắt đầu ký những lệnh phát hành nhiều hơn số đã khóa một chút — đủ nhỏ để cách tính truyền thống bỏ qua.",
+      "d3": "Điểm rủi ro được tính riêng cho từng cặp (validator, tuyến), nên chỉ ô của V7 trên tuyến A→B đỏ lên. Hệ thống đề xuất cô lập V7 nhưng không tự làm — hộp thoại yêu cầu con người phê duyệt.",
+      "d4": "Sau khi V7 bị chặn trên chuỗi, các lệnh phát hành có V7 tham gia không còn đủ chữ ký hợp lệ. Cách tính điểm truyền thống (đường xám) lúc này vẫn chưa phát hiện ra.",
+      "d5": "Kịch bản thông đồng: ba validator và một relayer cùng ký những lệnh phát hành không có tiền khóa tương ứng. Tổng phát hành vượt tổng khóa — tiền giả đang được tạo ra.",
+      "d6": "Khi nhiều tác nhân cùng vi phạm trên một tuyến, cô lập từng người không còn đủ an toàn. Hệ thống đề xuất dừng cả cầu nối (R5); sau phê duyệt, mọi lệnh phát hành mới đều bị chặn.",
+      "d7": "Giám sát cũng có cái giá: dồn quá nhiều biện pháp vào vài người là không công bằng. Chỉ số G-surv (Gini) đo mức dồn đó, và ngưỡng phản ứng được tối ưu để cân bằng giữa phát hiện, công bằng và chi phí."
     },
     "scHint": {
       "normal": "Lưu lượng hợp lệ, mọi sự kiện ghép đúng.",
@@ -424,6 +496,51 @@
       "oracle_skew": "Oracle O1 báo giá lệch +20–40 % trên tuyến qua oracle.",
       "flash_drain": "U3 đột ngột chuyển khối lượng rất lớn liên tục — không luật nào bắt, chỉ kênh học thấy.",
       "liveness": "V1, V2 ngoại tuyến — trễ lan trên mọi relayer: sự cố hệ thống, không quy oan."
+    },
+    "primer": {
+      "analogy": "Giống phòng an ninh của ngân hàng: camera ở cả hai cửa (chain-A và chain-B) ghép từng lượt gửi với từng lượt rút; hai chuyên gia (luật cứng và mô hình học máy) cùng đánh giá, ý kiến được hợp nhất thành một điểm rủi ro cho từng người trên từng tuyến; bảo vệ có thể cảnh báo ngay, nhưng muốn khóa tài khoản hay đóng cửa (R4/R5) thì phải có chỉ huy phê duyệt.",
+      "watchList": [
+        "Hai làn sự kiện: khóa ở chain-A, phát hành ở chain-B, được ghép từng cặp",
+        "Khung Diễn giải kể lại từng tick bằng lời thường",
+        "Điểm rủi ro CRS theo tác nhân–tuyến so với cách tính truyền thống (M2)",
+        "Phản ứng R0–R5 và hộp thoại phê duyệt của con người (M3)"
+      ],
+      "termList": [
+        "Tick|Một nhịp mô phỏng; mỗi tick có vài giao dịch mới trên hai chuỗi.",
+        "Lock / Mint|Khóa tài sản ở chuỗi nguồn / phát hành lượng tương ứng ở chuỗi đích; mint không có lock là dấu hiệu tấn công.",
+        "Validator / Relayer / Oracle|Bên ký xác nhận / bên chuyển thông điệp / bên cung cấp giá.",
+        "Dempster–Shafer|Cách hợp nhất hai nguồn bằng chứng (luật + học máy) và đo mức chúng mâu thuẫn nhau (K).",
+        "CRS|Điểm rủi ro theo từng tác nhân trên từng tuyến, tăng nhanh khi có bằng chứng xấu, giảm dần khi hành vi trở lại bình thường.",
+        "R0–R5|Thang phản ứng: quan sát → cảnh báo → giới hạn → tăng xác nhận → cô lập tác nhân → dừng cầu nối."
+      ]
+    },
+    "nar": {
+      "title": "Diễn giải từng tick",
+      "empty": "Bấm Chạy hoặc Bước — mỗi tick, khung này sẽ giải thích bằng lời thường điều vừa xảy ra trên hai chuỗi.",
+      "tone": {
+        "ok": "bình thường",
+        "info": "thông tin",
+        "warn": "đáng ngờ",
+        "bad": "vi phạm",
+        "act": "phản ứng"
+      },
+      "pairs": "{n} giao dịch khóa → phát hành **khớp đúng** (đúng số lượng, đúng thời gian) — bằng chứng nghiêng về bình thường.",
+      "orphan": "Chain-B phát hành {amount} token **không có lần khóa nào** ở chain-A tương ứng. Người ký: **{signers}**, relayer {relayer}. Đây là vi phạm bất biến cung (phát hành ≤ khóa).",
+      "inflated": "Lượng phát hành **gấp {ratio} lần** số đã khóa (người gửi {user}, người ký **{signers}**) — luật \"giá trị ra > giá trị vào\" kích hoạt.",
+      "inflatedOracle": "Lượng phát hành **gấp {ratio} lần** số đã khóa trên tuyến dùng giá oracle. Vì lượng mint do giá của **{oracle}** quyết định, trách nhiệm chính được quy cho oracle chứ không cho validator.",
+      "duplicate": "Một thông điệp **đã được xử lý trước đó** bị relayer **{relayer}** nộp lại — tấn công phát lại nhằm nhận tiền hai lần.",
+      "latency": "Relayer **{relayer}** giữ thông điệp **{lat} tick** trước khi chuyển (vượt ngưỡng) — dấu hiệu trì hoãn có chủ đích.",
+      "latencySys": "{n} thông điệp cùng trễ trên **nhiều relayer khác nhau** → hệ thống nhận diện là **sự cố chung** (vd validator ngoại tuyến), không quy lỗi cho cá nhân nào.",
+      "circular": "**{user}** liên tục chuyển các khoản nhỏ qua lại với rất ít đối tác — nghi **thổi phồng uy tín** để sau này được tin cậy hơn.",
+      "learnOnly": "Không luật cứng nào bị vi phạm, nhưng **mô hình học máy** thấy giao dịch của **{who}** bất thường (p̂ = {p}) — ví dụ khối lượng hay tần suất lạ. Đây là loại tấn công luật không bắt được.",
+      "reverted": "{n} lệnh phát hành **bị chuỗi chặn** ({reason}) — biện pháp đã được phê duyệt đang có hiệu lực.",
+      "level": "Điểm rủi ro CRS của **{actor}** trên tuyến {corridor} = {r} → mức **{level} · {levelName}**.",
+      "proposal": "CrossSentry **đề xuất {level} · {levelName}** đối với **{target}** (tuyến {corridor}, r = {r}). Biện pháp mạnh nên phải chờ **con người phê duyệt**.",
+      "approved": "Con người đã **phê duyệt {level}** cho {target} → giao dịch **{fn}** được gửi lên chain-B và có hiệu lực ngay.",
+      "rejected": "Con người **từ chối {level}** cho {target} — bằng chứng chưa đủ thuyết phục; hệ thống tiếp tục theo dõi.",
+      "paused": "Cầu nối **đã tạm dừng** — mọi lệnh phát hành tiếp theo sẽ bị từ chối cho tới khi được mở lại.",
+      "supply": "Tổng phát hành ({m}) **vượt** tổng đã khóa ({l}): token trên chain-B không còn được bảo chứng đầy đủ.",
+      "quiet": "Chưa có giao dịch nào hoàn tất trong tick này — các thông điệp đang trên đường."
     }
   },
   "common": {
@@ -554,7 +671,8 @@
     "label": "Tổng quan luận án",
     "coverage": "Mức độ trình diễn",
     "feedback": "PHẢN HỒI & CẢI TIẾN LIÊN TỤC",
-    "cycle": "vòng đời khép kín · 5 giai đoạn"
+    "cycle": "vòng đời khép kín · 5 giai đoạn",
+    "auto": "Đang tự giới thiệu từng giai đoạn — bấm để dừng"
   },
   "quest": {
     "cd1": {
@@ -886,12 +1004,47 @@
           "with": "Chỉ lệnh rút đầu tiên lọt qua (≈ 15%); cầu nối được tạm dừng, phần lớn tài sản được giữ lại."
         }
       }
-    }
+    },
+    "pace": "Tốc độ"
   },
   "dock": {
     "title": "Nhật ký sự kiện",
     "empty": "Chưa có sự kiện — các kết quả giao dịch, phê duyệt và bước kịch bản sẽ hiện ở đây.",
     "clear": "Xóa nhật ký",
-    "top": "Lên đầu trang"
+    "top": "Lên đầu trang",
+    "justNow": "vừa xong",
+    "secAgo": "{n} giây trước",
+    "minAgo": "{n} phút trước"
+  },
+  "pace": {
+    "label": "Tốc độ",
+    "title": "Tốc độ trình diễn (0,5× = chậm gấp đôi, dễ theo dõi)"
+  },
+  "hint": {
+    "home": "Chọn một giai đoạn trên vòng Secure SDLC để xem chi tiết, hoặc đọc mục \"Lần đầu đến đây?\" bên dưới.",
+    "cd1": "Bấm \"Chạy kịch bản tấn công\" để xem tự động từ cấp văn bằng đến các lần giả mạo bị từ chối — hoặc làm từng bước.",
+    "cd2": "Bấm \"Chạy kịch bản tấn công\", hoặc chọn một hợp đồng rồi xem M1→M4 và thử tấn công thật ở Exploit lab.",
+    "cd3": "Bấm \"Chạy kịch bản tấn công\", hoặc chọn kịch bản rồi Chạy — khung Diễn giải sẽ kể lại từng tick bằng lời thường.",
+    "incidents": "Chọn một vụ tấn công để xem từng bước: bên trái là thực tế, bên phải là khi có công cụ của luận án.",
+    "playground": "Thử trực tiếp các thuật toán lõi: băm, chữ ký, Merkle, chia sẻ bí mật."
+  },
+  "primer": {
+    "badge": "Hiểu nhanh cho người mới",
+    "analogy": "Hình dung",
+    "watch": "Trên trang này bạn sẽ thấy",
+    "terms": "Thuật ngữ",
+    "hide": "Thu gọn",
+    "show": "Mở phần giải thích"
+  },
+  "newbie": {
+    "badge": "Lần đầu đến đây?",
+    "title": "Bốn ý để hiểu luận án trong một phút",
+    "cards": [
+      "Cầu nối liên chuỗi là gì?|Mỗi blockchain như một quốc gia có đồng tiền riêng. Cầu nối là \"quầy đổi tiền\": khóa tài sản ở chuỗi A rồi phát hành (mint) lượng tương đương ở chuỗi B. Một nhóm validator/relayer xác nhận việc khóa đã thật sự xảy ra.",
+      "Vì sao hay bị tấn công?|Cầu nối giữ một kho tài sản khổng lồ, và chuỗi B phải tin vào lời xác nhận từ chuỗi A. Chỉ cần đánh cắp đủ khóa ký, giả bằng chứng hay lợi dụng một lỗi trong hợp đồng là có thể rút sạch kho: chín vụ ở trang Sự cố thực tế mất tổng cộng hơn 2,7 tỷ USD.",
+      "Secure SDLC là gì?|Là đưa an toàn vào mọi giai đoạn làm phần mềm — thiết kế, lập trình, kiểm thử/kiểm toán, vận hành, rồi rút kinh nghiệm quay lại thiết kế — thay vì chỉ \"vá\" sau khi bị tấn công. Vì quay vòng liên tục nên được vẽ thành một vòng tròn khép kín.",
+      "Luận án đóng góp gì?|Ba công cụ cho ba chặng: CĐ1 thiết kế giao thức xác minh bằng chứng mật mã và chữ ký ngưỡng (khó giả mạo); CĐ2 tìm lỗ hổng hợp đồng cầu nối trước khi triển khai; CĐ3 giám sát cầu nối khi đang chạy và phản ứng có con người phê duyệt."
+    ],
+    "more": "Xem các vụ tấn công thật"
   }
 }

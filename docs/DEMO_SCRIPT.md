@@ -1,10 +1,11 @@
 # Kịch bản trình bày / Demo script
 
-> Mỗi trang module có nút **Chạy kịch bản tấn công / Run attack scenario** chạy tự động đúng các bước dưới đây, kèm phụ đề song ngữ
-> (Space: tạm dừng · →: bước tiếp · Esc: thoát). Trang tự cuộn tới vùng đang diễn ra sự kiện; thông báo và kết quả
-> được lưu trong **Nhật ký sự kiện** (góc dưới phải) — bấm vào một mục để cuộn lại đúng chỗ.
-> Each module page has a **Run attack scenario** button that plays these steps automatically with bilingual captions;
-> the page follows the action and every result is kept in the floating **Event log**.
+> Mỗi trang module có nút **Chạy kịch bản tấn công / Run attack scenario** chạy tự động đúng các bước dưới đây. Thanh phụ đề ở đáy
+> màn hình có thêm lời giải thích chi tiết cho người mới, thanh thời gian đọc và bộ chọn **tốc độ 0,5× · 0,75× · 1× · 1,5×**
+> (khi trình bày trước hội đồng nên chọn 0,5× hoặc 0,75×). Space: tạm dừng · →: bước tiếp · Esc: dừng.
+> Mọi thông báo hiện trên **dải sự kiện của header** (luôn đi theo thanh cuộn) — bấm để cuộn tới nơi xảy ra; chuông mở nhật ký đầy đủ.
+> Each module page has a **Run attack scenario** button with detailed captions, a reading-time bar and a 0.5×–1.5× speed selector;
+> every event appears in the header event strip, which follows the scroll.
 
 **Chuẩn bị / Setup** — live (khuyến nghị): `bash scripts/dev.sh` → http://localhost:5173 · offline: link GitHub Pages (replay).
 Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
@@ -56,6 +57,9 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 ---
 
 ## CĐ3 · CrossSentry (≈ 4 phút)
+> Tốc độ tick mặc định 2 s (1×); 0,5× = 4 s/tick. Khung **Diễn giải từng tick** ngay dưới hai làn sự kiện kể lại bằng lời thường từng
+> điều vừa xảy ra — đọc to khung này khi thuyết minh. Hộp thoại phê duyệt luôn hiện giữa màn hình đang xem (Enter: phê duyệt · Esc: để sau).
+
 | # | Thao tác | Thuyết minh (VI) | Narration (EN) |
 |---|---|---|---|
 | 1 | Kịch bản **Bình thường** → **Chạy** (2×) ~10 tick | Hai làn chuỗi: mỗi Locked (A) được ghép với Minted (B) — xanh. Tab M1: đồ thị tác nhân–hợp đồng; bảng bằng chứng p̂, κ_L, κ_P, Bel thấp. | Every Locked is matched with a Minted; evidence stays low. |

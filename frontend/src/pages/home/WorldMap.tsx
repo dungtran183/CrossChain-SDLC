@@ -2,9 +2,9 @@
 // cây cầu liên chuỗi giữa chain-A và chain-B. Ba cung màu đánh dấu phạm vi của ba chuyên đề.
 // Chọn một giai đoạn để xem mô tả, mối đe dọa, đóng góp và nội dung trình diễn; nhấp đúp để mở chuyên đề.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, CircleCheck, Circle, ShieldAlert, Lightbulb, Presentation } from "lucide-react";
+import { ArrowRight, CircleCheck, Circle, ShieldAlert, Lightbulb, Presentation, PlayCircle } from "lucide-react";
 import { useT } from "../../i18n/useT";
 import { PHASES, QUESTS, useProgress, type ModuleId } from "../../lib/progress";
 import { MODULES } from "../../modules/registry";
@@ -59,6 +59,18 @@ export default function WorldMap() {
   const firstOpen = PHASES.findIndex((p) => p.quests.some((q) => !prog.has(p.module, q)));
   const [sel, setSel] = useState(firstOpen < 0 ? 0 : firstOpen);
   const [hover, setHover] = useState<number | null>(null);
+  // tự giới thiệu: điểm đánh dấu tự đi qua từng giai đoạn khi người xem chưa tương tác
+  const boxRef = useRef<HTMLElement>(null);
+  const inView = useInView(boxRef, { amount: 0.4 });
+  const reduce = useReducedMotion();
+  const [auto, setAuto] = useState(true);
+  const [hold, setHold] = useState(false);
+  const AUTO_MS = 6000;
+  useEffect(() => {
+    if (!auto || hold || !inView || reduce) return;
+    const h = window.setTimeout(() => setSel((i) => (i + 1) % PHASES.length), AUTO_MS);
+    return () => window.clearTimeout(h);
+  }, [auto, hold, inView, reduce, sel]);
   // góc quay của điểm đánh dấu: luôn đi tiếp theo chiều kim đồng hồ quanh vòng
   const rot = useRef(ANG[sel] + 90);
   const angle = useMemo(() => {
@@ -85,7 +97,7 @@ export default function WorldMap() {
   const phases = tl("home.phases");
 
   return (
-    <section className="glass relative overflow-hidden">
+    <section ref={boxRef} className="glass relative overflow-hidden" onPointerDown={() => setAuto(false)} onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
       {/* thanh mức độ trình diễn */}
       <div className="relative z-10 flex flex-wrap items-center gap-4 border-b border-white/10 px-5 py-3">
         <div>
@@ -136,6 +148,18 @@ export default function WorldMap() {
               <path key={z.id} d={arc(z.a0, z.a1)} fill="none" stroke={COLOR[z.id]} strokeOpacity={hover !== null && PHASES[hover].module !== z.id ? 0.18 : 0.45} strokeWidth={30} />
             ))}
             <motion.circle cx={CX} cy={CY} r={R} fill="none" className="stroke-slate-300" strokeWidth={2} strokeDasharray="6 12" animate={{ strokeDashoffset: [0, -36] }} transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }} />
+            {/* gói tin chạy dọc vòng đời theo chiều kim đồng hồ */}
+            {!reduce &&
+              [0, 1, 2, 3].map((i) => (
+                <motion.circle
+                  key={`pk${i}`}
+                  r={4.5}
+                  fill={["#00c9b0", "#a26bff", "#ff8f42", "#3d8bff"][i]}
+                  style={{ offsetPath: `path("M ${CX} ${CY - R} A ${R} ${R} 0 1 1 ${CX} ${CY + R} A ${R} ${R} 0 1 1 ${CX} ${CY - R}")` }}
+                  animate={{ offsetDistance: ["0%", "100%"] }}
+                  transition={{ duration: 16, repeat: Infinity, ease: "linear", delay: -i * 4 }}
+                />
+              ))}
             {/* mũi tên chiều vòng lặp giữa các giai đoạn */}
             {ANG.map((a, i) => (
               <path key={i} d={arc(a + 24, a + 48, R)} fill="none" className="stroke-slate-200" strokeWidth={2.5} markerEnd="url(#wmArrow)" />
@@ -212,7 +236,17 @@ export default function WorldMap() {
               );
             })}
           </svg>
-          <div className="pointer-events-none absolute bottom-3 left-4 font-mono text-[11px] text-slate-400">{t("world.hint")}</div>
+          <div className="pointer-events-none absolute bottom-3 left-4 right-4 flex flex-wrap items-center gap-3 font-mono text-[11px] text-slate-400">
+            <span>{t("world.hint")}</span>
+            {auto && !reduce && (
+              <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-surface-1 px-2 py-0.5 text-slate-300" data-testid="world-auto">
+                <PlayCircle className="h-3 w-3" /> {t("world.auto")}
+                <span className="h-1 w-12 overflow-hidden rounded-full bg-white/10">
+                  <span key={`${sel}-${hold}`} className="block h-full origin-left bg-slate-300" style={{ animation: `tour-hold ${AUTO_MS}ms linear forwards`, animationPlayState: hold || !inView ? "paused" : "running" }} />
+                </span>
+              </span>
+            )}
+          </div>
         </div>
 
         <AnimatePresence mode="wait">

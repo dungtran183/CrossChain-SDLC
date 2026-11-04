@@ -1,12 +1,18 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Boxes, Cpu, Flame, Gamepad2, Globe, Laptop, ShieldCheck } from "lucide-react";
 import { useT } from "../i18n/useT";
 import WorldMap from "./home/WorldMap";
 import BigPicture from "./home/BigPicture";
 import { MODE } from "../lib/api";
+import Newcomer from "./home/Newcomer";
+import AnimatedNumber from "../components/fx/AnimatedNumber";
+import { INCIDENTS, TOTAL_LOSS } from "./incidents/data";
 
-/** Hai chuỗi khối và cây cầu: gói tin chạy liên tục giữa chuỗi A và B. */
+const ATTACK_S = 4.2;
+
+/** Hai chuỗi khối và cây cầu: gói tin chạy liên tục giữa chuỗi A và B; định kỳ một gói tin độc bị khiên chặn. */
 function BridgeHero() {
   const blocks = [0, 1, 2, 3];
   const pathAB = "M 150 70 C 230 10, 330 10, 410 70";
@@ -76,13 +82,70 @@ function BridgeHero() {
           transition={{ duration: 2.8, repeat: Infinity, delay: 0.5 + i * 1.4, ease: "easeInOut" }}
         />
       ))}
+      {/* gói tin độc: lao vào cầu, bị khiên chặn và vỡ ra */}
+      <motion.circle
+        r={6}
+        fill="#ff4b4b"
+        style={{ offsetPath: `path("${pathAB}")` }}
+        animate={{ offsetDistance: ["0%", "0%", "44%", "44%"], opacity: [0, 1, 1, 0], scale: [1, 1, 1, 2.6] }}
+        transition={{ duration: ATTACK_S, times: [0, 0.3, 0.55, 0.62], repeat: Infinity, repeatDelay: 0.6 }}
+      />
+      {[0, 60, 120, 180, 240, 300].map((a) => (
+        <motion.line
+          key={a}
+          x1={280}
+          y1={90}
+          x2={280 + 34 * Math.cos((a * Math.PI) / 180)}
+          y2={90 + 34 * Math.sin((a * Math.PI) / 180)}
+          stroke="#ff4b4b"
+          strokeWidth={2}
+          strokeLinecap="round"
+          animate={{ pathLength: [0, 0, 1, 1], opacity: [0, 0, 1, 0] }}
+          transition={{ duration: ATTACK_S, times: [0, 0.55, 0.62, 0.8], repeat: Infinity, repeatDelay: 0.6 }}
+        />
+      ))}
       {/* khiên bảo vệ ở giữa */}
-      <motion.g animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 3, repeat: Infinity }} style={{ transformOrigin: "280px 90px" }}>
-        <circle cx={280} cy={90} r={26} fill="rgba(139,92,246,0.15)" stroke="#a78bfa" strokeOpacity={0.6} />
+      <motion.g animate={{ scale: [1, 1, 1.25, 1] }} transition={{ duration: ATTACK_S, times: [0, 0.54, 0.6, 0.75], repeat: Infinity, repeatDelay: 0.6 }} style={{ transformOrigin: "280px 90px" }}>
+        <motion.circle cx={280} cy={90} r={26} fill="rgba(139,92,246,0.15)" animate={{ stroke: ["#a78bfa", "#a78bfa", "#ff4b4b", "#a78bfa"] }} transition={{ duration: ATTACK_S, times: [0, 0.54, 0.6, 0.8], repeat: Infinity, repeatDelay: 0.6 }} strokeWidth={2} />
         <path d="M280 74 l12 5 v9 c0 8 -5 13 -12 16 c-7 -3 -12 -8 -12 -16 v-9 z" fill="none" stroke="#e9d5ff" strokeWidth={1.6} />
         <path d="M274 90 l4 4 l8 -8" fill="none" stroke="#e9d5ff" strokeWidth={1.6} />
       </motion.g>
     </svg>
+  );
+}
+
+/** Dải số liệu: đếm tăng khi cuộn tới. */
+function HeroStats() {
+  const { t, lang } = useT();
+  const ref = useRef<HTMLDivElement>(null);
+  const seen = useInView(ref, { once: true, amount: 0.6 });
+  const loc = lang === "vi" ? "vi-VN" : "en-US";
+  const items = [
+    { v: 3, d: 0, k: "modules", c: "from-teal-400 to-cyan-400" },
+    { v: 5, d: 0, k: "phases", c: "from-violet-400 to-fuchsia-400" },
+    { v: INCIDENTS.length, d: 0, k: "incidents", c: "from-orange-400 to-amber-300" },
+    { v: TOTAL_LOSS / 1000, d: 1, k: "loss", c: "from-rose-500 to-orange-400" },
+  ];
+  return (
+    <div ref={ref} className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4" data-testid="hero-stats">
+      {items.map((x, i) => (
+        <motion.div key={x.k} initial={{ opacity: 0, y: 10 }} animate={seen ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 * i }} className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
+          <div className={`bg-gradient-to-r ${x.c} bg-clip-text font-display text-2xl font-extrabold text-transparent`}>
+            <AnimatedNumber value={seen ? x.v : 0} decimals={x.d} duration={1.4} locale={loc} />
+          </div>
+          <div className="text-[11px] leading-tight text-slate-400">{t(`home.stat.${x.k}`)}</div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/** Khối hiện dần khi cuộn tới. */
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return (
+    <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.55, delay }}>
+      {children}
+    </motion.div>
   );
 }
 
@@ -101,12 +164,20 @@ export default function Home() {
               </span>
             </div>
             <h1 className="hero-title animate-gradient-x bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-[length:200%_auto] bg-clip-text text-2xl font-extrabold leading-tight tracking-tight text-transparent sm:text-3xl">
-              {t("home.heroTitle")}
+              {t("home.heroTitle")
+                .split(" ")
+                .map((w, i) => (
+                  <motion.span key={`${w}-${i}`} className="hero-word" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.07, duration: 0.4 }}>
+                    {w}
+                    {"\u00a0"}
+                  </motion.span>
+                ))}
             </h1>
             <p className="mt-3 max-w-2xl text-base text-slate-300">{t("home.heroBody")}</p>
             <p className="mt-2 text-xs text-slate-400">{t("app.author")}</p>
+            <HeroStats />
             <div className="mt-5 flex flex-wrap gap-3">
-              <a href="#world" onClick={(e) => (e.preventDefault(), document.getElementById("world")?.scrollIntoView({ behavior: "smooth" }))} className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-violet-500 to-amber-400 px-5 py-2.5 text-sm font-bold text-ink-950 shadow-lg transition hover:brightness-110">
+              <a href="#world" onClick={(e) => (e.preventDefault(), document.getElementById("world")?.scrollIntoView({ behavior: "smooth", block: "start" }))} className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-violet-500 to-amber-400 px-5 py-2.5 text-sm font-bold text-ink-950 shadow-lg transition hover:brightness-110">
                 <Gamepad2 className="h-4 w-4" /> {t("world.play")}
               </a>
               <Link to="/incidents" className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/5">
@@ -120,11 +191,17 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <div id="world" className="scroll-mt-20">
+      <div id="world" className="scroll-mt-24">
         <WorldMap />
       </div>
 
-      <BigPicture />
+      <Reveal>
+        <Newcomer />
+      </Reveal>
+
+      <Reveal>
+        <BigPicture />
+      </Reveal>
 
       <section className="grid gap-5 md:grid-cols-3">
         {[
@@ -132,7 +209,7 @@ export default function Home() {
           { icon: <Cpu className="h-5 w-5" />, k: "ml" },
           { icon: MODE === "replay" ? <Globe className="h-5 w-5" /> : <Laptop className="h-5 w-5" />, k: "modes" },
         ].map((x, i) => (
-          <motion.div key={x.k} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="glass p-5">
+          <motion.div key={x.k} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} whileHover={{ y: -4 }} transition={{ delay: i * 0.08 }} className="glass p-5">
             <div className="mb-2 flex items-center gap-2 font-semibold">
               <span className="text-slate-300">{x.icon}</span>
               {t(`home.tech.${x.k}.title`)}
