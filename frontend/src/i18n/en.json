@@ -248,7 +248,7 @@
     },
     "ex": {
       "attackVuln": "Attack",
-      "attackSafe": "Attack SafeBridge",
+      "attackSafe": "Attack the fixed version",
       "pickVuln": "Pick a vulnerable contract to run an attack.",
       "locked": "Locked on A",
       "attacker": "Attacker balance on B",
@@ -259,7 +259,9 @@
         "duplicate_sig": "Duplicate signature / weak threshold",
         "fake_source": "Fake source bridge",
         "hijack_relayer": "Relayer hijack",
-        "oracle_manipulation": "Oracle price manipulation"
+        "oracle_manipulation": "Oracle price manipulation",
+        "reentrancy": "Reentrancy (re-entering unlock)",
+        "cross_chain_replay": "Cross-chain replay (no domain)"
       },
       "step": {
         "deploy": "Deploy",
@@ -269,8 +271,12 @@
         "forge": "Forged release",
         "deploy_fake": "Deploy fake vault",
         "hijack": "Hijack",
-        "manipulate": "Pump oracle price"
-      }
+        "manipulate": "Pump oracle price",
+        "deploy_attacker": "Deploy attacker contract",
+        "reenter": "Recursive re-entry",
+        "replay_other_chain": "Replay on the other chain"
+      },
+      "fixed": "fixed"
     },
     "thesis": {
       "source": "CĐ2 report",

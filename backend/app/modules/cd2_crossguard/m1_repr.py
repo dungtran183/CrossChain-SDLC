@@ -119,6 +119,11 @@ INTERACTIONS = [
     ("unguarded_admin", r"function\s+set\w+\([^)]*\)\s*external\s*\{"),
     ("oracle_price", r"\boracle\b|\bprice\b"),
     ("freshness_check", r"updatedAt\s*<=|block\.number\s*-\s*updatedAt|MAX_AGE"),
+    ("external_call", r"\.call\{value:"),
+    ("state_after_call", r"\.call\{value:[^;]*;[^}]*?\n[^}]*?\w+\[[^\]]+\]\s*(=|-=)"),
+    ("reentrancy_guard", r"\bnonReentrant\b"),
+    ("domain_separation", r"encodePacked\([^;]*(address\(this\)|block\.chainid)"),
+    ("source_params", r"function\s+release\([^)]*src(ChainId|Bridge)"),
 ]
 
 

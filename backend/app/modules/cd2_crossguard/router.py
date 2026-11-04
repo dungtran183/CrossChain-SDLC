@@ -11,7 +11,7 @@ from . import exploit, m1_repr, m2_fewshot, m3_federated, m4_audit, samples
 router = APIRouter(prefix="/api/cd2", tags=["cd2 · CrossGuard"])
 _verified: dict[str, set[str]] = {}  # sample → bất biến đã được Exploit lab kiểm
 
-INV_BY_ATTACK = {"replay": "INV-NONCE", "duplicate_sig": "INV-THRESH", "fake_source": "INV-SRC", "hijack_relayer": "INV-ACL", "oracle_manipulation": "INV-ORACLE"}
+INV_BY_ATTACK = {"replay": "INV-NONCE", "duplicate_sig": "INV-THRESH", "fake_source": "INV-SRC", "hijack_relayer": "INV-ACL", "oracle_manipulation": "INV-ORACLE", "reentrancy": "INV-CEI", "cross_chain_replay": "INV-DOMAIN"}
 
 
 def _src(sample_id: str | None, code: str | None) -> str:

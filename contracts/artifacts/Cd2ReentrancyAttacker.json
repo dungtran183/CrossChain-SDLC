@@ -1,0 +1,87 @@
+{
+  "contractName": "Cd2ReentrancyAttacker",
+  "sourceName": "cd2/Cd2ReentrancyAttacker.sol",
+  "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_target",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxRounds",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "attack",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "maxRounds",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rounds",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "target",
+      "outputs": [
+        {
+          "internalType": "contract ICd2Unlockable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161032938038061032983398101604081905261002f91610061565b600080546001600160a01b039093166001600160a01b031993841617905560018054909216331790915560035561009b565b6000806040838503121561007457600080fd5b82516001600160a01b038116811461008b57600080fd5b6020939093015192949293505050565b61027f806100aa6000396000f3fe60806040526004361061004e5760003560e01c80631faf969b146100d55780638da5cb5b146100fe5780639e5faafc14610136578063a2e800ad1461014b578063d4b839921461016157600080fd5b366100d05760035460025410156100ce576002805490600061006f83610222565b9091555050600080546040805163a69df4b560e01b815290516001600160a01b039092169263a69df4b59260048084019382900301818387803b1580156100b557600080fd5b505af11580156100c9573d6000803e3d6000fd5b505050505b005b600080fd5b3480156100e157600080fd5b506100eb60035481565b6040519081526020015b60405180910390f35b34801561010a57600080fd5b5060015461011e906001600160a01b031681565b6040516001600160a01b0390911681526020016100f5565b34801561014257600080fd5b506100ce610181565b34801561015757600080fd5b506100eb60025481565b34801561016d57600080fd5b5060005461011e906001600160a01b031681565b6001546001600160a01b031633146101c75760405162461bcd60e51b815260206004820152600560248201526437bbb732b960d91b604482015260640160405180910390fd5b600080546040805163a69df4b560e01b815290516001600160a01b039092169263a69df4b59260048084019382900301818387803b15801561020857600080fd5b505af115801561021c573d6000803e3d6000fd5b50505050565b60006001820161024257634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212205a97b4526422786ac3feceb9832b50ad02025ea702359b44ac8a9a64b4a868bc64736f6c63430008180033"
+}

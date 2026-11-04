@@ -124,10 +124,10 @@ class Chain:
             except Exception:  # noqa: BLE001 - bus không được làm hỏng giao dịch
                 pass
 
-    def deploy(self, artifact_name: str, *args: Any, sender: str | None = None, alias: str | None = None) -> Any:
+    def deploy(self, artifact_name: str, *args: Any, sender: str | None = None, alias: str | None = None, value: int = 0) -> Any:
         art = load_artifact(artifact_name)
         factory = self.w3.eth.contract(abi=art["abi"], bytecode=art["bytecode"])
-        tx_hash = factory.constructor(*args).transact({"from": sender or self.accounts[0]})
+        tx_hash = factory.constructor(*args).transact({"from": sender or self.accounts[0], "value": value})
         receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
         contract = self.w3.eth.contract(address=receipt.contractAddress, abi=art["abi"])
         key = alias or artifact_name

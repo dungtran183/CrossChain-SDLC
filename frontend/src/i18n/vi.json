@@ -248,7 +248,7 @@
     },
     "ex": {
       "attackVuln": "Tấn công",
-      "attackSafe": "Tấn công SafeBridge",
+      "attackSafe": "Tấn công bản đã sửa",
       "pickVuln": "Chọn một hợp đồng lỗi để chạy tấn công.",
       "locked": "Đã khóa trên A",
       "attacker": "Số dư attacker trên B",
@@ -259,7 +259,9 @@
         "duplicate_sig": "Chữ ký trùng / ngưỡng yếu",
         "fake_source": "Cầu nguồn giả",
         "hijack_relayer": "Chiếm quyền relayer",
-        "oracle_manipulation": "Thao túng giá oracle"
+        "oracle_manipulation": "Thao túng giá oracle",
+        "reentrancy": "Reentrancy (gọi lại unlock)",
+        "cross_chain_replay": "Phát lại chéo chuỗi (thiếu domain)"
       },
       "step": {
         "deploy": "Triển khai",
@@ -269,8 +271,12 @@
         "forge": "Giả mạo release",
         "deploy_fake": "Triển khai vault giả",
         "hijack": "Chiếm quyền",
-        "manipulate": "Đẩy giá oracle"
-      }
+        "manipulate": "Đẩy giá oracle",
+        "deploy_attacker": "Triển khai hợp đồng tấn công",
+        "reenter": "Gọi lại đệ quy",
+        "replay_other_chain": "Phát lại sang chuỗi khác"
+      },
+      "fixed": "bản sửa"
     },
     "thesis": {
       "source": "Báo cáo CĐ2",

@@ -10,7 +10,7 @@ from functools import lru_cache
 
 from .samples import CLASSES
 
-PER_CLASS = 34
+PER_CLASS = 40
 SEED = 2026
 
 NAMES = {
@@ -54,6 +54,27 @@ def _core(cls: str, n: dict, rng: random.Random) -> str:
     src = "        require(srcChainId == SRC_CHAIN_ID, \"bad source\");\n"
     mint = f"        {tok}.mint({to}, {a});\n        emit Released({m}, {to}, {a});\n"
     sig1 = f"        require(_recover(keccak256(abi.encodePacked({m}, {to}, {a}, srcChainId)), sig) == {rel}, \"sig\");\n"
+    variant = rng.random()
+    if cls == "bridge_logic" and variant < 0.5:  # reentrancy: gọi ra ngoài trước khi cập nhật trạng thái
+        body = (
+            f"    mapping(address => uint256) public credit;\n"
+            f"    function credit_(bytes32 {m}, address {to}, uint256 {a}) external {{\n        require(msg.sender == {rel}, \"only {rel}\");\n        credit[{to}] += {a};\n    }}\n"
+            f"    function unlock() external {{\n        uint256 {a} = credit[msg.sender];\n        require({a} > 0, \"empty\");\n"
+            f"        (bool ok, ) = msg.sender.call{{value: {a}}}(\"\");\n        require(ok, \"fail\");\n        credit[msg.sender] = 0;\n    }}\n"
+        )
+        return body
+    if cls == "message_verification" and variant < 0.5:  # thiếu domain separation (chainid / address(this))
+        params = f"bytes32 {m}, address {to}, uint256 {a}, bytes calldata sig"
+        body = check + f"        require(_recover(keccak256(abi.encodePacked({m}, {to}, {a})), sig) == {rel}, \"sig\");\n" + mark + mint
+        return f"    function release({params}) external {{\n{body}    }}\n" + RECOVER
+    if cls == "safe" and variant < 0.3:  # vault an toàn: checks-effects-interactions + nonReentrant
+        return (
+            "    bool private locked;\n    modifier nonReentrant() { require(!locked, \"reentrant\"); locked = true; _; locked = false; }\n"
+            f"    mapping(address => uint256) public credit;\n"
+            f"    function credit_(bytes32 {m}, address {to}, uint256 {a}) external {{\n        require(msg.sender == {rel}, \"only {rel}\");\n        credit[{to}] += {a};\n    }}\n"
+            f"    function unlock() external nonReentrant {{\n        uint256 {a} = credit[msg.sender];\n        require({a} > 0, \"empty\");\n"
+            f"        credit[msg.sender] = 0;\n        (bool ok, ) = msg.sender.call{{value: {a}}}(\"\");\n        require(ok, \"fail\");\n    }}\n"
+        )
     if cls == "message_verification":  # thiếu nonce
         body = src + sig1 + ("        // TODO: track message\n" if rng.random() < 0.3 else "") + mint
         params = f"bytes32 {m}, address {to}, uint256 {a}, uint256 srcChainId, bytes calldata sig"
@@ -109,6 +130,8 @@ def synth(cls: str, rng: random.Random, idx: int) -> str:
         "    event Released(bytes32 indexed id, address indexed to, uint256 amount);",
         "    modifier onlyOwner() { require(msg.sender == owner, \"owner\"); _; }",
     ]
+    if rng.random() < 0.6:  # phần lớn hợp đồng thật có constructor khởi tạo token/relayer
+        lines.append(f"    constructor(address _t, address _r) {{ {n['tok']} = IToken(_t); {n['rel']} = _r; owner = msg.sender; }}")
     body = _core(cls, n, rng)
     extras = rng.sample(EXTRAS, k=rng.randint(0, 3))
     # nhiễu: đôi khi hợp đồng lỗi có thêm guard không liên quan; bản safe đôi khi thiếu sự kiện
@@ -135,3 +158,25 @@ def dataset() -> tuple[list[str], list[int]]:
             X.append(synth(cls, rng, i))
             y.append(ci)
     return X, y
+
+
+def subtype(cls: str, src: str) -> str:
+    """Dạng con của mẫu trong lớp (để dựng nhiều prototype cho một lớp đa dạng)."""
+    if cls == "bridge_logic" and ".call{value:" in src:
+        return "bridge_logic/reentrancy"
+    if cls == "safe" and "nonReentrant" in src:
+        return "safe/vault"
+    if cls == "message_verification" and "uint256 srcChainId, bytes calldata sig" not in src:
+        return "message_verification/domain"
+    return f"{cls}/main"
+
+
+@lru_cache(maxsize=1)
+def subclasses() -> tuple[list[str], list[int]]:
+    """(danh sách dạng con, chỉ số dạng con của từng mẫu)."""
+    X, y = dataset()
+    from .samples import CLASSES
+
+    subs = [subtype(CLASSES[c], x) for x, c in zip(X, y)]
+    names = sorted(set(subs), key=lambda n: (CLASSES.index(n.split("/")[0]), n))
+    return names, [names.index(n) for n in subs]

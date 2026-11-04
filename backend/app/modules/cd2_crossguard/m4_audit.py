@@ -20,13 +20,17 @@ INVARIANTS = [
      {"vi": "Gắn onlyOwner (hoặc timelock/multisig) cho setRelayer/setValidator.", "en": "Guard setRelayer/setValidator with onlyOwner (or a timelock/multisig)."}),
     ("INV-ORACLE", "block.number − updatedAt ≤ MAX_AGE ∧ |Δprice| ≤ bound", "soft", ("freshness_check",), "validator_oracle",
      {"vi": "Dùng nhiều nguồn giá (median), kiểm độ mới và giới hạn biên độ thay đổi.", "en": "Use multiple price sources (median), check freshness and bound price changes."}),
+    ("INV-CEI", "trạng thái được cập nhật TRƯỚC mọi lời gọi ra ngoài (checks-effects-interactions) ∨ nonReentrant", "hard", ("reentrancy_guard",), "bridge_logic",
+     {"vi": "Đặt credit[msg.sender] = 0 trước khi chuyển tiền và thêm modifier nonReentrant.", "en": "Zero credit[msg.sender] before transferring and add a nonReentrant modifier."}),
+    ("INV-DOMAIN", "digest đã ký gắn block.chainid ∧ address(this) (domain separation, EIP-712)", "hard", ("domain_separation",), "message_verification",
+     {"vi": "Đưa block.chainid và address(this) (hoặc domain EIP-712) vào thông điệp được ký.", "en": "Include block.chainid and address(this) (or an EIP-712 domain) in the signed message."}),
     ("INV-SUPPLY", "totalSupply(wrapped trên B) ≤ Σ locked (trên A)", "hard", (), None,
      {"vi": "Giám sát bất biến cung sau triển khai (xem CĐ3).", "en": "Monitor the supply invariant after deployment (see CĐ3)."}),
 ]
 
 
 def tier(p: float) -> str:
-    return "high" if p >= 0.7 else "medium" if p >= 0.45 else "low"
+    return "high" if p >= 0.7 else "medium" if p >= 0.5 else "low"
 
 
 def report(sample_id: str, k: int = 5, verified: set[str] | None = None) -> dict:
@@ -49,6 +53,8 @@ def report(sample_id: str, k: int = 5, verified: set[str] | None = None) -> dict
         "INV-THRESH": flags.get("multi_sig") or flags.get("threshold"),
         "INV-ACL": has_admin,
         "INV-ORACLE": flags.get("oracle_price"),
+        "INV-CEI": flags.get("external_call"),
+        "INV-DOMAIN": flags.get("verify_signature"),
         "INV-SUPPLY": relevant,
     }
     for inv_id, pred, kind, need, _cat, fix in INVARIANTS:
@@ -57,6 +63,8 @@ def report(sample_id: str, k: int = 5, verified: set[str] | None = None) -> dict
         enforced = bool(need) and all(flags.get(n) for n in need)
         if inv_id == "INV-ACL" and flags.get("unguarded_admin"):
             enforced = False
+        if inv_id == "INV-CEI" and not flags.get("state_after_call"):
+            enforced = True  # đã theo checks-effects-interactions
         status = "declared" if enforced else "candidate"
         if verified and inv_id in verified:
             status = "verified"

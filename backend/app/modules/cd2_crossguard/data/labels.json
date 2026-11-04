@@ -1,18 +1,111 @@
 {
   "categories": {
-    "validator_oracle": {"vi": "Tổn hại validator / oracle", "en": "Validator / oracle compromise"},
-    "bridge_logic": {"vi": "Lỗi logic cầu nối", "en": "Bridge logic error"},
-    "message_verification": {"vi": "Lỗi kiểm chứng thông điệp / trạng thái", "en": "Message / state verification error"},
-    "access_control": {"vi": "Rủi ro tập trung & kiểm soát truy cập", "en": "Centralization & access control"},
-    "protocol_rule": {"vi": "Vi phạm quy tắc an toàn giao thức", "en": "Protocol safety rule violation"},
-    "safe": {"vi": "An toàn (bản sửa)", "en": "Safe (fixed)"}
+    "validator_oracle": {
+      "vi": "Tổn hại validator / oracle",
+      "en": "Validator / oracle compromise"
+    },
+    "bridge_logic": {
+      "vi": "Lỗi logic cầu nối",
+      "en": "Bridge logic error"
+    },
+    "message_verification": {
+      "vi": "Lỗi kiểm chứng thông điệp / trạng thái",
+      "en": "Message / state verification error"
+    },
+    "access_control": {
+      "vi": "Rủi ro tập trung & kiểm soát truy cập",
+      "en": "Centralization & access control"
+    },
+    "protocol_rule": {
+      "vi": "Vi phạm quy tắc an toàn giao thức",
+      "en": "Protocol safety rule violation"
+    },
+    "safe": {
+      "vi": "An toàn (bản sửa)",
+      "en": "Safe (fixed)"
+    }
   },
   "samples": [
-    {"id": "Cd2VulnBridgeNoNonce", "title": "VulnBridgeNoNonce", "category": "message_verification", "bug": {"vi": "release() không đánh dấu message đã xử lý → phát lại", "en": "release() never marks a message as processed → replay"}},
-    {"id": "Cd2VulnBridgeWeakThreshold", "title": "VulnBridgeWeakThreshold", "category": "bridge_logic", "bug": {"vi": "Ngưỡng = 1 và đếm trùng chữ ký", "en": "Threshold = 1 and duplicate signatures counted"}},
-    {"id": "Cd2VulnBridgeNoSourceCheck", "title": "VulnBridgeNoSourceCheck", "category": "protocol_rule", "bug": {"vi": "Không kiểm srcChainId / cầu nguồn", "en": "No srcChainId / source bridge check"}},
-    {"id": "Cd2VulnBridgeAccess", "title": "VulnBridgeAccess", "category": "access_control", "bug": {"vi": "setRelayer() thiếu onlyOwner", "en": "setRelayer() lacks onlyOwner"}},
-    {"id": "Cd2VulnBridgeOracle", "title": "VulnBridgeOracle", "category": "validator_oracle", "bug": {"vi": "Tin giá oracle đơn lẻ, không kiểm độ mới", "en": "Trusts a single oracle price without freshness check"}},
-    {"id": "Cd2SafeBridge", "title": "SafeBridge", "category": "safe", "bug": {"vi": "Bản sửa: nonce, ngưỡng, kiểm nguồn, phân quyền", "en": "Fixed: nonce, threshold, source check, access control"}}
+    {
+      "id": "Cd2VulnBridgeNoNonce",
+      "title": "VulnBridgeNoNonce",
+      "category": "message_verification",
+      "bug": {
+        "vi": "release() không đánh dấu message đã xử lý → phát lại",
+        "en": "release() never marks a message as processed → replay"
+      }
+    },
+    {
+      "id": "Cd2VulnBridgeWeakThreshold",
+      "title": "VulnBridgeWeakThreshold",
+      "category": "bridge_logic",
+      "bug": {
+        "vi": "Ngưỡng = 1 và đếm trùng chữ ký",
+        "en": "Threshold = 1 and duplicate signatures counted"
+      }
+    },
+    {
+      "id": "Cd2VulnBridgeNoSourceCheck",
+      "title": "VulnBridgeNoSourceCheck",
+      "category": "protocol_rule",
+      "bug": {
+        "vi": "Không kiểm srcChainId / cầu nguồn",
+        "en": "No srcChainId / source bridge check"
+      }
+    },
+    {
+      "id": "Cd2VulnBridgeAccess",
+      "title": "VulnBridgeAccess",
+      "category": "access_control",
+      "bug": {
+        "vi": "setRelayer() thiếu onlyOwner",
+        "en": "setRelayer() lacks onlyOwner"
+      }
+    },
+    {
+      "id": "Cd2VulnBridgeOracle",
+      "title": "VulnBridgeOracle",
+      "category": "validator_oracle",
+      "bug": {
+        "vi": "Tin giá oracle đơn lẻ, không kiểm độ mới",
+        "en": "Trusts a single oracle price without freshness check"
+      }
+    },
+    {
+      "id": "Cd2VulnBridgeReentrancy",
+      "title": "VulnBridgeReentrancy",
+      "category": "bridge_logic",
+      "bug": {
+        "vi": "unlock() chuyển ETH trước khi cập nhật số dư → reentrancy",
+        "en": "unlock() sends ETH before updating balances → reentrancy"
+      }
+    },
+    {
+      "id": "Cd2VulnBridgeNoDomain",
+      "title": "VulnBridgeNoDomain",
+      "category": "message_verification",
+      "bug": {
+        "vi": "Chữ ký không gắn chainid / địa chỉ hợp đồng → phát lại chéo chuỗi",
+        "en": "Signature not bound to chainid / contract → cross-chain replay"
+      }
+    },
+    {
+      "id": "Cd2SafeBridge",
+      "title": "SafeBridge",
+      "category": "safe",
+      "bug": {
+        "vi": "Bản sửa: nonce, ngưỡng, kiểm nguồn, phân quyền",
+        "en": "Fixed: nonce, threshold, source check, access control"
+      }
+    },
+    {
+      "id": "Cd2SafeVault",
+      "title": "SafeVault",
+      "category": "safe",
+      "bug": {
+        "vi": "Bản sửa reentrancy: checks-effects-interactions + nonReentrant",
+        "en": "Reentrancy fix: checks-effects-interactions + nonReentrant"
+      }
+    }
   ]
 }
