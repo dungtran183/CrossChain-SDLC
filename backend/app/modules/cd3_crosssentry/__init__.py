@@ -9,7 +9,7 @@ MODULE = {
     "package": "cd3_crosssentry",
     "name": "CrossSentry",
     "sdlc_phase": "Secure Operations · Optimization",
-    "status": "planned",
+    "status": "ready",
     "phase": "P4",
 }
 

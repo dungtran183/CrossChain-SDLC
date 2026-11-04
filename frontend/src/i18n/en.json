@@ -288,7 +288,108 @@
       "M3 · R0–R5 response & G-surv"
     ],
     "short": "Monitoring & adaptive trust",
-    "pubs": "CrossTrust-IoT · ChronosRep"
+    "pubs": "CrossTrust-IoT · ChronosRep",
+    "scenario": "Scenario",
+    "play": "Play",
+    "pause": "Pause",
+    "step": "Step",
+    "replayEnd": "End of the recorded scenario — press Reset or pick another scenario.",
+    "replayNote": "Replay: each scenario is a separate recording (warms up with normal traffic, then switches to the attack). Run locally to try all 6 scenarios.",
+    "sc": {
+      "normal": "Normal",
+      "replay": "Replay",
+      "delayed": "Delayed",
+      "collusion": "Collusion",
+      "slow_burn": "Slow-burn",
+      "boosting": "Boosting"
+    },
+    "kpi": {
+      "locked": "Locked (A)",
+      "minted": "Minted (B)",
+      "pending": "Pending approvals",
+      "bridge": "Bridge",
+      "paused": "paused",
+      "running": "running",
+      "invariant": "Supply invariant violated: total minted on B exceeds total locked on A."
+    },
+    "lane": {
+      "pending": "pending",
+      "matched": "matched",
+      "late": "late",
+      "flagged": "rule violation",
+      "reverted": "blocked on-chain"
+    },
+    "tabs": {
+      "m1": "M1 · Events & ECA",
+      "m2": "M2 · DS & CRS",
+      "m3": "M3 · R0–R5 & G-surv"
+    },
+    "ev": {
+      "kind": "kind",
+      "actors": "attributed to",
+      "rules": "violated rules"
+    },
+    "m2": {
+      "ds": "Dempster–Shafer fusion",
+      "learn": "Learning channel (IsolationForest)",
+      "rule": "Rule channel",
+      "fused": "Fused",
+      "noEv": "No evidence yet",
+      "heatmap": "CRS heatmap actor × corridor",
+      "trad": "Traditional cumulative score",
+      "noSeries": "Run a few ticks to get r(t)",
+      "crsDetect": "CRS detection (r ≥ 0.6)",
+      "tradDetect": "Traditional score detection",
+      "notYet": "not yet"
+    },
+    "m3": {
+      "ladder": "Response ladder",
+      "human": "needs approval",
+      "queue": "Approval queue (R4/R5)",
+      "noQueue": "No requests",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approved": "approved",
+      "rejected": "rejected",
+      "pending": "pending",
+      "noAuto": "R4/R5 never self-execute — they run on-chain only after human approval.",
+      "log": "Response log",
+      "giniHint": "0 = even monitoring · high = concentrated on few actors",
+      "tune": "Optimise Θ"
+    },
+    "level": {
+      "R0": "Observe",
+      "R1": "Alert",
+      "R2": "Throttle",
+      "R3": "Raise confirmations",
+      "R4": "Isolate actor",
+      "R5": "Pause bridge"
+    },
+    "modal": {
+      "title": "Human approval required",
+      "corridor": "Corridor",
+      "onchain": "On-chain action",
+      "body": "CrossSentry proposes a strong measure. Approving sends a real transaction to MintGateway on chain-B; reject if the evidence is weak (e.g. a validator that only co-signed by chance).",
+      "later": "Later"
+    },
+    "toast": {
+      "executed": "Executed on-chain"
+    },
+    "thesis": {
+      "source": "CĐ3 report",
+      "ttd": "Time-to-detect with CRS (steps)",
+      "scale": "500-node environment"
+    },
+    "tour": {
+      "s0": "CrossSentry monitors a live bridge: LockVault on chain-A, MintGateway (7 validators, t = 3) on chain-B.",
+      "s1": "Normal traffic: every Locked is matched with its Minted, evidence leans to N, every actor's CRS stays low.",
+      "s2": "Switch to slow-burn: validator V7, with a good history, starts co-signing “inflated” mints on corridor A→B.",
+      "s3": "CRS of (V7, A→B) jumps while other corridors stay low → R4 isolate V7 is proposed; a human approves → blockActor on-chain.",
+      "s4": "From now on mints proposed by V7 are blocked (not enough valid signatures) — the traditional cumulative score has not even caught up.",
+      "s5": "Collusion scenario: V5–V7 co-sign mints with no matching lock; total minted exceeds total locked.",
+      "s6": "Several actors at R4 on one corridor → R5 pause bridge is proposed; approve → pause(), every later mint reverts.",
+      "s7": "G-surv: compare the optimal Θ with the concentration criterion off (w_g = 0) and on (w_g = 1) — balancing detection and fairness."
+    }
   },
   "common": {
     "toy": "toy · illustrative",

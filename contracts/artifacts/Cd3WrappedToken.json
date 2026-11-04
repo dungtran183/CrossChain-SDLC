@@ -1,0 +1,127 @@
+{
+  "contractName": "Cd3WrappedToken",
+  "sourceName": "cd3/Cd3WrappedToken.sol",
+  "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "deployer",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "mint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "minter",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "m",
+          "type": "address"
+        }
+      ],
+      "name": "setMinter",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60a060405234801561001057600080fd5b50336080526080516103566100366000396000818160e8015261020001526103566000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c8063075461721461006757806318160ddd1461009757806340c10f19146100ae57806370a08231146100c3578063d5f39488146100e3578063fca3b5aa1461010a575b600080fd5b60025461007a906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b6100a060015481565b60405190815260200161008e565b6100c16100bc3660046102ad565b61011d565b005b6100a06100d13660046102d7565b60006020819052908152604090205481565b61007a7f000000000000000000000000000000000000000000000000000000000000000081565b6100c16101183660046102d7565b6101f5565b6002546001600160a01b0316331461016a5760405162461bcd60e51b815260206004820152600b60248201526a37b7363c9036b4b73a32b960a91b60448201526064015b60405180910390fd5b6001600160a01b038216600090815260208190526040812080548392906101929084906102f9565b9250508190555080600160008282546101ab91906102f9565b90915550506040518181526001600160a01b038316906000907fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9060200160405180910390a35050565b336001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001614801561023657506002546001600160a01b0316155b61026f5760405162461bcd60e51b815260206004820152600a6024820152691b5a5b9d195c881cd95d60b21b6044820152606401610161565b600280546001600160a01b0319166001600160a01b0392909216919091179055565b80356001600160a01b03811681146102a857600080fd5b919050565b600080604083850312156102c057600080fd5b6102c983610291565b946020939093013593505050565b6000602082840312156102e957600080fd5b6102f282610291565b9392505050565b8082018082111561031a57634e487b7160e01b600052601160045260246000fd5b9291505056fea2646970667358221220f3b8d371fea6f810ded727795258aa265ab557446a8a6fbfdc77f5c5f22e8bf864736f6c63430008180033"
+}

@@ -31,7 +31,8 @@ DEFAULT_CHAINS: dict[str, int] = {
     "chain-B": 97,  # "BSC-like" — chuỗi đích
 }
 
-FAIL_GAS = 800_000  # gas cấp cho tx biết trước sẽ revert (để vẫn được đào thành block)
+FAIL_GAS = 800_000
+TX_GAS = 3_000_000  # trần gas cho tx thành công (chỉ tính gas thực dùng)  # gas cấp cho tx biết trước sẽ revert (để vẫn được đào thành block)
 JS_SAFE_INT = 2**53 - 1
 
 
@@ -159,7 +160,8 @@ class Chain:
         except Exception as e:  # noqa: BLE001 - mọi lỗi revert/validation
             reason = revert_reason(e)
         if reason is None:
-            tx_hash = func.transact(params)
+            # gas cố định: bỏ qua bước estimate_gas (thêm một lần thực thi EVM) — nhanh gấp ~2 lần
+            tx_hash = func.transact({**params, "gas": TX_GAS})
         else:
             data = contract.encode_abi(fn, args=list(args))
             tx_hash = self.w3.eth.send_transaction(

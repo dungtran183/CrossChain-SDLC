@@ -288,7 +288,108 @@
       "M3 · Phản ứng R0–R5 & G-surv"
     ],
     "short": "Giám sát & tin cậy thích ứng",
-    "pubs": "CrossTrust-IoT · ChronosRep"
+    "pubs": "CrossTrust-IoT · ChronosRep",
+    "scenario": "Kịch bản",
+    "play": "Chạy",
+    "pause": "Tạm dừng",
+    "step": "Bước",
+    "replayEnd": "Đã hết kịch bản ghi sẵn — bấm Đặt lại hoặc chọn kịch bản khác.",
+    "replayNote": "Replay: mỗi kịch bản là một bản ghi riêng (khởi động bằng lưu lượng bình thường rồi chuyển sang tấn công). Chạy local để thử đủ 6 kịch bản.",
+    "sc": {
+      "normal": "Bình thường",
+      "replay": "Phát lại",
+      "delayed": "Trì hoãn",
+      "collusion": "Thông đồng",
+      "slow_burn": "Slow-burn",
+      "boosting": "Nâng điểm"
+    },
+    "kpi": {
+      "locked": "Đã khóa (A)",
+      "minted": "Đã mint (B)",
+      "pending": "Chờ phê duyệt",
+      "bridge": "Cầu nối",
+      "paused": "tạm dừng",
+      "running": "đang chạy",
+      "invariant": "Vi phạm bất biến cung: tổng mint trên B vượt tổng khóa trên A."
+    },
+    "lane": {
+      "pending": "chờ ghép",
+      "matched": "đã ghép",
+      "late": "trễ",
+      "flagged": "vi phạm luật",
+      "reverted": "bị chặn on-chain"
+    },
+    "tabs": {
+      "m1": "M1 · Sự kiện & ECA",
+      "m2": "M2 · DS & CRS",
+      "m3": "M3 · R0–R5 & G-surv"
+    },
+    "ev": {
+      "kind": "loại",
+      "actors": "quy cho",
+      "rules": "luật vi phạm"
+    },
+    "m2": {
+      "ds": "Hợp nhất Dempster–Shafer",
+      "learn": "Kênh học (IsolationForest)",
+      "rule": "Kênh luật",
+      "fused": "Sau hợp nhất",
+      "noEv": "Chưa có bằng chứng",
+      "heatmap": "Heatmap CRS tác nhân × tuyến",
+      "trad": "Điểm tích lũy truyền thống",
+      "noSeries": "Chạy vài tick để có chuỗi r(t)",
+      "crsDetect": "CRS phát hiện (r ≥ 0,6)",
+      "tradDetect": "Điểm truyền thống phát hiện",
+      "notYet": "chưa"
+    },
+    "m3": {
+      "ladder": "Thang phản ứng",
+      "human": "cần duyệt",
+      "queue": "Hàng chờ phê duyệt (R4/R5)",
+      "noQueue": "Không có yêu cầu nào",
+      "approve": "Phê duyệt",
+      "reject": "Từ chối",
+      "approved": "đã duyệt",
+      "rejected": "đã từ chối",
+      "pending": "chờ",
+      "noAuto": "R4/R5 không tự thi hành — chỉ chạy on-chain khi con người phê duyệt.",
+      "log": "Nhật ký phản ứng",
+      "giniHint": "0 = giám sát đều · cao = dồn vào ít tác nhân",
+      "tune": "Tối ưu Θ"
+    },
+    "level": {
+      "R0": "Quan sát",
+      "R1": "Cảnh báo",
+      "R2": "Giới hạn",
+      "R3": "Tăng xác nhận",
+      "R4": "Cô lập tác nhân",
+      "R5": "Dừng cầu nối"
+    },
+    "modal": {
+      "title": "Yêu cầu phê duyệt của con người",
+      "corridor": "Tuyến",
+      "onchain": "Hành động on-chain",
+      "body": "CrossSentry đề xuất biện pháp mạnh. Phê duyệt sẽ gửi giao dịch thật tới MintGateway trên chain-B; từ chối nếu bằng chứng chưa đủ (vd validator chỉ tình cờ cùng ký).",
+      "later": "Để sau"
+    },
+    "toast": {
+      "executed": "Đã thi hành on-chain"
+    },
+    "thesis": {
+      "source": "Báo cáo CĐ3",
+      "ttd": "Thời gian phát hiện nhờ CRS (bước)",
+      "scale": "Môi trường 500 nút"
+    },
+    "tour": {
+      "s0": "CrossSentry giám sát cầu nối đang chạy: LockVault trên chain-A, MintGateway (7 validator, t = 3) trên chain-B.",
+      "s1": "Lưu lượng bình thường: mỗi Locked được ghép với Minted tương ứng, bằng chứng nghiêng về N, CRS của mọi tác nhân thấp.",
+      "s2": "Chuyển sang slow-burn: validator V7 có lịch sử tốt bắt đầu ký mint “thổi phồng” trên tuyến A→B.",
+      "s3": "CRS của (V7, A→B) nhảy vọt trong khi các tuyến khác vẫn thấp → đề xuất R4 cô lập V7; con người phê duyệt → blockActor on-chain.",
+      "s4": "Từ đây mint do V7 đề xuất bị chặn (thiếu chữ ký hợp lệ) — điểm tích lũy truyền thống vẫn chưa kịp phát hiện.",
+      "s5": "Kịch bản thông đồng: V5–V7 cùng ký mint không có lock tương ứng; tổng mint vượt tổng khóa.",
+      "s6": "Nhiều tác nhân cùng ở R4 trên một tuyến → đề xuất R5 dừng cầu nối; phê duyệt → pause(), mọi mint sau đó revert.",
+      "s7": "G-surv: so sánh Θ tối ưu khi tắt (w_g = 0) và bật (w_g = 1) tiêu chí tập trung giám sát — cân bằng phát hiện với công bằng."
+    }
   },
   "common": {
     "toy": "toy · minh họa",
