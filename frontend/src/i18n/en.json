@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "Cross-Chain Secure SDLC",
+    "subtitle": "PhD thesis prototype demo",
+    "disclaimer": "Illustrative — not thesis results",
+    "replayMode": "Replay mode (no backend needed)",
+    "liveMode": "Live mode",
+    "backendOk": "Backend is running",
+    "backendDown": "Backend not reachable",
+    "home": "Overview",
+    "language": "Language"
+  },
+  "home": {
+    "heroTitle": "Cross-chain security across the software lifecycle",
+    "heroBody": "Three independent modules illustrate the three thesis studies: privacy-preserving design, pre-deployment contract auditing and post-deployment monitoring on two simulated EVM chains.",
+    "open": "Open module",
+    "sdlc": "Secure SDLC phase"
+  },
+  "status": {
+    "planned": "Planned",
+    "phase": "To be implemented in phase"
+  },
+  "cd1": {
+    "name": "Π_univ",
+    "topic": "Enhancing privacy in cross-chain communication",
+    "sdlc": "1 · Secure Design",
+    "summary": "Cross-chain academic credentials: the source chain anchors a Merkle commitment, the holder proves a business predicate in zero knowledge, a relay committee co-signs t-of-n and the destination chain verifies with ecrecover.",
+    "steps": ["Setup & key generation", "Issue credential", "Generate ZK proof", "Cross-chain verification", "Revocation"]
+  },
+  "cd2": {
+    "name": "CrossGuard",
+    "topic": "Vulnerability detection and auditing of cross-chain smart contracts",
+    "sdlc": "2–3 · Secure Coding · Testing & Audit",
+    "summary": "Pre-deployment audit of bridge contracts: multi-source representation, few-shot classification, differentially private federated training and an audit report with protocol invariants.",
+    "steps": ["M1 · Multi-source representation", "M2 · Few-shot detection core", "M3 · DP-SGD federated training", "M4 · Audit report", "Exploit lab"]
+  },
+  "cd3": {
+    "name": "CrossSentry",
+    "topic": "Anomaly detection and adaptive trust assessment in cross-chain communication",
+    "sdlc": "4–5 · Operations & Monitoring · Evaluation & Optimization",
+    "summary": "Monitoring a live bridge: two-chain event matching with evidence competence, Dempster–Shafer fusion, actor–corridor risk scores and R0–R5 responses with human approval.",
+    "steps": ["M1 · Events & evidence (ECA)", "M2 · DS fusion & CRS", "M3 · R0–R5 response & G-surv"]
+  }
+}

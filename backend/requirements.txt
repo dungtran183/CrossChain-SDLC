@@ -1,0 +1,20 @@
+# Backend dependencies — Python 3.11+ (đã thử trên 3.12)
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+
+# Blockchain giả lập: 2 chuỗi EVM in-memory
+# Lưu ý: KHÔNG dùng extra eth-tester[py-evm] — extra đó kéo safe-pysha3 cần trình biên dịch C (lỗi trên Windows).
+web3>=7.0,<8
+eth-tester>=0.12.0b1
+py-evm>=0.10.1b1
+eth-account>=0.13
+
+# ML tượng trưng + mật mã toy
+numpy>=1.26
+scikit-learn>=1.4
+cryptography>=42
+
+# Test
+pytest>=8
+httpx>=0.27

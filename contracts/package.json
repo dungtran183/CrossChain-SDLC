@@ -1,0 +1,12 @@
+{
+  "name": "crosschain-sdlc-demo-contracts",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "compile": "node compile.mjs"
+  },
+  "devDependencies": {
+    "solc": "0.8.24"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "Cross-Chain Secure SDLC",
+    "subtitle": "Prototype minh họa luận án Tiến sĩ",
+    "disclaimer": "Minh họa — không phải kết quả thực nghiệm của luận án",
+    "replayMode": "Chế độ replay (không cần backend)",
+    "liveMode": "Chế độ live",
+    "backendOk": "Backend đang chạy",
+    "backendDown": "Không kết nối được backend",
+    "home": "Tổng quan",
+    "language": "Ngôn ngữ"
+  },
+  "home": {
+    "heroTitle": "An toàn liên chuỗi xuyên suốt vòng đời phần mềm",
+    "heroBody": "Ba module độc lập minh họa ba chuyên đề của luận án: thiết kế bảo toàn riêng tư, kiểm toán hợp đồng trước triển khai và giám sát sau triển khai trên hai chuỗi EVM giả lập.",
+    "open": "Mở module",
+    "sdlc": "Giai đoạn Secure SDLC"
+  },
+  "status": {
+    "planned": "Đang lên kế hoạch",
+    "phase": "Sẽ hiện thực ở phase"
+  },
+  "cd1": {
+    "name": "Π_univ",
+    "topic": "Tăng cường tính riêng tư trong giao tiếp liên chuỗi",
+    "sdlc": "1 · Thiết kế an toàn",
+    "summary": "Văn bằng số liên chuỗi: chuỗi nguồn neo cam kết Merkle, người học sinh bằng chứng ZKP cho điều kiện nghiệp vụ, ủy ban relay ký ngưỡng t-of-n và chuỗi đích kiểm tra bằng ecrecover.",
+    "steps": ["Thiết lập & sinh khóa", "Cấp văn bằng", "Sinh bằng chứng ZKP", "Xác minh liên chuỗi", "Thu hồi"]
+  },
+  "cd2": {
+    "name": "CrossGuard",
+    "topic": "Phát hiện lỗ hổng và kiểm toán hợp đồng thông minh liên chuỗi",
+    "sdlc": "2–3 · Lập trình an toàn · Kiểm thử & Kiểm toán",
+    "summary": "Kiểm toán hợp đồng cầu nối trước triển khai: biểu diễn đa nguồn, phân loại few-shot, học liên kết có riêng tư vi phân và hồ sơ kiểm toán kèm bất biến giao thức.",
+    "steps": ["M1 · Biểu diễn đa nguồn", "M2 · Lõi phát hiện few-shot", "M3 · Học liên kết DP-SGD", "M4 · Hồ sơ kiểm toán", "Exploit lab"]
+  },
+  "cd3": {
+    "name": "CrossSentry",
+    "topic": "Phát hiện bất thường và đánh giá tin cậy thích ứng trong giao tiếp liên chuỗi",
+    "sdlc": "4–5 · Vận hành & Giám sát · Đánh giá & Tối ưu",
+    "summary": "Giám sát cầu nối đang chạy: ghép sự kiện hai chuỗi và đánh giá độ đầy đủ bằng chứng, hợp nhất Dempster–Shafer, rủi ro theo tác nhân–tuyến và phản ứng R0–R5 có phê duyệt.",
+    "steps": ["M1 · Sự kiện & bằng chứng (ECA)", "M2 · Hợp nhất DS & CRS", "M3 · Phản ứng R0–R5 & G-surv"]
+  }
+}
