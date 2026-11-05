@@ -7,6 +7,7 @@ import WorldMap from "./home/WorldMap";
 import BigPicture from "./home/BigPicture";
 import { MODE } from "../lib/api";
 import Newcomer from "./home/Newcomer";
+import Context from "./home/Context";
 import AnimatedNumber from "../components/fx/AnimatedNumber";
 import { INCIDENTS, TOTAL_LOSS } from "./incidents/data";
 
@@ -197,6 +198,10 @@ export default function Home() {
 
       <Reveal>
         <Newcomer />
+      </Reveal>
+
+      <Reveal>
+        <Context />
       </Reveal>
 
       <Reveal>

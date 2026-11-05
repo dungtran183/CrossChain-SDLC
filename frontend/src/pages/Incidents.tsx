@@ -1,7 +1,7 @@
 // Thư viện sự cố cầu nối liên chuỗi tiêu biểu (số liệu ước tính theo báo cáo công khai) và chuyên đề nào phòng vệ.
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ArrowRight, Flame, PlayCircle, ShieldCheck, Swords } from "lucide-react";
 import { useT } from "../i18n/useT";
@@ -15,7 +15,16 @@ import { COLOR, INCIDENTS, type ModId } from "./incidents/data";
 export default function Incidents() {
   const { t, lang } = useT();
   const [filter, setFilter] = useState<ModId | "all">("all");
-  const [pick, setPick] = useState("ronin");
+  const [sp] = useSearchParams();
+  const qid = sp.get("id");
+  const [pick, setPick] = useState(INCIDENTS.some((x) => x.id === qid) ? (qid as string) : "ronin");
+  // mở từ liên kết ngoài (?id=…): chọn sự cố và cuộn tới trình phát
+  useEffect(() => {
+    if (!qid || !INCIDENTS.some((x) => x.id === qid)) return;
+    setPick(qid);
+    const h = window.setTimeout(() => focusAnchor("inc-player"), 450);
+    return () => window.clearTimeout(h);
+  }, [qid]);
   const picked = INCIDENTS.find((x) => x.id === pick) ?? INCIDENTS[0];
   const watch = (id: string) => {
     setPick(id);

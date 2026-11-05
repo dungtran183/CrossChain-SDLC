@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Flame, FlaskConical, GitBranch, House, Menu, Moon, Sun, X } from "lucide-react";
+import { Flame, FlaskConical, GitBranch, House, Menu, Moon, Network, Sun, Target, Waypoints, X } from "lucide-react";
 import { useT, type Lang } from "./i18n/useT";
 import { MODULES } from "./modules/registry";
 import { MODE, checkHealth } from "./lib/api";
@@ -13,9 +13,13 @@ import { Loading } from "./components/States";
 import { useToast } from "./components/Toast";
 import { onQuest } from "./lib/progress";
 import { useTheme } from "./lib/themeMode";
+import SidebarNetwork from "./components/SidebarNetwork";
 
 const Playground = lazy(() => import("./pages/Playground"));
 const Incidents = lazy(() => import("./pages/Incidents"));
+const Protocols = lazy(() => import("./pages/Protocols"));
+const Iob = lazy(() => import("./pages/Iob"));
+const Method = lazy(() => import("./pages/Method"));
 const REPO = "https://github.com/dungtran183/CrossChain-SDLC";
 
 function LangToggle() {
@@ -84,6 +88,20 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
         </span>
         {t("app.home")}
       </NavLink>
+      <div className="label mt-4 mb-1 px-3">{t("app.background")}</div>
+      {[
+        { to: "/iob", icon: <Network className="h-4 w-4 text-sky-300" />, bg: "bg-sky-500/15", k: "iob" },
+        { to: "/protocols", icon: <Waypoints className="h-4 w-4 text-violet-300" />, bg: "bg-violet-500/15", k: "protocols" },
+        { to: "/method", icon: <Target className="h-4 w-4 text-emerald-300" />, bg: "bg-emerald-500/15", k: "method" },
+      ].map((x) => (
+        <NavLink key={x.to} to={x.to} onClick={onNavigate} className={({ isActive }) => item(isActive)}>
+          <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${x.bg}`}>{x.icon}</span>
+          <span className="min-w-0">
+            <span className="block font-semibold">{t(`app.nav.${x.k}`)}</span>
+            <span className="block truncate text-[11px] text-slate-400">{t(`app.nav.${x.k}Sub`)}</span>
+          </span>
+        </NavLink>
+      ))}
       <div className="label mt-4 mb-1 px-3">{t("app.modules")}</div>
       {MODULES.map((m) => (
         <NavLink key={m.id} to={m.path} onClick={onNavigate} className={({ isActive }) => item(isActive)}>
@@ -151,8 +169,12 @@ export default function App() {
             <div className="brand-title bg-gradient-to-r from-cyan-300 via-violet-300 to-amber-200 bg-clip-text font-display text-base font-extrabold leading-tight tracking-tight text-transparent">{t("app.title")}</div>
             <div className="text-xs text-slate-400">{t("app.subtitle")}</div>
           </div>
-          <NavItems />
-          <div className="mt-auto space-y-3 px-2">
+          {/* menu cuộn được khi màn hình thấp; minh họa mạng co giãn lấp khoảng trống còn lại (ẩn khi hết chỗ) */}
+          <div className="-mx-1 flex min-h-0 flex-1 flex-col overflow-y-auto px-1">
+            <NavItems />
+            <SidebarNetwork />
+          </div>
+          <div className="mt-3 space-y-3 px-2">
             <a href={REPO} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs text-slate-400 hover:text-white">
               <GitBranch className="h-3.5 w-3.5" /> {t("app.source")}
             </a>
@@ -193,6 +215,9 @@ export default function App() {
                     ))}
                     <Route path="/playground" element={<Playground />} />
                     <Route path="/incidents" element={<Incidents />} />
+                    <Route path="/protocols" element={<Protocols />} />
+                    <Route path="/iob" element={<Iob />} />
+                    <Route path="/method" element={<Method />} />
                     <Route path="*" element={<Home />} />
                   </Routes>
                 </Suspense>
@@ -210,7 +235,7 @@ export default function App() {
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="glass h-full w-72 rounded-none bg-surface-1/95 p-4"
+              className="glass h-full w-72 overflow-y-auto rounded-none bg-surface-1/95 p-4"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 flex items-center justify-between px-2">

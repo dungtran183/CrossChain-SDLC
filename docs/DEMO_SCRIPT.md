@@ -18,6 +18,20 @@ Màn hình chiếu ≥ 1280 px; chọn ngôn ngữ VI/EN ở góc phải trên.
 
 ---
 
+## Bối cảnh & động lực / Context & motivation (≈ 3 phút)
+Ba trang trong mục **Bối cảnh & động lực** của thanh bên — dùng ở phần mở đầu để dẫn tới câu hỏi nghiên cứu. / The three pages under **Context & motivation** in the sidebar, used as the opening that leads to the research questions.
+
+| # | Thao tác / Action | Thuyết minh (VI) | Narration (EN) |
+|---|---|---|---|
+| 1 | **Internet of Blockchains**: để bản đồ tự phát lại sự cố | Các chuỗi nối với nhau bằng cầu; bản đồ đi qua 13 sự cố theo thời gian, cầu bị tấn công lóe đỏ và tổn thất cộng dồn. Rê chuột lên một chuỗi để thấy các cầu của nó. | Chains linked by bridges; the map replays 13 incidents over time with a running loss total. |
+| 2 | Kéo thanh **Số chuỗi N** trong *Bài toán N²* | N(N−1)/2 cầu nối, mỗi cầu một giả định tin cậy; với xác suất minh họa p, khả năng có ít nhất một sự cố mỗi năm tiến nhanh tới 100%. | Pairwise bridges grow as N²; the chance of at least one incident a year approaches 100%. |
+| 3 | Chọn lớp **L3 · Xác minh** trong *Mô hình phân lớp* | Thông điệp đi xuống ngăn xếp chuỗi A, qua truyền tải, lên ngăn xếp chuỗi B; mỗi lớp có mối đe dọa và chuyên đề phòng vệ riêng. | Five layers, each with its own threats and defending study. |
+| 4 | **Giao thức liên chuỗi**: chọn **Notary**, rồi chuyển **Luồng chuẩn → Sự cố / tấn công** | Cùng một cơ chế chạy hai lần: lần đầu đúng thiết kế, lần sau với 3/5 khóa bị chiếm — chữ ký vẫn “hợp lệ”, kho bị rút. Lặp lại với HTLC (Bob mất kết nối), Light client (bằng chứng giả kiểu BNB Bridge), Optimistic (gốc 0x00 kiểu Nomad). | Each mechanism runs twice — as designed, then as it failed in a real incident. |
+| 5 | Bấm một dòng trong **bảng so sánh** / một điểm trên **tam giác bất khả** | Không cơ chế nào vừa không cần tin cậy, vừa dễ mở rộng, vừa tổng quát — luôn còn một giả định có thể gãy. | No mechanism is trustless, extensible and general at once. |
+| 6 | **Động lực & phương pháp**: trong *Mô phỏng phủ rủi ro*, bật lần lượt CĐ1 → CĐ2 → CĐ3 | Một chuyên đề chỉ phủ 45–85% tổn thất của 9 vụ; cả ba mới phủ 100% — lập luận định lượng cho Secure SDLC khép kín. Tiếp theo: ma trận khoảng trống, chu trình nghiên cứu và bảng truy vết RQ → phương pháp → thước đo. | One study covers 45–85% of the losses; all three cover 100%. Then the gap matrix, research cycle and RQ traceability. |
+
+---
+
 ## Bản đồ khung Secure SDLC / Secure SDLC map (≈ 1 phút)
 **VI.** “Khung Secure SDLC của luận án là một vòng đời khép kín gồm năm giai đoạn; kết quả đánh giá ở giai đoạn 5 phản hồi trở lại thiết kế. Ở trung tâm là cây cầu liên chuỗi — đối tượng cần bảo vệ. Ba cung màu là phạm vi ba chuyên đề: CĐ1 ở thiết kế, CĐ2 ở lập trình và kiểm toán, CĐ3 ở vận hành và tối ưu.” Chọn lần lượt các giai đoạn để giới thiệu mối đe dọa và đóng góp, rồi “Mở chuyên đề”. Kéo xuống *Bức tranh tổng thể*: rê chuột lên CĐ1/CĐ2/CĐ3 để thấy mỗi chuyên đề phòng vệ chặng nào. Trang *Sự cố thực tế* nối 9 vụ tấn công lớn với phần trình diễn tương ứng.
 **EN.** “The thesis Secure SDLC is a closed five-phase lifecycle; evaluation in phase 5 feeds back into design. The cross-chain bridge in the centre is the asset to protect; three coloured arcs mark the scope of the three studies.” Select each phase to introduce threats and contributions, then “Open study”.

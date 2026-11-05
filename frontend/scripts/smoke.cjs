@@ -3,8 +3,8 @@
 const { chromium } = require("playwright");
 
 const BASE = (process.env.BASE || "http://localhost:4173/").replace(/\/?$/, "/");
-const ROUTES = ["/", "/cd1", "/cd2", "/cd3", "/incidents", "/playground"];
-const RAW_KEY = /\b(cd[123]|inc|world|home|primer|newbie|dock|hint|pace|common|quest|app)\.[a-z][A-Za-z0-9]*(\.[A-Za-z0-9]+)*\b/;
+const ROUTES = ["/", "/iob", "/protocols", "/method", "/cd1", "/cd2", "/cd3", "/incidents", "/playground"];
+const RAW_KEY = /\b(cd[123]|inc|world|home|primer|newbie|dock|hint|pace|common|quest|app|proto|iob|method|ctx)\.[a-z][A-Za-z0-9]*(\.[A-Za-z0-9]+)*\b/;
 const failures = [];
 const ok = (cond, msg) => {
   if (!cond) failures.push(msg);
@@ -129,6 +129,56 @@ const inViewport = (box, vp) => box && box.y >= 0 && box.x >= 0 && box.y + box.h
     await p.locator("#inc-player button[title]").last().click();
     await p.waitForTimeout(1200);
     ok(await p.getByText("Giữ lại được").isVisible(), "sự cố: so sánh kết cục ở bước cuối");
+    await p.close();
+  }
+
+  // 7) giao thức liên chuỗi: đủ 6 mô phỏng, mỗi mô phỏng có hai chế độ với lời kể khác nhau
+  {
+    const p = await page(browser);
+    await p.goto(url("/protocols"));
+    await p.waitForTimeout(1500);
+    let modesOk = 0;
+    for (const id of ["notary", "htlc", "sidechain", "relay", "hub", "optimistic"]) {
+      await p.getByTestId(`proto-tab-${id}`).click();
+      await p.waitForTimeout(500);
+      const a = await p.getByTestId("proto-narration").innerText();
+      await p.getByTestId("proto-player").getByRole("tab").nth(1).click();
+      await p.waitForTimeout(500);
+      const b = await p.getByTestId("proto-narration").innerText();
+      if (a && b && a !== b) modesOk++;
+    }
+    ok(modesOk === 6, `giao thức: 6/6 mô phỏng có luồng chuẩn và sự cố (${modesOk})`);
+    const before = await p.getByTestId("proto-narration").innerText();
+    await p.getByTestId("proto-next").click();
+    await p.waitForTimeout(500);
+    ok((await p.getByTestId("proto-narration").innerText()) !== before, "giao thức: nút bước sau chuyển lời kể");
+    ok(p.errors.length === 0, `giao thức: không lỗi console ${p.errors.join(" | ")}`);
+    await p.close();
+  }
+
+  // 8) Internet of Blockchains: bản đồ tự phát sự cố; thanh bên có mục Bối cảnh
+  {
+    const p = await page(browser, { pace: 1.5 });
+    await p.goto(url("/iob"));
+    await p.waitForTimeout(1200);
+    const first = await p.getByTestId("iob-event").innerText();
+    await p.waitForTimeout(3800);
+    ok((await p.getByTestId("iob-event").innerText()) !== first, "IoB: bản đồ tự chuyển sang sự cố kế tiếp");
+    ok((await p.locator("aside nav a[href='#/protocols']").count()) === 1, "thanh bên: có mục Giao thức liên chuỗi");
+    await p.close();
+  }
+
+  // 9) động lực & phương pháp: bật đủ ba chuyên đề thì phủ 100% tổn thất
+  {
+    const p = await page(browser);
+    await p.goto(url("/method"));
+    await p.waitForTimeout(1200);
+    await p.getByTestId("method-coverage").scrollIntoViewIfNeeded();
+    await p.waitForTimeout(800);
+    await p.getByTestId("cover-cd2").click();
+    await p.getByTestId("cover-cd3").click();
+    await p.waitForTimeout(1500);
+    ok((await p.getByTestId("cover-pct").innerText()).startsWith("100"), "phương pháp: cả ba chuyên đề phủ 100% tổn thất");
     await p.close();
   }
 

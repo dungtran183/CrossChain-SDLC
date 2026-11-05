@@ -15,7 +15,17 @@
     "author": "NCS Trần Tuấn Dũng · HD: PGS.TS. Phạm Văn Hậu, PGS.TS. Nguyễn Tấn Cầm",
     "replayHint": "Dữ liệu phát lại từ kịch bản ghi sẵn; chạy local để có backend thật.",
     "toDark": "Chuyển sang giao diện tối",
-    "toLight": "Chuyển sang giao diện sáng"
+    "toLight": "Chuyển sang giao diện sáng",
+    "background": "Bối cảnh & động lực",
+    "nav": {
+      "iob": "Internet of Blockchains",
+      "iobSub": "bản đồ chuỗi & cầu nối",
+      "protocols": "Giao thức liên chuỗi",
+      "protocolsSub": "mô phỏng 6 cơ chế",
+      "method": "Động lực & phương pháp",
+      "methodSub": "khoảng trống, RQ, đánh giá"
+    },
+    "iobWidget": "Internet of Blockchains"
   },
   "home": {
     "heroTitle": "An toàn liên chuỗi xuyên suốt vòng đời phần mềm",
@@ -1026,7 +1036,10 @@
     "cd2": "Bấm \"Chạy kịch bản tấn công\", hoặc chọn một hợp đồng rồi xem M1→M4 và thử tấn công thật ở Exploit lab.",
     "cd3": "Bấm \"Chạy kịch bản tấn công\", hoặc chọn kịch bản rồi Chạy — khung Diễn giải sẽ kể lại từng tick bằng lời thường.",
     "incidents": "Chọn một vụ tấn công để xem từng bước: bên trái là thực tế, bên phải là khi có công cụ của luận án.",
-    "playground": "Thử trực tiếp các thuật toán lõi: băm, chữ ký, Merkle, chia sẻ bí mật."
+    "playground": "Thử trực tiếp các thuật toán lõi: băm, chữ ký, Merkle, chia sẻ bí mật.",
+    "iob": "Rê chuột lên một chuỗi để xem các cầu nối của nó; bản đồ tự phát lại các vụ tấn công theo thời gian.",
+    "protocols": "Chọn một giao thức, rồi chuyển giữa “Luồng chuẩn” và “Sự cố / tấn công” để xem giả định tin cậy gãy ở đâu.",
+    "method": "Bật/tắt từng chuyên đề trong mô phỏng phủ rủi ro để thấy vì sao cần cả ba giai đoạn."
   },
   "primer": {
     "badge": "Hiểu nhanh cho người mới",
@@ -1046,5 +1059,649 @@
       "Luận án đóng góp gì?|Ba công cụ cho ba chặng: CĐ1 thiết kế giao thức xác minh bằng chứng mật mã và chữ ký ngưỡng (khó giả mạo); CĐ2 tìm lỗ hổng hợp đồng cầu nối trước khi triển khai; CĐ3 giám sát cầu nối khi đang chạy và phản ứng có con người phê duyệt."
     ],
     "more": "Xem các vụ tấn công thật"
+  },
+  "proto": {
+    "badge": "Mô phỏng giao thức",
+    "title": "Các cơ chế giao tiếp liên chuỗi — hoạt động và thất bại thế nào",
+    "body": "Sáu họ cơ chế chính để hai blockchain trao đổi tài sản và thông điệp, theo phân loại của Buterin (2016) và các khảo sát sau này. Mỗi mô phỏng có hai chế độ: luồng chuẩn và một sự cố/tấn công đã xảy ra trong thực tế — để thấy giả định tin cậy của từng cơ chế gãy ở đâu.",
+    "pick": "Chọn giao thức",
+    "modeLabel": "Chế độ mô phỏng",
+    "mode": {
+      "normal": "Luồng chuẩn",
+      "attack": "Sự cố / tấn công"
+    },
+    "idea": "Ý tưởng",
+    "trustModel": "Giả định tin cậy",
+    "pros": "Điểm mạnh",
+    "cons": "Vấn đề tồn tại",
+    "incidents": "Sự cố & điểm yếu đã ghi nhận",
+    "thesisLink": "Luận án xử lý ở đâu",
+    "compare": "So sánh sáu cơ chế (bấm một dòng để mô phỏng)",
+    "compareNote": "Thang 1–5 là đánh giá định tính để so sánh tương đối; nhiều chấm hơn = tốt hơn ở tiêu chí đó. Tổn thất là tổng các sự cố liệt kê ở trên (ước tính).",
+    "col": {
+      "name": "Cơ chế",
+      "trust": "Ít phải tin",
+      "general": "Tổng quát",
+      "speed": "Tốc độ",
+      "cost": "Rẻ on-chain",
+      "extensible": "Dễ mở rộng",
+      "losses": "Tổn thất đã ghi nhận"
+    },
+    "tri": {
+      "title": "Tam giác bất khả của khả năng tương tác",
+      "body": "Một giao thức khó đạt cùng lúc cả ba: không cần tin cậy, dễ mở rộng sang chuỗi mới và truyền được dữ liệu tùy ý (A. Bhuptani, Connext, 2021). Vị trí trên hình mang tính minh họa định tính.",
+      "trustless": "Không cần tin cậy",
+      "extensible": "Dễ mở rộng",
+      "general": "Tổng quát"
+    },
+    "kind": {
+      "hack": "Bị tấn công",
+      "bug": "Lỗ hổng",
+      "foiled": "Bị chặn kịp",
+      "attack": "Tấn công đã công bố"
+    },
+    "refs": "Tài liệu: V. Buterin, Chain Interoperability (R3, 2016) · A. Back et al., Enabling Blockchain Innovations with Pegged Sidechains (2014) · M. Herlihy, Atomic Cross-Chain Swaps (PODC 2018) · R. Han, H. Lin, J. Yu, On the Optionality and Fairness of Atomic Swaps (AFT 2019) · J. Harris, A. Zohar, Flood & Loot (AFT 2020) · A. Zamyatin et al., SoK: Communication Across Distributed Ledgers (FC 2021) · R. Belchior et al., A Survey on Blockchain Interoperability (ACM CSUR 2021) · T. Xie et al., zkBridge (ACM CCS 2022) · A. Augusto et al., SoK: Security and Privacy of Blockchain Interoperability (IEEE S&P 2024). Số liệu sự cố tổng hợp từ báo cáo công khai của các dự án và tổ chức phân tích bảo mật.",
+    "s": {
+      "chainA": "Chuỗi A",
+      "chainB": "Chuỗi B",
+      "vault": "kho tài sản (vault)",
+      "mintContract": "hợp đồng mint",
+      "user": "Người dùng",
+      "attacker": "Kẻ tấn công"
+    },
+    "notary": {
+      "name": "Notary scheme (công chứng viên)",
+      "short": "Notary",
+      "family": "Bên xác nhận",
+      "tag": "Ủy ban k-of-n quan sát rồi ký xác nhận",
+      "examplesLine": "Ronin · Wormhole (guardian) · Multichain (MPC) · sàn tập trung",
+      "idea": "Một bên trung gian — một sàn, một nhóm multisig hay một ủy ban MPC/TSS — theo dõi sự kiện trên chuỗi nguồn và ký xác nhận cho chuỗi đích. Chuỗi đích không tự kiểm được chuỗi nguồn; nó chỉ kiểm chữ ký của ủy ban có đủ ngưỡng k-of-n hay không.",
+      "trustText": "Tin vào đa số trung thực của ủy ban: chỉ cần k khóa bị chiếm hay thông đồng là có thể ký bất kỳ lệnh nào. An toàn của cầu nối = an toàn của k khóa.",
+      "pros": [
+        "Đơn giản, nhanh, rẻ; dễ triển khai",
+        "Hỗ trợ chuỗi bất kỳ và thông điệp tùy ý",
+        "Dễ thêm chuỗi mới (chỉ cần ủy ban theo dõi thêm)"
+      ],
+      "cons": [
+        "Tập trung hóa: điểm lỗi đơn lẻ nằm ở tập khóa",
+        "Quản lý khóa, quyền “ký hộ” dễ sai (Ronin)",
+        "Ngưỡng thấp hoặc nhiều khóa cùng một chủ thể (Harmony 2-of-5, Multichain)",
+        "Hoạt động off-chain mờ đục, khó kiểm toán và giám sát"
+      ],
+      "normal": [
+        "Người dùng khóa 10 token vào hợp đồng kho trên chuỗi A. Hợp đồng phát sự kiện Locked(user, 10).",
+        "Năm thành viên độc lập của ủy ban công chứng theo dõi chuỗi A và cùng thấy sự kiện Locked.",
+        "Mỗi thành viên ký xác nhận “user đã khóa 10 token”. Cần tối thiểu k = 3 trên n = 5 chữ ký.",
+        "Gói chữ ký đạt ngưỡng được chuyển tới hợp đồng mint trên chuỗi B.",
+        "Chuỗi B chỉ kiểm chữ ký có thuộc ủy ban và đủ ngưỡng hay không — đủ thì mint 10 wToken cho người dùng. Chuỗi B không hề tự nhìn thấy chuỗi A."
+      ],
+      "attack": [
+        "Kẻ tấn công lừa đảo (phishing) một đơn vị vận hành và chiếm được 3 trong 5 khóa của ủy ban — vừa đủ ngưỡng.",
+        "Chúng tự soạn lệnh “mở khóa toàn bộ kho cho kẻ tấn công”. Trên chuỗi B không hề có lệnh đốt (burn) tương ứng.",
+        "Ba khóa bị chiếm ký lệnh giả. Về mặt mật mã, đây là 3/5 chữ ký hoàn toàn hợp lệ.",
+        "Hợp đồng kho trên chuỗi A thấy đủ chữ ký nên giải phóng toàn bộ tài sản về ví kẻ tấn công.",
+        "Hai thành viên trung thực không thể ngăn lại và không hệ thống nào báo động. Ở Ronin (2022), vụ việc bị phát hiện sau 6 ngày."
+      ],
+      "thesis": {
+        "cd1": "Π_univ thay “tin chữ ký” bằng “tin bằng chứng”: chuỗi đích kiểm ZKP và chữ ký ngưỡng t-of-n, loại signer trùng và khóa cùng một chủ thể, chống phát lại bằng nonce.",
+        "cd3": "CrossSentry ghép sự kiện hai chuỗi: lệnh mở khóa không có burn tương ứng bị gắn cờ ngay, R4/R5 tạm dừng cầu nối có phê duyệt — thay vì sau 6 ngày."
+      },
+      "committee": "Ủy ban công chứng 3-of-5",
+      "signEach": "mỗi notary ký xác nhận",
+      "keysStolen": "3/5 khóa bị chiếm",
+      "noBurn": "không có burn",
+      "validSig": "chữ ký hợp lệ 3/5 ✓",
+      "late": "phát hiện sau 6 ngày"
+    },
+    "htlc": {
+      "name": "HTLC — hoán đổi nguyên tử",
+      "short": "HTLC",
+      "family": "Khóa băm",
+      "tag": "Khóa băm + khóa thời gian, không trung gian",
+      "examplesLine": "Atomic swap BTC↔LTC · Lightning Network · Interledger",
+      "idea": "Hai bên khóa tài sản trên hai chuỗi bằng cùng một khóa băm H = h(s) và hai hạn chót T1 > T2. Ai đưa ra được bí mật s thì mở được; quá hạn thì chủ cũ lấy lại. Khi Alice dùng s để nhận tài sản của Bob, s bị lộ công khai — Bob dùng chính s đó để nhận tài sản của Alice.",
+      "trustText": "Không cần bên thứ ba: chỉ tin vào hàm băm và khóa thời gian của hai chuỗi. Nhưng an toàn dựa trên giả định đồng bộ: hai bên phải trực tuyến và giao dịch phải lên khối trước hạn chót.",
+      "pros": [
+        "Không trung gian giữ tài sản, không cần ủy ban",
+        "Chỉ cần hai chuỗi hỗ trợ cùng hàm băm và khóa thời gian",
+        "Tính nguyên tử: cả hai cùng xảy ra hoặc cùng hoàn lại"
+      ],
+      "cons": [
+        "Chỉ hoán đổi tài sản, không truyền được thông điệp tùy ý",
+        "Phải trực tuyến; tắc nghẽn hay bị chặn giao dịch là mất tiền",
+        "“Quyền chọn miễn phí”: bên đi trước có thể bỏ cuộc khi giá bất lợi",
+        "Cùng giá trị H trên hai chuỗi làm liên kết được hai giao dịch (lộ riêng tư)",
+        "Vốn bị khóa lâu, phải tìm đối tác và thanh khoản"
+      ],
+      "normal": [
+        "Alice chọn bí mật s, tính H = SHA-256(s) và gửi H cho Bob (ngoài chuỗi). Chỉ Alice biết s.",
+        "Alice khóa 1 coin trên chuỗi A vào HTLC_A: Bob nhận được nếu đưa ra s thỏa h(s) = H; quá T1 = 48 giờ thì hoàn cho Alice.",
+        "Bob kiểm HTLC_A trên chuỗi A, rồi khóa token trên chuỗi B vào HTLC_B với cùng H, dành cho Alice, hạn T2 = 24 giờ — ngắn hơn T1.",
+        "Alice gửi s cho HTLC_B để nhận token trên chuỗi B. Lúc này s nằm công khai trên chuỗi B.",
+        "Bob đọc s từ chuỗi B và dùng nó mở HTLC_A trên chuỗi A trước hạn T1, nhận coin của Alice.",
+        "Hoán đổi hoàn tất mà không ai giữ hộ tài sản. Nếu Alice không bao giờ lộ s, cả hai chỉ cần chờ hết hạn để lấy lại tiền."
+      ],
+      "attack": [
+        "Thiết lập như bình thường: cùng khóa băm H; HTLC_A (hạn 48 giờ) trên chuỗi A và HTLC_B (hạn 24 giờ) trên chuỗi B đều đã khóa tài sản.",
+        "Alice chờ tới giờ thứ 23 — sát hạn T2 — mới lộ s để nhận token trên chuỗi B. Cô có thể đã chờ xem giá biến động (“quyền chọn miễn phí”).",
+        "Bob mất kết nối, hoặc giao dịch nhận coin của anh bị nghẽn phí / bị đối tác gian thay thế liên tục (replacement cycling) nên không lên được khối.",
+        "Quá giờ thứ 48, T1 hết hạn. Alice gọi hoàn tiền trên HTLC_A và lấy lại coin của mình.",
+        "Kết cục: Alice giữ cả coin lẫn token, Bob mất trắng. Tính nguyên tử của HTLC chỉ đúng khi các bên luôn trực tuyến và mạng không bị tắc nghẽn."
+      ],
+      "thesis": {
+        "cd1": "Cùng giá trị H xuất hiện trên hai chuỗi khiến người quan sát liên kết được hai giao dịch. Π_univ chứng minh điều kiện bằng ZKP và tiết lộ chọn lọc, không phải công khai một bí mật dùng chung.",
+        "cd3": "Giám sát hai chuỗi phát hiện giao dịch bị trì hoãn và mẫu chặn/thay thế gần hạn chót (kịch bản Trì hoãn của CrossSentry)."
+      },
+      "clock": "đồng hồ chung",
+      "sPublic": "s công khai trên B",
+      "offchain": "kênh ngoài chuỗi",
+      "atomic": "hoán đổi nguyên tử ✓",
+      "bothLocked": "hai HTLC đã khóa",
+      "stuck": "tx bị chặn",
+      "offline": "Bob mất kết nối",
+      "refund": "Alice hoàn tiền",
+      "unfair": "Alice giữ cả hai, Bob mất"
+    },
+    "sidechain": {
+      "name": "Sidechain & two-way peg",
+      "short": "Sidechain",
+      "family": "Chuỗi phụ",
+      "tag": "Neo tài sản sang chuỗi phụ có đồng thuận riêng",
+      "examplesLine": "Liquid (11-of-15) · Rootstock · Polygon PoS · Ronin",
+      "idea": "Tài sản được khóa trên chuỗi chính (peg-in) và một lượng tương đương được phát hành trên sidechain — chuỗi có đồng thuận riêng, nhanh và rẻ hơn. Khi rút về (peg-out), token bị đốt trên sidechain và liên minh/validator ký mở khóa trên chuỗi chính; sidechain có thể định kỳ ghi checkpoint lên chuỗi chính.",
+      "trustText": "An toàn không kế thừa từ chuỗi chính: phải tin vào liên minh giữ peg (federation) và đa số validator của sidechain — thường chỉ vài đến vài chục nút.",
+      "pros": [
+        "Tăng thông lượng, phí thấp, thử được tính năng mới",
+        "Chuỗi chính không phải thay đổi",
+        "Checkpoint hạn chế việc viết lại lịch sử sidechain"
+      ],
+      "cons": [
+        "Ít validator → dễ bị chiếm đa số hơn chuỗi chính",
+        "Chuỗi chính không tự kiểm được trạng thái sidechain",
+        "Peg-in/peg-out chậm (chờ xác nhận, thời gian thách thức)",
+        "Lỗi trong hợp đồng/bằng chứng thoát (Polygon Plasma 2021)"
+      ],
+      "normal": [
+        "Peg-in: người dùng gửi 1 coin vào địa chỉ/hợp đồng peg trên chuỗi chính. Coin bị khóa.",
+        "Chờ đủ số xác nhận trên chuỗi chính (Liquid chờ 102 khối Bitcoin) để tránh đảo khối; liên minh theo dõi.",
+        "Liên minh (k-of-n) ký và sidechain phát hành 1 token neo giá cho người dùng.",
+        "Người dùng giao dịch trên sidechain: khối nhanh hơn, phí thấp hơn nhiều so với chuỗi chính.",
+        "Peg-out: người dùng đốt token trên sidechain, sidechain ghi checkpoint lên chuỗi chính, liên minh ký mở khóa và coin trở về người dùng."
+      ],
+      "attack": [
+        "Chuỗi chính được hàng nghìn thợ đào/validator bảo vệ — còn sidechain và peg chỉ dựa vào một nhóm nhỏ (Ronin: 9 validator).",
+        "Kẻ tấn công chiếm được đa số validator/khóa liên minh của sidechain (Ronin 2022: 5/9 khóa).",
+        "Đa số bị chiếm ký một lệnh peg-out giả — không có token nào bị đốt trên sidechain.",
+        "Hợp đồng peg trên chuỗi chính chỉ kiểm chữ ký của liên minh nên mở khóa, kho bị rút cạn.",
+        "Chuỗi chính vẫn an toàn tuyệt đối, nhưng peg thì không: chuỗi chính không có cách nào kiểm trạng thái thật của sidechain."
+      ],
+      "thesis": {
+        "cd1": "Ủy ban ngưỡng phân tán với thành viên độc lập và bằng chứng kiểm được trên chuỗi đích làm cho peg-out không thể chỉ dựa vào “đủ chữ ký”.",
+        "cd3": "Peg-out không có burn tương ứng trên sidechain là bất thường kinh điển: CrossSentry ghép sự kiện hai chuỗi để gắn cờ và tạm dừng có phê duyệt."
+      },
+      "main": "Chuỗi chính",
+      "mainSub": "an ninh lớn · khối chậm",
+      "peg": "Peg · kho khóa",
+      "side": "Sidechain",
+      "sideSub": "đồng thuận riêng · khối nhanh",
+      "pegged": "Token neo giá",
+      "fed": "Liên minh / validator sidechain",
+      "pegIn": "peg-in: khóa 1 coin",
+      "confirm": "chờ đủ xác nhận…",
+      "fast": "nhanh · phí thấp",
+      "pegOut": "peg-out: đốt → mở khóa",
+      "strong": "hàng nghìn validator",
+      "weak": "chỉ vài validator",
+      "majority": "đa số bị chiếm",
+      "fakeOut": "peg-out giả (không burn)",
+      "lesson": "chuỗi chính an toàn — peg thì không"
+    },
+    "relay": {
+      "name": "Chain relay / light client",
+      "short": "Light client",
+      "family": "Chuyển tiếp",
+      "tag": "Chuỗi đích tự kiểm tiêu đề khối và bằng chứng Merkle",
+      "examplesLine": "BTC Relay · IBC (Cosmos) · Rainbow Bridge · zkBridge",
+      "idea": "Chuỗi đích chạy một light client của chuỗi nguồn dưới dạng hợp đồng: relayer chuyển tiếp tiêu đề khối, hợp đồng kiểm chữ ký đồng thuận (hoặc bằng chứng công việc) của từng tiêu đề và lưu gốc trạng thái. Muốn chứng minh một giao dịch, người dùng nộp bằng chứng Merkle từ lá tới gốc đã lưu. Biến thể zkBridge nén việc kiểm này thành một bằng chứng ZK.",
+      "trustText": "Gần như không cần tin bên thứ ba: relayer chỉ cần còn sống, không cần trung thực. An toàn bằng an toàn đồng thuận của chuỗi nguồn — với điều kiện mã xác minh không có lỗi.",
+      "pros": [
+        "Tối thiểu hóa tin cậy: chuỗi đích tự kiểm",
+        "Relayer không thể giả mạo, chỉ có thể làm chậm",
+        "Truyền được thông điệp tùy ý kèm bằng chứng"
+      ],
+      "cons": [
+        "Chi phí kiểm tiêu đề on-chain cao (khác thuật toán chữ ký, hàm băm)",
+        "Mỗi cặp chuỗi cần một light client riêng → khó mở rộng",
+        "Phụ thuộc tính chung cuộc; rủi ro đảo khối, tấn công tầm xa",
+        "Lỗi trong bộ xác minh bằng chứng trở thành điểm tin cậy mới (BNB Bridge)"
+      ],
+      "normal": [
+        "Relayer liên tục chuyển tiêu đề khối #100–#103 của chuỗi A sang hợp đồng light client trên chuỗi B.",
+        "Light client kiểm chữ ký đồng thuận của validator chuỗi A trên từng tiêu đề rồi lưu lại gốc trạng thái r100…r103.",
+        "Giao dịch của người dùng nằm trong khối #102. Bằng chứng Merkle π gồm các hash anh em trên đường từ lá tx tới gốc được dựng.",
+        "Bằng chứng π được nộp lên chuỗi B. Hợp đồng tự tính lại gốc từ π và so với r102 đã lưu — khớp.",
+        "Ứng dụng cầu nối trên B thực thi (mint). Không ai phải tin relayer; chỉ cần tin đồng thuận của chuỗi A."
+      ],
+      "attack": [
+        "Kẻ tấn công dựng một bằng chứng cho một khoản nạp chưa từng xảy ra trên chuỗi nguồn (lá giả).",
+        "Bộ xác minh bằng chứng (IAVL) có lỗi: không kiểm chặt cấu trúc bằng chứng, nên đường băm giả vẫn cho ra đúng gốc đã lưu.",
+        "Chuỗi đích chấp nhận và mint 2 triệu BNB không bảo chứng (BNB Bridge, 10/2022, ≈ 570 triệu USD).",
+        "Một phần tài sản bị chuyển sang các chuỗi khác trước khi validator phối hợp dừng toàn bộ chuỗi — một biện pháp rất tập trung.",
+        "Bài học: tối thiểu hóa tin cậy không có nghĩa là không có lỗi — mã xác minh bằng chứng chính là điểm tin cậy mới, cần được kiểm toán."
+      ],
+      "thesis": {
+        "cd1": "Π_univ ràng buộc cam kết với lá (leaf binding) và kiểm bằng chứng Merkle cùng ngữ cảnh chuỗi/nonce, nên lá giả hoặc bằng chứng dùng sai ngữ cảnh bị từ chối on-chain.",
+        "cd2": "CrossGuard coi bộ xác minh là thành phần phải kiểm toán: thiếu kiểm chứng thông điệp được phát hiện và gắn bất biến INV-DOMAIN/INV-NONCE trước khi triển khai."
+      },
+      "headers": "tiêu đề khối",
+      "lc": "light client của A",
+      "app": "Ứng dụng cầu nối",
+      "relayer": "relayer (không cần tin)",
+      "checkSig": "✓ chữ ký đồng thuận A",
+      "buildProof": "dựng bằng chứng Merkle π",
+      "trustless": "chỉ tin đồng thuận chuỗi A",
+      "fakeLeaf": "lá giả: khoản nạp không tồn tại",
+      "bug": "lỗi xác minh: π* vẫn khớp gốc",
+      "halt": "⏸ dừng toàn chuỗi",
+      "lesson": "mã xác minh = điểm tin cậy mới"
+    },
+    "hub": {
+      "name": "Relay chain / hub (blockchain of blockchains)",
+      "short": "Relay chain",
+      "family": "Hệ sinh thái",
+      "tag": "Chuỗi con dùng chung bảo mật qua chuỗi chuyển tiếp",
+      "examplesLine": "Polkadot (XCM) · Cosmos (IBC) · Poly Network",
+      "idea": "Thay vì nối từng cặp, các chuỗi con (parachain/zone) nối vào một chuỗi chuyển tiếp trung tâm. Ở Polkadot, validator của relay chain kiểm và chốt khối của mọi parachain (bảo mật dùng chung); thông điệp XCM đi giữa các chuỗi con mà chỉ cần tin đồng thuận của hub. Cosmos đi theo hướng mỗi zone tự giữ bảo mật và nối nhau bằng IBC.",
+      "trustText": "Tin vào đồng thuận của chuỗi chuyển tiếp — trong hệ sinh thái là mạnh. Nhưng bảo mật dùng chung chỉ bảo vệ đồng thuận, không bảo vệ logic ứng dụng của từng chuỗi con; chuỗi ngoài hệ sinh thái vẫn cần cầu nối.",
+      "pros": [
+        "Giảm số kết nối từ N(N−1)/2 xuống N",
+        "Bảo mật dùng chung, định dạng thông điệp thống nhất",
+        "Nhanh trong nội bộ hệ sinh thái"
+      ],
+      "cons": [
+        "Hub là điểm tập trung rủi ro hệ thống",
+        "Chỉ đồng nhất trong hệ sinh thái; nối Ethereum/Bitcoin vẫn cần cầu nối",
+        "Lỗi logic ở một chuỗi con có thể lan qua hub",
+        "Quản trị can thiệp (dừng chuỗi, đốt tài sản) gây tranh cãi về phi tập trung"
+      ],
+      "normal": [
+        "Mỗi chuỗi con (parachain) gửi khối ứng viên của mình lên chuỗi chuyển tiếp.",
+        "Validator của chuỗi chuyển tiếp kiểm và chốt khối cho mọi chuỗi con — bảo mật dùng chung.",
+        "Chuỗi con 1 tạo thông điệp XCM chuyển 10 token sang chuỗi con 3; thông điệp nằm trong khối đã được chốt.",
+        "Thông điệp được định tuyến qua chuỗi chuyển tiếp tới chuỗi con 3.",
+        "Chuỗi con 3 thực thi và ghi có token. Hai chuỗi con chỉ cần tin vào đồng thuận của chuỗi chuyển tiếp."
+      ],
+      "attack": [
+        "Ethereum, Bitcoin… nằm ngoài phạm vi bảo mật dùng chung: muốn nối với chúng, hệ sinh thái vẫn phải dùng cầu nối — và mang theo rủi ro của cầu nối.",
+        "Lỗi cấu hình một pool thanh khoản mới trên chuỗi con Acala (08/2022) khiến khoảng 3 tỷ aUSD bị mint nhầm, không có bảo chứng.",
+        "Tài sản không bảo chứng có thể theo XCM lan sang các chuỗi con khác — rủi ro lan truyền qua hub.",
+        "Quản trị trên chuỗi tạm dừng chuỗi con, đóng băng tài sản và bỏ phiếu đốt số aUSD mint nhầm — hiệu quả nhưng rất tập trung.",
+        "Bài học: bảo mật dùng chung bảo vệ đồng thuận, không bảo vệ logic ứng dụng — vẫn cần kiểm toán mã và giám sát khi vận hành."
+      ],
+      "thesis": {
+        "cd2": "Lỗi logic, cấu hình và phân quyền của từng chuỗi con/ứng dụng là đối tượng của CrossGuard: phát hiện trước triển khai và sinh bất biến cung (INV-SUPPLY).",
+        "cd3": "Mint đột biến không có khóa tương ứng và dòng tài sản lan qua nhiều tuyến được CrossSentry phát hiện; R4/R5 tạm dừng tuyến có phê duyệt của con người."
+      },
+      "buggy": "Para 4 · lỗi cấu hình",
+      "para": "Para",
+      "relay": "Relay chain",
+      "shared": "bảo mật dùng chung",
+      "collate": "gửi khối ứng viên",
+      "validated": "validator chốt mọi chuỗi con",
+      "trustHub": "chỉ tin đồng thuận của hub",
+      "outside": "ngoài hệ sinh thái → cần cầu nối",
+      "spread": "tài sản lỗi lan qua hub",
+      "govHalt": "quản trị dừng & đóng băng",
+      "lesson": "đồng thuận ≠ logic ứng dụng"
+    },
+    "optimistic": {
+      "name": "Optimistic bridge (lạc quan + chứng minh gian lận)",
+      "short": "Optimistic",
+      "family": "Lai",
+      "tag": "Mặc định tin, cho phép thách thức trong một cửa sổ",
+      "examplesLine": "Nomad · Across · Rainbow Bridge (NEAR→ETH) · cầu nối rollup",
+      "idea": "Một updater có ký quỹ đăng gốc thông điệp lên chuỗi đích. Thông điệp chỉ có hiệu lực sau một cửa sổ thách thức (ví dụ 30 phút); trong thời gian đó bất kỳ watcher nào thấy gốc sai đều có thể nộp chứng minh gian lận để chặn và tịch thu ký quỹ.",
+      "trustText": "Giả định 1-trong-N: chỉ cần một watcher trung thực, còn sống và không bị kiểm duyệt. Đổi lại là độ trễ — và giả định này chỉ đúng khi hợp đồng được khởi tạo và hiện thực đúng.",
+      "pros": [
+        "Giả định tin cậy nhẹ hơn nhiều so với đa số trung thực",
+        "Rẻ: không phải kiểm chữ ký/tiêu đề nặng trên chuỗi",
+        "Tổng quát, dễ mở rộng sang chuỗi mới"
+      ],
+      "cons": [
+        "Độ trễ: phải chờ hết cửa sổ thách thức (vài phút → 7 ngày)",
+        "Watcher phải trực tuyến, có động lực và không bị kiểm duyệt",
+        "Không cứu được lỗi hiện thực/khởi tạo (Nomad)",
+        "Rủi ro griefing và tấn công vào chính cơ chế thách thức"
+      ],
+      "normal": [
+        "Người dùng gửi thông điệp #42 trên chuỗi A; updater có ký quỹ đăng gốc R chứa thông điệp đó lên chuỗi B.",
+        "Gốc R ở trạng thái chờ: cửa sổ thách thức bắt đầu đếm, thông điệp chưa được thực thi.",
+        "Các watcher độc lập tự tính lại gốc từ chuỗi A và so với R trên chuỗi B — khớp, không ai thách thức.",
+        "Cửa sổ thách thức kết thúc; R được xác nhận.",
+        "Chuỗi B thực thi thông điệp (mint). An toàn chỉ cần một watcher trung thực — đổi lại độ trễ bằng cửa sổ thách thức."
+      ],
+      "attack": [
+        "Một lần nâng cấp thường lệ khởi tạo gốc tin cậy là 0x00. Mọi thông điệp chưa được chứng minh mặc định có gốc 0x00 — nên được coi là đã xác nhận.",
+        "Kẻ tấn công gọi process() với một thông điệp chưa từng được gửi trên chuỗi A. Hợp đồng chấp nhận và chuyển tiền.",
+        "Giao dịch tấn công dễ sao chép: hàng trăm địa chỉ chỉ cần thay địa chỉ nhận rồi gửi lại — kho bị rút cạn trong vài giờ (Nomad, 08/2022, ≈ 190 triệu USD).",
+        "Watcher bất lực: không có gốc gian lận nào để thách thức — chính mã hợp đồng đã chấp nhận mọi thứ.",
+        "Bài học: giả định “1 watcher trung thực” đứng trên giả định “mã đúng”. Lỗi khởi tạo phải bị bắt từ khâu kiểm toán và giám sát."
+      ],
+      "thesis": {
+        "cd2": "Bất biến kiểm chứng thông điệp (INV-NONCE/INV-DOMAIN) và kiểm tra khởi tạo trong hồ sơ kiểm toán của CrossGuard bắt lỗi kiểu “gốc 0x00 luôn hợp lệ” trước khi triển khai.",
+        "cd3": "Hàng loạt lệnh process/mint không có lock tương ứng trên chuỗi nguồn và mẫu sao chép giao dịch được CrossSentry gắn cờ, kích hoạt tạm dừng sớm."
+      },
+      "home": "Home",
+      "nothing": "(không có thông điệp nào)",
+      "replica": "Replica · kho",
+      "updater": "updater (ký quỹ)",
+      "window": "cửa sổ thách thức 30 phút",
+      "pending": "R đang chờ — chưa thực thi",
+      "match": "watcher: R khớp ✓",
+      "assume": "giả định 1-trong-N trung thực",
+      "upgrade": "nâng cấp: gốc tin cậy = 0x00",
+      "copy": "hàng trăm địa chỉ sao chép tx",
+      "noFraud": "watcher: không có gì để thách thức",
+      "lesson": "≈ 190 triệu USD mất trong vài giờ"
+    },
+    "inc": {
+      "ronin": {
+        "name": "Ronin Bridge",
+        "body": "Ủy ban 9 validator, ngưỡng 5. Kẻ tấn công chiếm 4 khóa của cùng một đơn vị và 1 khóa “ký hộ” chưa thu hồi, rút 173.600 ETH và 25,5 triệu USDC; phát hiện sau 6 ngày."
+      },
+      "wormhole": {
+        "name": "Wormhole",
+        "body": "19 guardian ký xác nhận (ngưỡng 13/19). Trên Solana, bước kiểm chữ ký đọc tài khoản hệ thống do người gọi truyền vào mà không kiểm, cho phép giả xác nhận và mint 120.000 wETH không bảo chứng."
+      },
+      "harmony": {
+        "name": "Harmony Horizon",
+        "body": "Cầu nối Ethereum–Harmony dùng multisig chỉ 2-of-5; hai khóa bị lộ là đủ chuyển tài sản."
+      },
+      "multichain": {
+        "name": "Multichain",
+        "body": "Khóa MPC trên thực tế do một người kiểm soát; sau khi người này bị bắt giữ, tài sản bị chuyển đi bất thường khỏi nhiều cầu nối."
+      },
+      "orbit": {
+        "name": "Orbit Bridge",
+        "body": "7 trong 10 khóa multisig bị chiếm vào ngày đầu năm 2024, kho trên Ethereum bị rút."
+      },
+      "freeOption": {
+        "name": "Quyền chọn miễn phí",
+        "body": "Han, Lin, Yu (AFT 2019) chỉ ra atomic swap tương đương một quyền chọn kiểu Mỹ không phí: bên đi trước có thể chờ giá rồi mới quyết định hoàn tất hay bỏ cuộc, gây thiệt cho bên kia."
+      },
+      "floodLoot": {
+        "name": "Flood & Loot",
+        "body": "Harris & Zohar (AFT 2020): kẻ tấn công mở nhiều HTLC rồi buộc đóng đồng loạt để làm tắc chuỗi; nạn nhân không kịp đòi tiền trước hạn chót và bị chiếm đoạt."
+      },
+      "cycling": {
+        "name": "Replacement cycling",
+        "body": "Công bố 10/2023 (CVE-2023-40231…40234) trên Lightning Network: đối tác gian liên tục thay thế giao dịch hết hạn HTLC của nạn nhân trong mempool đến khi khóa thời gian hết. Các bản cài đặt chính đã có biện pháp giảm thiểu; chưa ghi nhận khai thác thực tế."
+      },
+      "roninSide": {
+        "name": "Ronin (sidechain)",
+        "body": "Ronin là sidechain của trò chơi Axie Infinity: Ethereum vẫn an toàn, nhưng peg chỉ dựa vào 9 validator — chiếm 5 là đủ rút ≈ 624 triệu USD."
+      },
+      "plasma": {
+        "name": "Polygon Plasma bridge",
+        "body": "10/2021, một white-hat phát hiện lỗi cho phép dùng lại bằng chứng thoát để rút cùng một khoản tới 223 lần; ≈ 850 triệu USD bị đe dọa, được vá kịp và trả thưởng 2 triệu USD."
+      },
+      "bnb": {
+        "name": "BNB Bridge (BSC Token Hub)",
+        "body": "Bằng chứng Merkle IAVL bị giả do bộ xác minh không kiểm chặt cấu trúc; 2 triệu BNB được mint. Validator BSC phải dừng toàn chuỗi để chặn dòng tiền."
+      },
+      "dragonberry": {
+        "name": "Dragonberry (IBC · ICS-23)",
+        "body": "10/2022: lỗ hổng trong ICS-23 cho phép bằng chứng giả được IBC chấp nhận, có thể leo thang thành chi tiêu kép từ tài khoản ký quỹ ICS-20. Được vá phối hợp trên các chuỗi Cosmos; không mất tài sản."
+      },
+      "poly": {
+        "name": "Poly Network",
+        "body": "Kiến trúc chuỗi chuyển tiếp (Poly Chain) nối các chuỗi dị thể qua keeper. Một lời gọi liên chuỗi dựng khéo đổi khóa keeper, cho phép rút ≈ 611 triệu USD (sau đó được hoàn trả)."
+      },
+      "acala": {
+        "name": "Acala aUSD",
+        "body": "08/2022: lỗi cấu hình pool iBTC/aUSD trên parachain Acala khiến ≈ 3 tỷ aUSD bị mint nhầm; aUSD mất neo giá, quản trị dừng chuỗi và bỏ phiếu đốt số mint nhầm."
+      },
+      "nomad": {
+        "name": "Nomad Bridge",
+        "body": "Cầu nối lạc quan: một lần nâng cấp khởi tạo gốc tin cậy 0x00 nên mọi thông điệp đều qua kiểm; hàng trăm địa chỉ sao chép giao dịch tấn công."
+      },
+      "rainbow": {
+        "name": "Rainbow Bridge (bị chặn)",
+        "body": "05 và 08/2022, kẻ tấn công nộp khối NEAR giả lên light client lạc quan trên Ethereum. Watchdog tự động thách thức (lần 08/2022 chỉ trong 31 giây), kẻ tấn công mất tiền ký quỹ; không mất tài sản người dùng."
+      }
+    }
+  },
+  "ctx": {
+    "label": "Bối cảnh nghiên cứu",
+    "title": "Từ Internet of Blockchains đến câu hỏi nghiên cứu",
+    "cards": [
+      "Internet of Blockchains|Hàng trăm chuỗi nối với nhau bằng cầu nối — mỗi cầu một giả định tin cậy, một kho tài sản. Xem bản đồ, bài toán N² và dòng thời gian các vụ tấn công.|Mở bản đồ",
+      "Mô phỏng giao thức liên chuỗi|Notary, HTLC, sidechain, light client, relay chain, optimistic: xem từng cơ chế chạy ra sao và gãy ở đâu trong các sự cố thực tế.|Xem mô phỏng",
+      "Động lực & phương pháp|Chuỗi lập luận, mô phỏng phủ rủi ro theo chuyên đề, khoảng trống nghiên cứu và chu trình nghiên cứu khép kín.|Xem lập luận"
+    ]
+  },
+  "iob": {
+    "badge": "Bối cảnh",
+    "title": "Internet of Blockchains — mạng của các chuỗi khối",
+    "body": "Giống như Internet nối các mạng máy tính độc lập, “Internet of Blockchains” là tầm nhìn các chuỗi khối trao đổi tài sản và thông điệp với nhau. Nhưng khác Internet, không có một giao thức chung kiểu TCP/IP: mỗi cặp chuỗi được nối bằng một cầu nối riêng với giả định tin cậy và mã nguồn riêng — và mỗi cầu nối là một kho tài sản khổng lồ đứng giữa hai thế giới.",
+    "graph": {
+      "label": "Bản đồ minh họa",
+      "title": "Các chuỗi và cầu nối giữa chúng",
+      "body": "Một phần nhỏ của hệ sinh thái (không theo tỷ lệ). Rê chuột lên một chuỗi để xem các cầu nối của nó; bấm dấu ! để xem sự cố gắn với cầu đó.",
+      "edge": {
+        "bridge": "Cầu nối bên thứ ba",
+        "native": "Giao thức gốc (IBC/XCM)",
+        "rollup": "Cầu nối rollup chuẩn"
+      },
+      "ev": {
+        "hack": "Bị tấn công",
+        "bug": "Lỗ hổng (đã vá/xử lý)",
+        "foiled": "Tấn công bị chặn"
+      },
+      "hub": "Chuỗi trung tâm (hub)",
+      "replay": "Phát lại sự cố theo thời gian",
+      "cumul": "Tổn thất lũy kế tới {date}",
+      "cumulNote": "Cộng dồn các vụ bị tấn công trên bản đồ theo thứ tự thời gian.",
+      "links": "cầu nối",
+      "hint": "Rê chuột (hoặc chạm) vào một chuỗi để làm nổi bật các cầu nối của nó."
+    },
+    "stats": [
+      "≈ | tỷ USD|bị đánh cắp qua 13 vụ tấn công cầu nối chỉ trong 7 tháng đầu năm 2022.|Chainalysis, 08/2022",
+      "|%|số tiền mã hóa bị đánh cắp trong cùng kỳ đến từ các cầu nối liên chuỗi.|Chainalysis, 08/2022",
+      "≈ | tỷ USD|tổn thất của 9 vụ tấn công cầu nối được dựng lại từng bước trong demo này.|Trang Sự cố thực tế",
+      "| ngày|vụ Ronin không bị ai phát hiện — không có giám sát đối chiếu hai chuỗi.|Báo cáo sự cố Ronin, 2022"
+    ],
+    "scale": {
+      "label": "Vì sao bề mặt tấn công bùng nổ",
+      "title": "Bài toán N²: nối từng cặp hay qua trung tâm",
+      "n": "Số chuỗi N",
+      "p": "Xác suất minh họa một cầu gặp sự cố mỗi năm (p)",
+      "mesh": "Nối từng cặp",
+      "hub": "Qua trung tâm",
+      "bridges": "cầu nối = N(N−1)/2",
+      "links": "kết nối = N",
+      "risk": "khả năng ≥ 1 sự cố mỗi năm",
+      "riskHub": "khả năng ≥ 1 sự cố mỗi năm (chưa tính rủi ro của chính hub)",
+      "body": "Mỗi cầu nối là một giả định tin cậy, một tập khóa, một khối mã và một kho tài sản riêng. Số cầu tăng theo bình phương số chuỗi, nên dù mỗi cầu chỉ có xác suất sự cố nhỏ, khả năng cả hệ sinh thái gặp ít nhất một sự cố mỗi năm vẫn tiến nhanh tới 100%. Đi qua trung tâm giảm số kết nối nhưng dồn rủi ro vào hub.",
+      "note": "Mô hình minh họa, giả định các cầu độc lập và cùng xác suất p: P = 1 − (1 − p)^M với M là số cầu. Không phải số liệu thống kê.",
+      "meshCap": "{m} cầu nối",
+      "hubCap": "{n} kết nối qua hub"
+    },
+    "layers": {
+      "label": "Mô hình phân lớp",
+      "title": "Một thông điệp liên chuỗi đi qua những lớp nào",
+      "body": "Tương tự ngăn xếp mạng, giao tiếp liên chuỗi có thể tách thành năm lớp. Thông điệp đi xuống ngăn xếp của chuỗi A, qua lớp truyền tải, rồi đi lên ngăn xếp của chuỗi B. Mỗi lớp có kiểu tấn công riêng — vì thế phải phòng vệ ở mọi giai đoạn của vòng đời. Chọn một lớp để xem chi tiết.",
+      "defense": "Luận án phòng vệ",
+      "app": {
+        "name": "Ứng dụng",
+        "ex": "cầu tài sản · DeFi liên chuỗi · văn bằng số",
+        "role": "Logic nghiệp vụ dùng thông điệp liên chuỗi: khóa/mint, đốt/mở khóa, cập nhật trạng thái, cấp văn bằng.",
+        "threats": [
+          "Lỗi logic, khởi tạo sai",
+          "Reentrancy",
+          "Thao túng oracle",
+          "Rút cạn đột biến"
+        ],
+        "cd2": "Phát hiện lỗ hổng hợp đồng trước triển khai; hồ sơ kiểm toán có bất biến (INV-SUPPLY, INV-ACL).",
+        "cd3": "Giám sát dòng tiền hai chuỗi khi vận hành; R4/R5 tạm dừng có phê duyệt của con người."
+      },
+      "msg": {
+        "name": "Thông điệp",
+        "ex": "định dạng · nonce · domain/chainId · payload",
+        "role": "Cách đóng gói thông điệp: ai gửi, gửi tới chuỗi nào, số thứ tự, nội dung và dữ liệu nhạy cảm đi kèm.",
+        "threats": [
+          "Phát lại",
+          "Phát lại chéo chuỗi",
+          "Thiếu domain separation",
+          "Lộ dữ liệu riêng tư"
+        ],
+        "cd1": "Statement công khai tách khỏi witness bí mật; nonce và ngữ cảnh chuỗi được ràng buộc vào bằng chứng.",
+        "cd2": "Bất biến INV-NONCE/INV-DOMAIN; Exploit lab chứng minh phát lại chéo chuỗi trên bản lỗi."
+      },
+      "verify": {
+        "name": "Xác minh",
+        "ex": "notary/multisig · light client · ZK · optimistic",
+        "role": "Cơ chế để chuỗi đích tin rằng sự kiện trên chuỗi nguồn đã thật sự xảy ra.",
+        "threats": [
+          "Chiếm đủ ngưỡng khóa",
+          "Giả mạo xác nhận",
+          "Bằng chứng giả",
+          "Lỗi bộ xác minh"
+        ],
+        "cd1": "Chuỗi đích kiểm ZKP và chữ ký ngưỡng t-of-n bằng ecrecover; loại signer trùng, từ chối 7 kiểu giả mạo.",
+        "cd2": "Kiểm toán mã xác minh: thiếu kiểm chữ ký, kiểm nguồn, kiểm bằng chứng."
+      },
+      "transport": {
+        "name": "Truyền tải",
+        "ex": "relayer · oracle · mạng p2p",
+        "role": "Ai mang thông điệp và bằng chứng từ chuỗi này sang chuỗi kia, khi nào và theo thứ tự nào.",
+        "threats": [
+          "Trì hoãn, kiểm duyệt",
+          "Relayer/validator thông đồng",
+          "Nâng điểm uy tín (boosting)"
+        ],
+        "cd3": "Ghép sự kiện hai chuỗi, ECA + Dempster–Shafer, CRS theo tác nhân–tuyến để phát hiện trì hoãn và thông đồng."
+      },
+      "consensus": {
+        "name": "Đồng thuận & sổ cái",
+        "ex": "chuỗi A · chuỗi B (PoW, PoS, BFT)",
+        "role": "Tính chung cuộc và tính sống của từng chuỗi — nền móng mà mọi lớp phía trên dựa vào.",
+        "threats": [
+          "Đảo khối, chưa chung cuộc",
+          "Mất validator, dừng chuỗi",
+          "Tấn công 51%"
+        ],
+        "cd3": "Phân biệt sự cố hệ thống (mất validator) với tấn công để không quy oan; tối ưu tham số giám sát (G-surv)."
+      }
+    },
+    "time": {
+      "label": "Dòng thời gian",
+      "title": "Từ hoán đổi nguyên tử đến hàng trăm chuỗi — và những vụ tấn công",
+      "items": [
+        "2013|m|Ý tưởng atomic swap|Tier Nolan mô tả hoán đổi giữa hai chuỗi bằng khóa băm và khóa thời gian — tiền thân của HTLC.",
+        "2014|m|Pegged sidechains|Back et al. (Blockstream) đề xuất two-way peg để chuyển tài sản sang chuỗi phụ.",
+        "2015|m|Interledger Protocol|Thomas & Schwartz đề xuất giao thức thanh toán liên sổ cái theo mô hình Internet.",
+        "2016|m|Phân loại cơ chế liên chuỗi|Buterin (R3): notary, relay/sidechain, khóa băm. Cùng năm: sách trắng Polkadot, Cosmos, BTC Relay và Lightning Network.",
+        "2018|m|Liquid Network|Sidechain liên minh của Bitcoin ra mắt; peg do 15 thành viên giữ, ngưỡng 11.",
+        "2019–2020|m|Hub ra đời, DeFi bùng nổ|Cosmos Hub (2019) và Polkadot (2020) vận hành; DeFi kéo theo hàng loạt cầu nối tài sản.",
+        "2021|m|IBC & parachain|IBC đi vào vận hành trên Cosmos Hub; Polkadot có các parachain đầu tiên. Tài sản khóa trong cầu nối lên tới hàng chục tỷ USD.",
+        "08/2021|h|Poly Network|≈ 611 triệu USD bị rút do một lời gọi liên chuỗi đổi được khóa keeper.",
+        "2022|h|“Năm của các vụ tấn công cầu nối”|Wormhole, Ronin, Harmony, Nomad, BNB Bridge… Theo Chainalysis, cầu nối chiếm ≈ 69% số tiền mã hóa bị đánh cắp trong 7 tháng đầu năm.",
+        "2023|h|Multichain sụp đổ|Khóa MPC tập trung; tài sản bị chuyển đi bất thường khỏi nhiều cầu nối. Cùng năm: công bố tấn công replacement cycling nhắm vào HTLC.",
+        "2024|h|Orbit Bridge|7/10 khóa multisig bị chiếm ngày đầu năm (≈ 81 triệu USD). Các SoK về an toàn liên chuỗi xuất hiện ở hội nghị hàng đầu (IEEE S&P 2024).",
+        "2024–2026|m|Hàng trăm L1/L2, intent và chain abstraction|Light client ZK dần chuyển từ nghiên cứu sang triển khai; số tuyến liên chuỗi tiếp tục tăng.",
+        "Luận án|t|Secure SDLC khép kín cho giao tiếp liên chuỗi|Thiết kế dựa trên bằng chứng (CĐ1) · kiểm toán trước triển khai (CĐ2) · giám sát và phản ứng thích ứng (CĐ3), phản hồi về thiết kế."
+      ]
+    },
+    "next": {
+      "protocols": "Xem từng cơ chế hoạt động và thất bại ra sao",
+      "method": "Từ bối cảnh tới câu hỏi nghiên cứu và phương pháp"
+    },
+    "source": "Bản đồ chỉ minh họa một phần hệ sinh thái; vị trí và kích thước không theo tỷ lệ. Số liệu: Chainalysis (08/2022: ≈ 2 tỷ USD qua 13 vụ tấn công cầu nối, ≈ 69% tổng số bị đánh cắp từ đầu năm), báo cáo sự cố công khai của các dự án và tổ chức phân tích bảo mật."
+  },
+  "method": {
+    "badge": "Động lực & phương pháp",
+    "title": "Vì sao cần một khung Secure SDLC cho giao tiếp liên chuỗi",
+    "body": "Trang này gom các lập luận của luận án vào một chỗ: từ bối cảnh và số liệu sự cố, qua phân tích nguyên nhân gốc và khoảng trống nghiên cứu, tới chu trình nghiên cứu, câu hỏi nghiên cứu và cách đánh giá từng đóng góp.",
+    "chainLabel": "Chuỗi lập luận",
+    "chainTitle": "Từ bối cảnh đến luận điểm trong năm bước",
+    "chain": [
+      "Bối cảnh|Internet of Blockchains là tất yếu|Hàng trăm chuỗi L1/L2 cùng tồn tại; tài sản và thông điệp buộc phải đi qua cầu nối.|/iob",
+      "Vấn đề|Cầu nối là bề mặt tấn công lớn nhất|≈ 69% tiền mã hóa bị đánh cắp trong 7 tháng đầu 2022 đến từ cầu nối; 9 vụ trong demo mất ≈ 2,7 tỷ USD.|/incidents",
+      "Nguyên nhân|Lỗ hổng trải khắp vòng đời|Giả định tin cậy và quản lý khóa (thiết kế), lỗi kiểm chứng và khởi tạo (mã), phát hiện muộn (vận hành) — không cơ chế nào miễn nhiễm.|/protocols",
+      "Khoảng trống|Giải pháp rời rạc theo từng khâu|Công trình hiện có thường tập trung vào một khâu; thiếu khung xuyên suốt có phản hồi giữa các giai đoạn.|#gap",
+      "Luận điểm|Secure SDLC khép kín cho liên chuỗi|CĐ1 thiết kế dựa trên bằng chứng · CĐ2 kiểm toán trước triển khai · CĐ3 giám sát thích ứng, phản hồi về thiết kế.|/"
+    ],
+    "cover": {
+      "label": "Mô phỏng phủ rủi ro",
+      "title": "Một chuyên đề đơn lẻ có đủ không?",
+      "body": "Bật/tắt từng chuyên đề để xem bao nhiêu phần tổn thất thực tế của 9 vụ tấn công nằm trong phạm vi phòng vệ. Mỗi vụ được gắn với các chuyên đề có cơ chế chặn được nó (theo phân tích ở trang Sự cố thực tế).",
+      "pick": "Chọn chuyên đề",
+      "covered": "Tổn thất nằm trong phạm vi phòng vệ",
+      "only": "chỉ",
+      "all": "cả ba",
+      "conclusion": "Không chuyên đề nào một mình phủ hết: nguyên nhân gốc nằm ở các giai đoạn khác nhau của vòng đời. Chỉ khi kết hợp cả ba — thiết kế, kiểm toán, vận hành — toàn bộ các vụ mới nằm trong phạm vi phòng vệ. Đây là lập luận định lượng cho cách tiếp cận Secure SDLC khép kín.",
+      "note": "Tỷ lệ tính theo tổn thất ước tính; “phòng vệ được” nghĩa là chuyên đề có cơ chế chặn hoặc phát hiện sớm bước then chốt của vụ tấn công."
+    },
+    "gap": {
+      "label": "Khoảng trống nghiên cứu",
+      "title": "Định vị so với các công trình liên quan",
+      "body": "Các công trình tiêu biểu đều có đóng góp mạnh nhưng thường cho một khâu của vòng đời. Luận án hướng tới phủ mọi khâu và nối chúng bằng vòng phản hồi.",
+      "work": "Công trình",
+      "cols": [
+        "Thiết kế xác minh",
+        "Riêng tư",
+        "Lập trình & kiểm toán",
+        "Giám sát vận hành",
+        "Phản ứng & tối ưu",
+        "Vòng đời khép kín"
+      ],
+      "rows": [
+        "zkBridge|Xie et al., ACM CCS 2022|●|—|—|—|—|—",
+        "SmartAxe|Liao et al., ACM FSE 2024|—|—|●|—|—|—",
+        "Xscope|Zhang et al., IEEE/ACM ASE 2022|—|—|—|●|—|—",
+        "XChainWatcher|Augusto et al., 2024|—|—|—|●|—|—",
+        "Các SoK / khảo sát|Zamyatin et al. FC 2021 · Belchior et al. CSUR 2021 · Augusto et al. S&P 2024|◐|◐|◐|◐|—|—",
+        "Luận án (CĐ1–CĐ3)|Π_univ · CrossGuard · CrossSentry|●|●|●|●|●|●"
+      ],
+      "note": "● trọng tâm chính · ◐ có đề cập/một phần · — ngoài phạm vi chính. Đánh giá định tính theo trọng tâm công bố của từng công trình, dùng để định vị — không phải so sánh hiệu năng."
+    },
+    "cycle": {
+      "label": "Phương pháp nghiên cứu",
+      "title": "Chu trình nghiên cứu khép kín",
+      "body": "Luận án đi theo tinh thần nghiên cứu khoa học thiết kế (Design Science Research, Peffers et al., 2007): xác định vấn đề từ thực tế, thiết kế và hiện thực artefact, trình diễn, đánh giá, rồi đưa kết quả quay lại cải tiến thiết kế — trùng với vòng phản hồi của Secure SDLC.",
+      "center": "Secure SDLC",
+      "centerSub": "liên chuỗi",
+      "output": "Đầu ra",
+      "steps": [
+        "Khảo sát sự cố|Tổng hợp tài liệu (SoK, khảo sát) và phân tích các vụ tấn công cầu nối lớn để rút ra nguyên nhân gốc và nhóm lỗi.|Phân loại nguyên nhân gốc; ánh xạ sự cố → giai đoạn → chuyên đề.|Xem các sự cố",
+        "Mô hình hóa đe dọa|Ánh xạ mối đe dọa vào các lớp của giao tiếp liên chuỗi và năm giai đoạn Secure SDLC.|Mô hình phân lớp, danh mục mối đe dọa theo giai đoạn.|Xem mô hình phân lớp",
+        "Thiết kế cơ chế|Đề xuất cơ chế cho từng giai đoạn: Π_univ (thiết kế), CrossGuard (lập trình – kiểm toán), CrossSentry (vận hành – tối ưu).|Ba khung/thuật toán với giả định và đảm bảo rõ ràng.|Mở CĐ1",
+        "Hiện thực & trình diễn|Hiện thực bằng hợp đồng Solidity thật trên hai chuỗi EVM, mật mã và học máy; dựng lại các kịch bản tấn công.|Prototype này: 3 module, exploit lab, kịch bản tấn công.|Thử Playground lõi",
+        "Đánh giá thực nghiệm|Đo độ trễ, kích thước bằng chứng, F1/PR-AUC, FPR, thời gian phát hiện, mức tập trung giám sát (Gini).|Kết quả định lượng cho từng câu hỏi nghiên cứu.|Mở CĐ3",
+        "Phản hồi & cải tiến|Kết quả vận hành và kiểm toán được đưa ngược về thiết kế: bất biến mới, ngưỡng mới, tham số giám sát mới.|Vòng đời khép kín — giai đoạn 5 phản hồi về giai đoạn 1.|Xem vòng Secure SDLC"
+      ]
+    },
+    "trace": {
+      "label": "Truy vết",
+      "title": "Câu hỏi nghiên cứu → phương pháp → thước đo → trình diễn",
+      "rq": "Câu hỏi nghiên cứu",
+      "method": "Phương pháp",
+      "metric": "Thước đo & kết quả",
+      "demo": "Trình diễn",
+      "cd1": "ZKP (Groth16) cho vị từ, tách statement/witness; ủy ban TSS t-of-n kiểm on-chain; chống phát lại bằng nonce; CP-ABE cho kiểm soát truy cập.",
+      "cd2": "Biểu diễn đa nguồn (cấu trúc, token, thao tác liên chuỗi); lõi few-shot; học liên kết DP-SGD (FedVuln); hồ sơ kiểm toán với bất biến có kiểu.",
+      "cd3": "Ghép sự kiện hai chuỗi; ECA + Dempster–Shafer; CRS theo tác nhân–tuyến; phản ứng R0–R5 có phê duyệt; G-surv và tối ưu F(Θ)."
+    },
+    "limits": {
+      "label": "Phạm vi & giới hạn của bản trình diễn",
+      "items": [
+        "Hai chuỗi EVM chạy trong bộ nhớ (py-evm): không có độ trễ mạng, tắc nghẽn hay đảo khối thật.",
+        "Một số thành phần mật mã (ZKP khoảng, CP-ABE) ở mức minh họa; số liệu của luận án được đo trên hiện thực đầy đủ.",
+        "Số liệu sự cố là ước tính tổng hợp từ báo cáo công khai; diễn biến được đơn giản hóa cho người ngoài lĩnh vực.",
+        "Thang so sánh giao thức và ma trận định vị là đánh giá định tính, dùng để minh họa lập luận."
+      ]
+    },
+    "refs": "Tài liệu: K. Peffers et al., A Design Science Research Methodology for Information Systems Research (JMIS, 2007) · T. Xie et al., zkBridge (ACM CCS 2022) · Z. Liao et al., SmartAxe (ACM FSE 2024) · J. Zhang et al., Xscope (ASE 2022) · A. Augusto et al., XChainWatcher (2024) · A. Augusto et al., SoK: Security and Privacy of Blockchain Interoperability (IEEE S&P 2024) · A. Zamyatin et al., SoK: Communication Across Distributed Ledgers (FC 2021) · R. Belchior et al., A Survey on Blockchain Interoperability (ACM CSUR 2021) · Chainalysis (2022)."
   }
 }

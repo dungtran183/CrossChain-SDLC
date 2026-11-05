@@ -15,7 +15,17 @@
     "author": "PhD candidate Tran Tuan Dung · Advisors: Assoc. Prof. Pham Van Hau, Assoc. Prof. Nguyen Tan Cam",
     "replayHint": "Data replayed from a recorded scenario; run locally for the real backend.",
     "toDark": "Switch to dark theme",
-    "toLight": "Switch to light theme"
+    "toLight": "Switch to light theme",
+    "background": "Context & motivation",
+    "nav": {
+      "iob": "Internet of Blockchains",
+      "iobSub": "map of chains & bridges",
+      "protocols": "Interop protocols",
+      "protocolsSub": "6 simulated mechanisms",
+      "method": "Motivation & method",
+      "methodSub": "gap, RQs, evaluation"
+    },
+    "iobWidget": "Internet of Blockchains"
   },
   "home": {
     "heroTitle": "Cross-chain security across the software lifecycle",
@@ -1026,7 +1036,10 @@
     "cd2": "Press \"Run attack scenario\", or pick a contract, walk through M1→M4 and launch a real attack in the Exploit lab.",
     "cd3": "Press \"Run attack scenario\", or pick a scenario and Run — the Explanation panel narrates every tick in plain words.",
     "incidents": "Pick an attack to watch it step by step: reality on the left, the thesis tools on the right.",
-    "playground": "Try the core algorithms directly: hashing, signatures, Merkle trees, secret sharing."
+    "playground": "Try the core algorithms directly: hashing, signatures, Merkle trees, secret sharing.",
+    "iob": "Hover a chain to see its bridges; the map replays the attacks over time on its own.",
+    "protocols": "Pick a protocol, then switch between “Normal flow” and “Incident / attack” to see where its trust assumption breaks.",
+    "method": "Toggle each module in the risk-coverage simulation to see why all three phases are needed."
   },
   "primer": {
     "badge": "Quick guide for newcomers",
@@ -1046,5 +1059,649 @@
       "What does the thesis contribute?|Three tools for three stages: CĐ1 designs a protocol verified by cryptographic proofs and threshold signatures (hard to forge); CĐ2 finds bridge contract bugs before deployment; CĐ3 monitors a running bridge and responds with human approval."
     ],
     "more": "See the real attacks"
+  },
+  "proto": {
+    "badge": "Protocol simulations",
+    "title": "Cross-chain communication mechanisms — how they work and how they fail",
+    "body": "The six main families of mechanisms that let two blockchains exchange assets and messages, following Buterin's (2016) classification and later surveys. Every simulation has two modes: the normal flow, and an incident or attack that happened in practice — so you can see exactly where each mechanism's trust assumption breaks.",
+    "pick": "Pick a protocol",
+    "modeLabel": "Simulation mode",
+    "mode": {
+      "normal": "Normal flow",
+      "attack": "Incident / attack"
+    },
+    "idea": "Idea",
+    "trustModel": "Trust assumption",
+    "pros": "Strengths",
+    "cons": "Open problems",
+    "incidents": "Recorded incidents & weaknesses",
+    "thesisLink": "Where the thesis addresses it",
+    "compare": "Comparing the six mechanisms (click a row to simulate it)",
+    "compareNote": "The 1–5 scale is a qualitative, relative assessment; more dots = better on that criterion. Losses are the sum of the incidents listed above (estimates).",
+    "col": {
+      "name": "Mechanism",
+      "trust": "Less trust",
+      "general": "Generality",
+      "speed": "Speed",
+      "cost": "Cheap on-chain",
+      "extensible": "Extensibility",
+      "losses": "Recorded losses"
+    },
+    "tri": {
+      "title": "The interoperability trilemma",
+      "body": "A protocol can hardly be trustless, extensible to new chains and able to carry arbitrary data all at once (A. Bhuptani, Connext, 2021). Positions are qualitative and illustrative.",
+      "trustless": "Trustless",
+      "extensible": "Extensible",
+      "general": "Generalizable"
+    },
+    "kind": {
+      "hack": "Exploited",
+      "bug": "Vulnerability",
+      "foiled": "Foiled",
+      "attack": "Published attack"
+    },
+    "refs": "References: V. Buterin, Chain Interoperability (R3, 2016) · A. Back et al., Enabling Blockchain Innovations with Pegged Sidechains (2014) · M. Herlihy, Atomic Cross-Chain Swaps (PODC 2018) · R. Han, H. Lin, J. Yu, On the Optionality and Fairness of Atomic Swaps (AFT 2019) · J. Harris, A. Zohar, Flood & Loot (AFT 2020) · A. Zamyatin et al., SoK: Communication Across Distributed Ledgers (FC 2021) · R. Belchior et al., A Survey on Blockchain Interoperability (ACM CSUR 2021) · T. Xie et al., zkBridge (ACM CCS 2022) · A. Augusto et al., SoK: Security and Privacy of Blockchain Interoperability (IEEE S&P 2024). Incident figures compiled from public reports by the projects and security firms.",
+    "s": {
+      "chainA": "Chain A",
+      "chainB": "Chain B",
+      "vault": "asset vault",
+      "mintContract": "mint contract",
+      "user": "User",
+      "attacker": "Attacker"
+    },
+    "notary": {
+      "name": "Notary scheme",
+      "short": "Notary",
+      "family": "Attesters",
+      "tag": "A k-of-n committee watches and signs attestations",
+      "examplesLine": "Ronin · Wormhole (guardians) · Multichain (MPC) · centralized exchanges",
+      "idea": "An intermediary — an exchange, a multisig group or an MPC/TSS committee — watches events on the source chain and signs attestations for the destination chain. The destination chain cannot check the source chain itself; it only checks whether the committee's signatures reach the k-of-n threshold.",
+      "trustText": "Trust an honest majority of the committee: as soon as k keys are stolen or collude, any message can be signed. The bridge is exactly as secure as k keys.",
+      "pros": [
+        "Simple, fast, cheap; easy to deploy",
+        "Works with any chain and arbitrary messages",
+        "Easy to add new chains (the committee just watches one more)"
+      ],
+      "cons": [
+        "Centralization: a single point of failure in the key set",
+        "Key management and delegated signing go wrong easily (Ronin)",
+        "Low thresholds or many keys under one entity (Harmony 2-of-5, Multichain)",
+        "Opaque off-chain operation, hard to audit and monitor"
+      ],
+      "normal": [
+        "The user locks 10 tokens in the vault contract on chain A, which emits Locked(user, 10).",
+        "Five independent notaries watch chain A and all observe the Locked event.",
+        "Each notary signs the attestation “user locked 10 tokens”. At least k = 3 of n = 5 signatures are needed.",
+        "The bundle of signatures reaching the threshold is relayed to the mint contract on chain B.",
+        "Chain B only checks that the signatures belong to the committee and meet the threshold — then mints 10 wTokens to the user. Chain B never sees chain A itself."
+      ],
+      "attack": [
+        "The attacker phishes an operator and steals 3 of the committee's 5 keys — exactly the threshold.",
+        "They write an order “unlock the entire vault to the attacker”. There is no matching burn on chain B.",
+        "The three stolen keys sign the forged order. Cryptographically these are 3/5 perfectly valid signatures.",
+        "The vault contract on chain A sees enough signatures and releases all assets to the attacker's wallet.",
+        "The two honest notaries cannot stop it and nothing raises an alarm. At Ronin (2022) the theft was noticed six days later."
+      ],
+      "thesis": {
+        "cd1": "Π_univ replaces “trust signatures” with “trust proofs”: the destination chain verifies a ZKP and a t-of-n threshold signature, rejects duplicate signers and keys held by one entity, and blocks replay with nonces.",
+        "cd3": "CrossSentry matches events on both chains: an unlock with no matching burn is flagged immediately and R4/R5 pause the bridge with human approval — instead of six days later."
+      },
+      "committee": "3-of-5 notary committee",
+      "signEach": "each notary signs",
+      "keysStolen": "3/5 keys stolen",
+      "noBurn": "no burn",
+      "validSig": "valid 3/5 signatures ✓",
+      "late": "noticed after 6 days"
+    },
+    "htlc": {
+      "name": "HTLC — atomic swap",
+      "short": "HTLC",
+      "family": "Hash-locking",
+      "tag": "Hash lock + time lock, no intermediary",
+      "examplesLine": "BTC↔LTC atomic swaps · Lightning Network · Interledger",
+      "idea": "Both parties lock assets on two chains under the same hash lock H = h(s) and two deadlines T1 > T2. Whoever reveals the secret s can claim; after the deadline the original owner gets a refund. When Alice uses s to claim Bob's asset, s becomes public — and Bob uses that same s to claim Alice's asset.",
+      "trustText": "No third party: only the hash function and both chains' time locks are trusted. But safety relies on synchrony: both parties must stay online and transactions must be included before the deadlines.",
+      "pros": [
+        "No intermediary holds funds, no committee needed",
+        "Only needs a shared hash function and time locks",
+        "Atomicity: both transfers happen or both are refunded"
+      ],
+      "cons": [
+        "Swaps assets only; cannot carry arbitrary messages",
+        "Parties must stay online; congestion or censored transactions lose money",
+        "“Free option”: the first mover can walk away when the price moves",
+        "The same H on both chains links the two transactions (privacy leak)",
+        "Capital locked for long periods; needs a counterparty and liquidity"
+      ],
+      "normal": [
+        "Alice picks a secret s, computes H = SHA-256(s) and sends H to Bob off-chain. Only Alice knows s.",
+        "Alice locks 1 coin on chain A in HTLC_A: Bob can claim it by revealing s with h(s) = H; after T1 = 48 h it refunds to Alice.",
+        "Bob checks HTLC_A on chain A, then locks tokens on chain B in HTLC_B under the same H, for Alice, with deadline T2 = 24 h — shorter than T1.",
+        "Alice sends s to HTLC_B and claims the tokens on chain B. s is now public on chain B.",
+        "Bob reads s from chain B and uses it to open HTLC_A on chain A before T1, claiming Alice's coin.",
+        "The swap completes without anyone holding funds in custody. If Alice never reveals s, both simply wait for the deadlines and get refunded."
+      ],
+      "attack": [
+        "Same setup: one hash lock H; HTLC_A (48 h) on chain A and HTLC_B (24 h) on chain B both hold the assets.",
+        "Alice waits until hour 23 — right before T2 — to reveal s and claim the tokens on chain B. She may have been watching the price (“free option”).",
+        "Bob goes offline, or his claim transaction is priced out / repeatedly replaced by a malicious counterparty (replacement cycling) and never gets included.",
+        "After hour 48, T1 expires. Alice calls refund on HTLC_A and takes her coin back.",
+        "Outcome: Alice keeps both the coin and the tokens, Bob loses everything. HTLC atomicity only holds if parties stay online and the network is not congested."
+      ],
+      "thesis": {
+        "cd1": "The same H appearing on two chains lets observers link both transactions. Π_univ proves conditions with ZKPs and selective disclosure instead of publishing a shared secret.",
+        "cd3": "Monitoring both chains detects delayed transactions and blocking/replacement patterns near deadlines (CrossSentry's Delayed scenario)."
+      },
+      "clock": "global clock",
+      "sPublic": "s public on B",
+      "offchain": "off-chain channel",
+      "atomic": "atomic swap ✓",
+      "bothLocked": "both HTLCs locked",
+      "stuck": "tx blocked",
+      "offline": "Bob offline",
+      "refund": "Alice refunds",
+      "unfair": "Alice gets both, Bob none"
+    },
+    "sidechain": {
+      "name": "Sidechain & two-way peg",
+      "short": "Sidechain",
+      "family": "Sidechains",
+      "tag": "Peg assets to a side chain with its own consensus",
+      "examplesLine": "Liquid (11-of-15) · Rootstock · Polygon PoS · Ronin",
+      "idea": "Assets are locked on the main chain (peg-in) and an equal amount is issued on the sidechain — a chain with its own consensus, faster and cheaper. To withdraw (peg-out), tokens are burned on the sidechain and a federation/validators sign the unlock on the main chain; the sidechain may periodically checkpoint to the main chain.",
+      "trustText": "Security is not inherited from the main chain: you trust the federation holding the peg and the majority of sidechain validators — often only a handful to a few dozen nodes.",
+      "pros": [
+        "Higher throughput, low fees, room for new features",
+        "No change needed on the main chain",
+        "Checkpoints limit rewriting sidechain history"
+      ],
+      "cons": [
+        "Few validators → much easier to capture a majority than on the main chain",
+        "The main chain cannot verify the sidechain's state",
+        "Slow peg-in/peg-out (confirmations, challenge periods)",
+        "Bugs in exit contracts/proofs (Polygon Plasma 2021)"
+      ],
+      "normal": [
+        "Peg-in: the user sends 1 coin to the peg address/contract on the main chain, where it is locked.",
+        "Wait for enough main-chain confirmations (Liquid waits 102 Bitcoin blocks) to avoid reorgs; the federation watches.",
+        "The federation (k-of-n) signs and the sidechain issues 1 pegged token to the user.",
+        "The user transacts on the sidechain: faster blocks and far lower fees than the main chain.",
+        "Peg-out: the user burns the token on the sidechain, the sidechain checkpoints to the main chain, the federation signs the unlock and the coin returns to the user."
+      ],
+      "attack": [
+        "The main chain is protected by thousands of miners/validators — the sidechain and its peg rely on a small group (Ronin: 9 validators).",
+        "The attacker captures a majority of the sidechain validators/federation keys (Ronin 2022: 5 of 9 keys).",
+        "The captured majority signs a fake peg-out — no token was ever burned on the sidechain.",
+        "The peg contract on the main chain only checks federation signatures, so it unlocks and the vault is drained.",
+        "The main chain stays perfectly secure, but the peg does not: the main chain has no way to check the sidechain's real state."
+      ],
+      "thesis": {
+        "cd1": "A distributed threshold committee with independent members, plus proofs checked on the destination chain, means a peg-out cannot rest on “enough signatures” alone.",
+        "cd3": "A peg-out with no matching burn on the sidechain is a textbook anomaly: CrossSentry matches events on both chains to flag it and pause with approval."
+      },
+      "main": "Main chain",
+      "mainSub": "strong security · slow blocks",
+      "peg": "Peg · locked vault",
+      "side": "Sidechain",
+      "sideSub": "own consensus · fast blocks",
+      "pegged": "Pegged token",
+      "fed": "Federation / sidechain validators",
+      "pegIn": "peg-in: lock 1 coin",
+      "confirm": "waiting for confirmations…",
+      "fast": "fast · low fees",
+      "pegOut": "peg-out: burn → unlock",
+      "strong": "thousands of validators",
+      "weak": "only a few validators",
+      "majority": "majority captured",
+      "fakeOut": "fake peg-out (no burn)",
+      "lesson": "main chain is safe — the peg is not"
+    },
+    "relay": {
+      "name": "Chain relay / light client",
+      "short": "Light client",
+      "family": "Relays",
+      "tag": "The destination verifies block headers and Merkle proofs itself",
+      "examplesLine": "BTC Relay · IBC (Cosmos) · Rainbow Bridge · zkBridge",
+      "idea": "The destination chain runs a light client of the source chain as a contract: relayers forward block headers, the contract verifies each header's consensus signatures (or proof of work) and stores state roots. To prove a transaction, the user submits a Merkle proof from the leaf to a stored root. zkBridge-style designs compress this verification into a single ZK proof.",
+      "trustText": "Almost no third-party trust: relayers only need to be live, not honest. Security equals the source chain's consensus — provided the verification code has no bugs.",
+      "pros": [
+        "Trust-minimized: the destination verifies by itself",
+        "Relayers cannot forge, only delay",
+        "Carries arbitrary messages with proofs"
+      ],
+      "cons": [
+        "Expensive on-chain header verification (different signature schemes and hashes)",
+        "Each chain pair needs its own light client → hard to extend",
+        "Depends on finality; reorg and long-range attack risks",
+        "Bugs in proof verification become the new trust anchor (BNB Bridge)"
+      ],
+      "normal": [
+        "Relayers keep forwarding chain A's block headers #100–#103 to the light-client contract on chain B.",
+        "The light client verifies chain A's validator signatures on each header and stores the state roots r100…r103.",
+        "The user's transaction sits in block #102. A Merkle proof π with the sibling hashes from the tx leaf up to the root is built.",
+        "π is submitted to chain B. The contract recomputes the root from π and compares it with the stored r102 — they match.",
+        "The bridge app on B executes (mints). Nobody has to trust the relayer; only chain A's consensus."
+      ],
+      "attack": [
+        "The attacker builds a proof for a deposit that never happened on the source chain (a forged leaf).",
+        "The proof verifier (IAVL) is buggy: it does not strictly check the proof's structure, so the forged path still yields the stored root.",
+        "The destination accepts and mints 2 million unbacked BNB (BNB Bridge, Oct 2022, ≈ $570M).",
+        "Part of the funds leaves to other chains before validators coordinate to halt the entire chain — a very centralized remedy.",
+        "Lesson: trust-minimized does not mean bug-free — the proof-verification code is the new trust anchor and must be audited."
+      ],
+      "thesis": {
+        "cd1": "Π_univ binds commitments to leaves and verifies Merkle proofs together with chain/nonce context, so forged leaves or proofs used in the wrong context are rejected on-chain.",
+        "cd2": "CrossGuard treats the verifier as a component to audit: missing message verification is detected and tagged with INV-DOMAIN/INV-NONCE invariants before deployment."
+      },
+      "headers": "block headers",
+      "lc": "light client of A",
+      "app": "Bridge app",
+      "relayer": "relayer (untrusted)",
+      "checkSig": "✓ chain-A consensus sigs",
+      "buildProof": "build Merkle proof π",
+      "trustless": "only trust chain A's consensus",
+      "fakeLeaf": "forged leaf: deposit never made",
+      "bug": "verifier bug: π* still matches",
+      "halt": "⏸ whole chain halted",
+      "lesson": "verifier code = new trust anchor"
+    },
+    "hub": {
+      "name": "Relay chain / hub (blockchain of blockchains)",
+      "short": "Relay chain",
+      "family": "Ecosystems",
+      "tag": "Child chains share security through a relay chain",
+      "examplesLine": "Polkadot (XCM) · Cosmos (IBC) · Poly Network",
+      "idea": "Instead of pairwise links, child chains (parachains/zones) connect to a central relay chain. In Polkadot, relay-chain validators check and finalize every parachain block (shared security); XCM messages travel between child chains trusting only the hub's consensus. Cosmos instead lets each zone keep its own security and connects them with IBC.",
+      "trustText": "Trust the relay chain's consensus — strong within the ecosystem. But shared security protects consensus, not each child chain's application logic; chains outside the ecosystem still need bridges.",
+      "pros": [
+        "Cuts connections from N(N−1)/2 to N",
+        "Shared security and a uniform message format",
+        "Fast inside the ecosystem"
+      ],
+      "cons": [
+        "The hub concentrates systemic risk",
+        "Homogeneous only inside the ecosystem; Ethereum/Bitcoin still need bridges",
+        "A logic bug in one child chain can spread through the hub",
+        "Governance interventions (halting, burning assets) raise decentralization concerns"
+      ],
+      "normal": [
+        "Each child chain (parachain) submits its candidate block to the relay chain.",
+        "Relay-chain validators check and finalize blocks for every child chain — shared security.",
+        "Child chain 1 creates an XCM message sending 10 tokens to child chain 3; the message sits in a finalized block.",
+        "The message is routed through the relay chain to child chain 3.",
+        "Child chain 3 executes and credits the tokens. Both child chains only trust the relay chain's consensus."
+      ],
+      "attack": [
+        "Ethereum, Bitcoin… are outside the shared-security perimeter: connecting to them still needs bridges — with all of their risks.",
+        "A misconfigured new liquidity pool on the Acala child chain (Aug 2022) erroneously minted about 3 billion unbacked aUSD.",
+        "Unbacked assets can follow XCM into other child chains — contagion through the hub.",
+        "On-chain governance pauses the child chain, freezes funds and votes to burn the erroneously minted aUSD — effective but highly centralized.",
+        "Lesson: shared security protects consensus, not application logic — code audits and runtime monitoring are still required."
+      ],
+      "thesis": {
+        "cd2": "Logic, configuration and access-control bugs in each child chain or app are CrossGuard's target: detected before deployment, with supply invariants (INV-SUPPLY).",
+        "cd3": "Sudden mints without matching locks and assets spreading across routes are detected by CrossSentry; R4/R5 pause a route with human approval."
+      },
+      "buggy": "Para 4 · misconfigured",
+      "para": "Para",
+      "relay": "Relay chain",
+      "shared": "shared security",
+      "collate": "submit candidate blocks",
+      "validated": "validators finalize every child",
+      "trustHub": "only trust the hub's consensus",
+      "outside": "outside the ecosystem → bridges",
+      "spread": "bad assets spread via the hub",
+      "govHalt": "governance halts & freezes",
+      "lesson": "consensus ≠ application logic"
+    },
+    "optimistic": {
+      "name": "Optimistic bridge (fraud proofs)",
+      "short": "Optimistic",
+      "family": "Hybrid",
+      "tag": "Trust by default, allow challenges within a window",
+      "examplesLine": "Nomad · Across · Rainbow Bridge (NEAR→ETH) · rollup bridges",
+      "idea": "A bonded updater posts a message root to the destination chain. The message only takes effect after a challenge window (e.g. 30 minutes); during that time any watcher who sees a wrong root can submit a fraud proof to block it and slash the bond.",
+      "trustText": "A 1-of-N assumption: one honest, live and uncensored watcher is enough. The price is latency — and the assumption only holds if the contract is initialized and implemented correctly.",
+      "pros": [
+        "Much weaker trust assumption than an honest majority",
+        "Cheap: no heavy on-chain signature/header checks",
+        "General and easy to extend to new chains"
+      ],
+      "cons": [
+        "Latency: wait out the challenge window (minutes → 7 days)",
+        "Watchers must be online, incentivized and uncensored",
+        "Cannot save you from implementation/initialization bugs (Nomad)",
+        "Griefing and attacks on the challenge mechanism itself"
+      ],
+      "normal": [
+        "The user sends message #42 on chain A; the bonded updater posts the root R containing it to chain B.",
+        "R is pending: the challenge window starts and the message is not executed yet.",
+        "Independent watchers recompute the root from chain A and compare it with R on chain B — it matches, nobody challenges.",
+        "The challenge window closes; R is confirmed.",
+        "Chain B executes the message (mint). Security needs only one honest watcher — at the cost of the challenge-window delay."
+      ],
+      "attack": [
+        "A routine upgrade initializes the trusted root to 0x00. Every unproven message defaults to root 0x00 — so it counts as confirmed.",
+        "The attacker calls process() with a message never sent on chain A. The contract accepts it and transfers funds.",
+        "The attack transaction is easy to copy: hundreds of addresses just swap in their own recipient and resend — the vault is drained within hours (Nomad, Aug 2022, ≈ $190M).",
+        "Watchers are powerless: there is no fraudulent root to challenge — the contract code itself accepted everything.",
+        "Lesson: “one honest watcher” sits on top of “correct code”. Initialization bugs must be caught by auditing and monitoring."
+      ],
+      "thesis": {
+        "cd2": "Message-verification invariants (INV-NONCE/INV-DOMAIN) and initialization checks in CrossGuard's audit report catch “root 0x00 is always valid” bugs before deployment.",
+        "cd3": "Mass process/mint calls with no matching lock on the source chain, and copy-cat transaction patterns, are flagged by CrossSentry and trigger an early pause."
+      },
+      "home": "Home",
+      "nothing": "(no message sent)",
+      "replica": "Replica · vault",
+      "updater": "updater (bonded)",
+      "window": "30-minute challenge window",
+      "pending": "R pending — not executed",
+      "match": "watchers: R matches ✓",
+      "assume": "1-of-N honest assumption",
+      "upgrade": "upgrade: trusted root = 0x00",
+      "copy": "hundreds of copy-cat txs",
+      "noFraud": "watchers: nothing to challenge",
+      "lesson": "≈ $190M lost within hours"
+    },
+    "inc": {
+      "ronin": {
+        "name": "Ronin Bridge",
+        "body": "A 9-validator committee with threshold 5. The attacker took 4 keys held by one entity plus 1 never-revoked delegated key, draining 173,600 ETH and 25.5M USDC; noticed six days later."
+      },
+      "wormhole": {
+        "name": "Wormhole",
+        "body": "19 guardians attest (13/19 threshold). On Solana, signature verification read a caller-supplied system account without checking it, letting the attacker fake an attestation and mint 120,000 unbacked wETH."
+      },
+      "harmony": {
+        "name": "Harmony Horizon",
+        "body": "The Ethereum–Harmony bridge used a mere 2-of-5 multisig; two leaked keys were enough to move the funds."
+      },
+      "multichain": {
+        "name": "Multichain",
+        "body": "The MPC keys were in practice controlled by one person; after this person was detained, funds were abnormally moved out of several bridges."
+      },
+      "orbit": {
+        "name": "Orbit Bridge",
+        "body": "7 of 10 multisig keys were compromised on New Year's Day 2024 and the Ethereum vault was drained."
+      },
+      "freeOption": {
+        "name": "The free option",
+        "body": "Han, Lin and Yu (AFT 2019) show an atomic swap is equivalent to a premium-free American call option: the first mover can wait on the price and then complete or abandon, at the other side's expense."
+      },
+      "floodLoot": {
+        "name": "Flood & Loot",
+        "body": "Harris & Zohar (AFT 2020): the attacker opens many HTLCs and forces them to close at once to congest the chain; victims cannot claim before the deadlines and lose funds."
+      },
+      "cycling": {
+        "name": "Replacement cycling",
+        "body": "Disclosed Oct 2023 (CVE-2023-40231…40234) for the Lightning Network: a malicious counterparty keeps replacing the victim's HTLC-timeout transaction in the mempool until the time lock expires. Major implementations shipped mitigations; no exploitation was observed."
+      },
+      "roninSide": {
+        "name": "Ronin (sidechain)",
+        "body": "Ronin is the Axie Infinity sidechain: Ethereum stayed secure, but the peg relied on 9 validators — capturing 5 was enough to drain ≈ $624M."
+      },
+      "plasma": {
+        "name": "Polygon Plasma bridge",
+        "body": "Oct 2021: a white-hat found that an exit proof could be reused to withdraw the same funds up to 223 times; ≈ $850M was at risk. It was patched in time and paid a $2M bounty."
+      },
+      "bnb": {
+        "name": "BNB Bridge (BSC Token Hub)",
+        "body": "An IAVL Merkle proof was forged because the verifier did not strictly check its structure; 2 million BNB were minted. BSC validators had to halt the chain to stop the outflow."
+      },
+      "dragonberry": {
+        "name": "Dragonberry (IBC · ICS-23)",
+        "body": "Oct 2022: an ICS-23 flaw let forged proofs be accepted by IBC, escalating to double-spends from ICS-20 escrow accounts. Patched in coordination across Cosmos chains; no funds lost."
+      },
+      "poly": {
+        "name": "Poly Network",
+        "body": "A relay-chain design (Poly Chain) connecting heterogeneous chains through keepers. A crafted cross-chain call replaced the keeper key, enabling ≈ $611M to be withdrawn (later returned)."
+      },
+      "acala": {
+        "name": "Acala aUSD",
+        "body": "Aug 2022: a misconfigured iBTC/aUSD pool on the Acala parachain erroneously minted ≈ 3B aUSD; aUSD lost its peg, governance halted the chain and voted to burn the erroneous mint."
+      },
+      "nomad": {
+        "name": "Nomad Bridge",
+        "body": "An optimistic bridge: an upgrade initialized the trusted root to 0x00, so every message passed verification; hundreds of addresses copied the attack transaction."
+      },
+      "rainbow": {
+        "name": "Rainbow Bridge (foiled)",
+        "body": "In May and Aug 2022 attackers submitted fake NEAR blocks to the optimistic light client on Ethereum. Automated watchdogs challenged them (in just 31 seconds in Aug 2022) and the attackers lost their deposits; no user funds were lost."
+      }
+    }
+  },
+  "ctx": {
+    "label": "Research context",
+    "title": "From the Internet of Blockchains to the research questions",
+    "cards": [
+      "Internet of Blockchains|Hundreds of chains linked by bridges — each bridge a trust assumption and a pot of assets. See the map, the N² problem and a timeline of attacks.|Open the map",
+      "Interop protocol simulations|Notary, HTLC, sidechain, light client, relay chain, optimistic: watch how each mechanism runs and where it broke in real incidents.|See the simulations",
+      "Motivation & method|The argument chain, a risk-coverage simulation per module, the research gap and the closed-loop research cycle.|See the argument"
+    ]
+  },
+  "iob": {
+    "badge": "Context",
+    "title": "Internet of Blockchains — a network of blockchains",
+    "body": "Just as the Internet connects independent computer networks, the “Internet of Blockchains” is the vision of blockchains exchanging assets and messages with each other. Unlike the Internet, though, there is no common TCP/IP-like protocol: each pair of chains is linked by its own bridge with its own trust assumptions and code — and every bridge is a huge pot of assets sitting between two worlds.",
+    "graph": {
+      "label": "Illustrative map",
+      "title": "Chains and the bridges between them",
+      "body": "A small slice of the ecosystem (not to scale). Hover a chain to see its bridges; click a ! marker to see the incident attached to that bridge.",
+      "edge": {
+        "bridge": "Third-party bridge",
+        "native": "Native protocol (IBC/XCM)",
+        "rollup": "Canonical rollup bridge"
+      },
+      "ev": {
+        "hack": "Exploited",
+        "bug": "Vulnerability (patched/handled)",
+        "foiled": "Attack foiled"
+      },
+      "hub": "Hub chain",
+      "replay": "Replay incidents over time",
+      "cumul": "Cumulative losses up to {date}",
+      "cumulNote": "Running total of the exploits on the map, in chronological order.",
+      "links": "bridges",
+      "hint": "Hover (or tap) a chain to highlight its bridges."
+    },
+    "stats": [
+      "≈ $|B|stolen in 13 cross-chain bridge hacks in just the first seven months of 2022.|Chainalysis, Aug 2022",
+      "|%|of all crypto stolen in the same period came from cross-chain bridges.|Chainalysis, Aug 2022",
+      "≈ $|B|lost in the 9 bridge attacks reconstructed step by step in this demo.|Real incidents page",
+      "| days|went by before anyone noticed the Ronin theft — no cross-chain monitoring.|Ronin incident reports, 2022"
+    ],
+    "scale": {
+      "label": "Why the attack surface explodes",
+      "title": "The N² problem: pairwise links or a hub",
+      "n": "Number of chains N",
+      "p": "Illustrative yearly incident probability per bridge (p)",
+      "mesh": "Pairwise",
+      "hub": "Through a hub",
+      "bridges": "bridges = N(N−1)/2",
+      "links": "links = N",
+      "risk": "chance of ≥ 1 incident per year",
+      "riskHub": "chance of ≥ 1 incident per year (excluding the hub's own risk)",
+      "body": "Each bridge is a separate trust assumption, key set, code base and asset vault. The number of bridges grows with the square of the number of chains, so even if each bridge has a small chance of failure, the chance that the ecosystem suffers at least one incident a year quickly approaches 100%. A hub cuts the number of links but concentrates risk in the hub.",
+      "note": "Illustrative model assuming independent bridges with equal probability p: P = 1 − (1 − p)^M where M is the number of bridges. Not a statistic.",
+      "meshCap": "{m} bridges",
+      "hubCap": "{n} links via the hub"
+    },
+    "layers": {
+      "label": "Layered model",
+      "title": "Which layers a cross-chain message passes through",
+      "body": "Like a network stack, cross-chain communication splits into five layers. A message goes down chain A's stack, across the transport layer, then up chain B's stack. Every layer has its own attacks — which is why defense is needed at every phase of the lifecycle. Pick a layer for details.",
+      "defense": "Thesis defenses",
+      "app": {
+        "name": "Application",
+        "ex": "asset bridges · cross-chain DeFi · digital credentials",
+        "role": "Business logic driven by cross-chain messages: lock/mint, burn/unlock, state updates, issuing credentials.",
+        "threats": [
+          "Logic and initialization bugs",
+          "Reentrancy",
+          "Oracle manipulation",
+          "Flash draining"
+        ],
+        "cd2": "Detects contract vulnerabilities before deployment; audit reports with invariants (INV-SUPPLY, INV-ACL).",
+        "cd3": "Monitors fund flows on both chains at runtime; R4/R5 pause with human approval."
+      },
+      "msg": {
+        "name": "Message",
+        "ex": "format · nonce · domain/chainId · payload",
+        "role": "How a message is packaged: sender, destination chain, sequence number, content and any sensitive data attached.",
+        "threats": [
+          "Replay",
+          "Cross-chain replay",
+          "Missing domain separation",
+          "Private data leaks"
+        ],
+        "cd1": "Public statements are separated from secret witnesses; nonces and chain context are bound into the proof.",
+        "cd2": "INV-NONCE/INV-DOMAIN invariants; the Exploit lab demonstrates cross-chain replay on the vulnerable version."
+      },
+      "verify": {
+        "name": "Verification",
+        "ex": "notary/multisig · light client · ZK · optimistic",
+        "role": "The mechanism that lets the destination chain believe an event really happened on the source chain.",
+        "threats": [
+          "Threshold key compromise",
+          "Forged attestations",
+          "Forged proofs",
+          "Verifier bugs"
+        ],
+        "cd1": "The destination verifies a ZKP and a t-of-n threshold signature via ecrecover; rejects duplicate signers and 7 kinds of forgery.",
+        "cd2": "Audits verification code: missing signature, source and proof checks."
+      },
+      "transport": {
+        "name": "Transport",
+        "ex": "relayers · oracles · p2p network",
+        "role": "Who carries messages and proofs from one chain to the other, when and in what order.",
+        "threats": [
+          "Delay and censorship",
+          "Colluding relayers/validators",
+          "Reputation boosting"
+        ],
+        "cd3": "Matches events on both chains; ECA + Dempster–Shafer and actor–route CRS detect delays and collusion."
+      },
+      "consensus": {
+        "name": "Consensus & ledger",
+        "ex": "chain A · chain B (PoW, PoS, BFT)",
+        "role": "Finality and liveness of each chain — the foundation every layer above relies on.",
+        "threats": [
+          "Reorgs, missing finality",
+          "Validator loss, chain halt",
+          "51% attacks"
+        ],
+        "cd3": "Distinguishes system faults (lost validators) from attacks to avoid false blame; tunes monitoring parameters (G-surv)."
+      }
+    },
+    "time": {
+      "label": "Timeline",
+      "title": "From atomic swaps to hundreds of chains — and the attacks",
+      "items": [
+        "2013|m|The atomic-swap idea|Tier Nolan describes swapping across two chains with hash locks and time locks — the precursor of HTLCs.",
+        "2014|m|Pegged sidechains|Back et al. (Blockstream) propose two-way pegs to move assets to side chains.",
+        "2015|m|Interledger Protocol|Thomas & Schwartz propose an Internet-style protocol for payments across ledgers.",
+        "2016|m|Classifying interop mechanisms|Buterin (R3): notaries, relays/sidechains, hash-locking. Same year: the Polkadot and Cosmos whitepapers, BTC Relay and the Lightning Network.",
+        "2018|m|Liquid Network|Bitcoin's federated sidechain launches; the peg is held by 15 members with an 11-of-15 threshold.",
+        "2019–2020|m|Hubs arrive, DeFi booms|Cosmos Hub (2019) and Polkadot (2020) go live; DeFi brings a wave of asset bridges.",
+        "2021|m|IBC & parachains|IBC goes live on the Cosmos Hub; Polkadot gets its first parachains. Assets locked in bridges reach tens of billions of USD.",
+        "08/2021|h|Poly Network|≈ $611M drained through a cross-chain call that replaced the keeper key.",
+        "2022|h|“The year of bridge hacks”|Wormhole, Ronin, Harmony, Nomad, BNB Bridge… Per Chainalysis, bridges account for ≈ 69% of crypto stolen in the first seven months.",
+        "2023|h|Multichain collapses|Centralized MPC keys; funds are abnormally moved out of several bridges. Same year: replacement-cycling attacks on HTLCs are disclosed.",
+        "2024|h|Orbit Bridge|7 of 10 multisig keys compromised on New Year's Day (≈ $81M). SoKs on interoperability security appear at top venues (IEEE S&P 2024).",
+        "2024–2026|m|Hundreds of L1/L2s, intents and chain abstraction|ZK light clients move from research to deployment; the number of cross-chain routes keeps growing.",
+        "Thesis|t|A closed-loop Secure SDLC for cross-chain communication|Proof-based design (CĐ1) · pre-deployment auditing (CĐ2) · adaptive monitoring and response (CĐ3), feeding back into design."
+      ]
+    },
+    "next": {
+      "protocols": "See how each mechanism works and fails",
+      "method": "From context to research questions and method"
+    },
+    "source": "The map shows only part of the ecosystem; positions and sizes are not to scale. Figures: Chainalysis (Aug 2022: ≈ $2B across 13 bridge hacks, ≈ 69% of all funds stolen that year so far) and public incident reports by the projects and security firms."
+  },
+  "method": {
+    "badge": "Motivation & method",
+    "title": "Why cross-chain communication needs a Secure SDLC framework",
+    "body": "This page brings the thesis's arguments together: from the context and incident data, through root-cause analysis and the research gap, to the research cycle, the research questions and how each contribution is evaluated.",
+    "chainLabel": "Argument chain",
+    "chainTitle": "From context to thesis in five steps",
+    "chain": [
+      "Context|The Internet of Blockchains is inevitable|Hundreds of L1/L2 chains coexist; assets and messages have to go through bridges.|/iob",
+      "Problem|Bridges are the largest attack surface|≈ 69% of crypto stolen in the first seven months of 2022 came from bridges; the 9 attacks in this demo lost ≈ $2.7B.|/incidents",
+      "Root cause|Vulnerabilities span the whole lifecycle|Trust assumptions and key management (design), verification and initialization bugs (code), late detection (operations) — no mechanism is immune.|/protocols",
+      "Gap|Solutions are fragmented by phase|Existing work usually targets one phase; there is no end-to-end framework with feedback between phases.|#gap",
+      "Thesis|A closed-loop Secure SDLC for cross-chain|CĐ1 proof-based design · CĐ2 pre-deployment auditing · CĐ3 adaptive monitoring, feeding back into design.|/"
+    ],
+    "cover": {
+      "label": "Risk-coverage simulation",
+      "title": "Is a single module enough?",
+      "body": "Toggle each module to see how much of the real losses of the 9 attacks falls within its defensive scope. Each attack is tagged with the modules whose mechanisms can stop it (per the analysis on the Real incidents page).",
+      "pick": "Pick modules",
+      "covered": "Losses within defensive scope",
+      "only": "only",
+      "all": "all three",
+      "conclusion": "No module covers everything on its own: root causes sit in different phases of the lifecycle. Only by combining all three — design, auditing, operations — do all attacks fall within defensive scope. This is the quantitative argument for a closed-loop Secure SDLC approach.",
+      "note": "Shares are weighted by estimated losses; “defended” means the module has a mechanism that stops or detects early the key step of the attack."
+    },
+    "gap": {
+      "label": "Research gap",
+      "title": "Positioning against related work",
+      "body": "Representative works make strong contributions, but usually to one phase of the lifecycle. The thesis aims to cover every phase and link them through a feedback loop.",
+      "work": "Work",
+      "cols": [
+        "Verification design",
+        "Privacy",
+        "Coding & auditing",
+        "Runtime monitoring",
+        "Response & tuning",
+        "Closed lifecycle"
+      ],
+      "rows": [
+        "zkBridge|Xie et al., ACM CCS 2022|●|—|—|—|—|—",
+        "SmartAxe|Liao et al., ACM FSE 2024|—|—|●|—|—|—",
+        "Xscope|Zhang et al., IEEE/ACM ASE 2022|—|—|—|●|—|—",
+        "XChainWatcher|Augusto et al., 2024|—|—|—|●|—|—",
+        "SoKs / surveys|Zamyatin et al. FC 2021 · Belchior et al. CSUR 2021 · Augusto et al. S&P 2024|◐|◐|◐|◐|—|—",
+        "This thesis (CĐ1–CĐ3)|Π_univ · CrossGuard · CrossSentry|●|●|●|●|●|●"
+      ],
+      "note": "● main focus · ◐ discussed/partial · — outside the main scope. A qualitative assessment of each work's published focus, used for positioning — not a performance comparison."
+    },
+    "cycle": {
+      "label": "Research method",
+      "title": "A closed-loop research cycle",
+      "body": "The thesis follows the spirit of Design Science Research (Peffers et al., 2007): identify the problem from practice, design and build the artefact, demonstrate it, evaluate it, and feed the results back into the design — mirroring the Secure SDLC feedback loop.",
+      "center": "Secure SDLC",
+      "centerSub": "cross-chain",
+      "output": "Output",
+      "steps": [
+        "Incident study|Review the literature (SoKs, surveys) and analyze the largest bridge attacks to extract root causes and bug classes.|Root-cause taxonomy; mapping incidents → phases → modules.|See the incidents",
+        "Threat modeling|Map threats onto the layers of cross-chain communication and the five Secure SDLC phases.|A layered model and a per-phase threat catalog.|See the layered model",
+        "Mechanism design|Propose a mechanism per phase: Π_univ (design), CrossGuard (coding – auditing), CrossSentry (operations – tuning).|Three frameworks/algorithms with explicit assumptions and guarantees.|Open CĐ1",
+        "Build & demonstrate|Implement with real Solidity contracts on two EVM chains, cryptography and machine learning; reconstruct attack scenarios.|This prototype: 3 modules, an exploit lab, attack scenarios.|Try the core playground",
+        "Empirical evaluation|Measure latency, proof size, F1/PR-AUC, FPR, detection time and monitoring concentration (Gini).|Quantitative results for each research question.|Open CĐ3",
+        "Feedback & improvement|Operational and audit results flow back into design: new invariants, new thresholds, new monitoring parameters.|A closed lifecycle — phase 5 feeds back into phase 1.|See the Secure SDLC loop"
+      ]
+    },
+    "trace": {
+      "label": "Traceability",
+      "title": "Research question → method → metrics → demo",
+      "rq": "Research question",
+      "method": "Method",
+      "metric": "Metrics & results",
+      "demo": "Demo",
+      "cd1": "ZKP (Groth16) for predicates with statement/witness separation; a t-of-n TSS committee verified on-chain; nonce-based replay protection; CP-ABE for access control.",
+      "cd2": "Multi-source representation (structure, tokens, cross-chain operations); a few-shot core; DP-SGD federated learning (FedVuln); audit reports with typed invariants.",
+      "cd3": "Two-chain event matching; ECA + Dempster–Shafer; actor–route CRS; R0–R5 responses with approval; G-surv and F(Θ) optimization."
+    },
+    "limits": {
+      "label": "Scope & limitations of this demo",
+      "items": [
+        "Two in-memory EVM chains (py-evm): no real network latency, congestion or reorgs.",
+        "Some cryptographic components (range ZKP, CP-ABE) are illustrative; the thesis figures come from the full implementations.",
+        "Incident figures are estimates compiled from public reports; the narratives are simplified for non-specialists.",
+        "The protocol scales and the positioning matrix are qualitative assessments meant to illustrate the argument."
+      ]
+    },
+    "refs": "References: K. Peffers et al., A Design Science Research Methodology for Information Systems Research (JMIS, 2007) · T. Xie et al., zkBridge (ACM CCS 2022) · Z. Liao et al., SmartAxe (ACM FSE 2024) · J. Zhang et al., Xscope (ASE 2022) · A. Augusto et al., XChainWatcher (2024) · A. Augusto et al., SoK: Security and Privacy of Blockchain Interoperability (IEEE S&P 2024) · A. Zamyatin et al., SoK: Communication Across Distributed Ledgers (FC 2021) · R. Belchior et al., A Survey on Blockchain Interoperability (ACM CSUR 2021) · Chainalysis (2022)."
   }
 }

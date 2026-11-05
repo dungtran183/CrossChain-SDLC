@@ -13,6 +13,15 @@ Chạy hoàn toàn trên trình duyệt, không cần cài đặt. Tự cập nh
 ## Trải nghiệm / Experience
 - **Bản đồ khung Secure SDLC** (trang chủ): năm giai đoạn (Thiết kế → Lập trình → Kiểm thử & kiểm toán → Vận hành & giám sát → Đánh giá & tối ưu) trên một **vòng đời khép kín** — giai đoạn 5 phản hồi về giai đoạn 1 — bao quanh cây cầu liên chuỗi giữa chain-A và chain-B. Ba cung màu đánh dấu phạm vi CĐ1, CĐ2, CĐ3. Chọn một giai đoạn để xem mô tả, mối đe dọa, đóng góp và các nội dung trình diễn; "Mở chuyên đề" để vào trang chi tiết. Mức độ trình diễn (đã trình diễn x/19 nội dung) được ghi nhận khi thao tác trong các chuyên đề.
 - **Bức tranh tổng thể**: luận điểm, 3 câu hỏi nghiên cứu, vòng đời một thông điệp liên chuỗi với mối đe dọa ở từng chặng và chuyên đề phòng vệ, thẻ đóng góp + kết quả của từng chuyên đề.
+- **Bối cảnh & động lực** (mục mới trên thanh bên; một minh họa mạng động co giãn lấp khoảng trống còn lại cuối menu):
+  - **Internet of Blockchains** (`/iob`): bản đồ chuỗi–cầu nối tự phát lại 13 sự cố theo thời gian và cộng dồn tổn thất; số liệu Chainalysis; *bài toán N²* tương tác (số cầu và xác suất có sự cố theo N, p); mô hình 5 lớp của giao tiếp liên chuỗi (mối đe dọa + chuyên đề phòng vệ từng lớp); dòng thời gian 2013 → nay.
+  - **Giao thức liên chuỗi** (`/protocols`): mô phỏng động 6 cơ chế — Notary/multisig, HTLC, Sidechain/two-way peg, Chain relay/light client, Relay chain (hub), Optimistic bridge — mỗi cơ chế có *luồng chuẩn* và *sự cố/tấn công thực tế* (Ronin, Bob mất kết nối/replacement cycling, peg-out giả, BNB Bridge, Acala, Nomad), phát/dừng/từng bước/tốc độ; ý tưởng, giả định tin cậy, ưu/nhược, sự cố đã ghi nhận, liên hệ CĐ1–CĐ3, bảng so sánh và tam giác bất khả.
+  - **Động lực & phương pháp** (`/method`): chuỗi lập luận 5 bước, *mô phỏng phủ rủi ro* (bật/tắt CĐ1–3 → % tổn thất của 9 vụ nằm trong phạm vi phòng vệ), ma trận định vị so với công trình liên quan, chu trình nghiên cứu khép kín, truy vết RQ → phương pháp → thước đo, phạm vi & giới hạn của bản trình diễn.
+
+| Internet of Blockchains | Giao thức liên chuỗi (Notary · chế độ sự cố) |
+|---|---|
+| ![Internet of Blockchains](docs/screenshots/iob.png) | ![Giao thức liên chuỗi](docs/screenshots/protocols.png) |
+
 - **Sự cố thực tế**: 9 vụ tấn công cầu nối tiêu biểu (Ronin, Wormhole, Nomad, Poly Network, BNB Bridge…) ánh xạ sang chuyên đề và màn demo tương ứng.
 - **Giao diện sáng / tối**: mặc định sáng theo nhận diện blockchainist.net (nền giấy, viền mực, bóng đổ cứng; Unbounded · Space Grotesk · JetBrains Mono); nút mặt trăng/mặt trời ở góc phải trên để chuyển sang giao diện tối.
 
@@ -47,6 +56,7 @@ flowchart LR
     Shell --> P2["/cd2 CrossGuard"]
     Shell --> P3["/cd3 CrossSentry"]
     Shell --> PG["/playground · ví ethers.js"]
+    Shell --> CX["/iob · /protocols · /method<br/>bối cảnh & động lực (chỉ frontend)"]
   end
   subgraph Backend["Python backend (FastAPI)"]
     R1["/api/cd1/*"] --- Core
